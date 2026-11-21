@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>User Login - Roots & Rhythm</title>
+  <title>User Login - EDUTECH Karnataka SSLC</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -74,11 +74,11 @@
         <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-700 flex items-center justify-center text-white shadow-md shadow-emerald-600/20 group-hover:scale-105 transition">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
         </div>
-        <span class="text-base font-extrabold text-emerald-950 tracking-tight">Roots & Rhythm</span>
+        <span class="text-base font-extrabold text-emerald-950 tracking-tight">EDUTECH</span>
       </a>
 
-      <a href="/" class="text-xs font-bold text-emerald-800 hover:text-emerald-950 bg-white/70 hover:bg-white backdrop-blur-md px-3 py-1.5 rounded-full border border-emerald-200/80 shadow-xs transition flex items-center gap-1">
-        <span>Demo Dashboard</span>
+      <a href="/student-dashboard" class="text-xs font-bold text-emerald-800 hover:text-emerald-950 bg-white/70 hover:bg-white backdrop-blur-md px-3 py-1.5 rounded-full border border-emerald-200/80 shadow-xs transition flex items-center gap-1">
+        <span>Student Dashboard</span>
         <span>→</span>
       </a>
     </div>
@@ -261,7 +261,7 @@
               <span class="absolute left-3.5 text-slate-400 pointer-events-none">
                 <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
               </span>
-              <input type="email" id="reg-email" required placeholder="Email Address" class="w-full text-xs font-semibold pl-10 pr-3.5 py-3 rounded-2xl border border-slate-200 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 transition">
+              <input type="email" id="reg-email" required placeholder="Student Email Address" class="w-full text-xs font-semibold pl-10 pr-3.5 py-3 rounded-2xl border border-slate-200 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 transition">
             </div>
           </div>
 
@@ -312,7 +312,7 @@
 
   <!-- Footer -->
   <footer class="py-4 text-center text-xs text-emerald-900/70 z-20 relative font-medium">
-    <span>Roots & Rhythm • Smart, Inclusive & Personalized Education</span>
+    <span>EDUTECH • Karnataka SSLC Smart Learning Platform</span>
   </footer>
 
   <script>
@@ -348,6 +348,8 @@
         roleParentBtn.className = "py-2 rounded-xl transition text-center text-slate-500 hover:text-slate-800";
         regCohortInput.placeholder = "Grade (e.g. 10-A)";
         regCohortInput.value = "Grade 10-A";
+        const emailInput = document.getElementById("reg-email");
+        if (emailInput) emailInput.placeholder = "Student Email Address";
       });
 
       roleParentBtn.addEventListener("click", () => {
@@ -356,6 +358,8 @@
         roleStudentBtn.className = "py-2 rounded-xl transition text-center text-slate-500 hover:text-slate-800";
         regCohortInput.placeholder = "Child's Grade (e.g. 10-A)";
         regCohortInput.value = "Grade 10-A";
+        const emailInput = document.getElementById("reg-email");
+        if (emailInput) emailInput.placeholder = "Parent Email Address";
       });
     }
 
