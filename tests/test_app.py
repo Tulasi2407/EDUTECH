@@ -527,5 +527,34 @@ class RootsAndRhythmTestCase(unittest.TestCase):
         res_alias = self.client.get("/my-subjects")
         self.assertEqual(res_alias.status_code, 200)
 
+    def test_25_student_dashboard_page(self):
+        """Verify the dedicated /student-dashboard and /student pages serve correctly with all 12 sections."""
+        with self.client.session_transaction() as sess:
+            sess["user_id"] = 1
+
+        res = self.client.get("/student-dashboard")
+        self.assertEqual(res.status_code, 200)
+        self.assertIn(b"EDUTECH", res.data)
+        self.assertIn(b"Karnataka SSLC", res.data)
+        self.assertIn(b"Mathematics", res.data)
+        self.assertIn(b"Science", res.data)
+        self.assertIn(b"Social Science", res.data)
+        self.assertIn(b"English", res.data)
+        self.assertIn(b"Kannada", res.data)
+        self.assertIn(b"Hindi", res.data)
+        self.assertIn(b"Dashboard Overview", res.data)
+        self.assertIn(b"Study Materials", res.data)
+        self.assertIn(b"Question Papers", res.data)
+        self.assertIn(b"Teaching Videos", res.data)
+        self.assertIn(b"Study Planner", res.data)
+        self.assertIn(b"Practice / Quiz", res.data)
+        self.assertIn(b"My Progress", res.data)
+        self.assertIn(b"Achievements", res.data)
+        self.assertIn(b"Student Profile", res.data)
+
+        # Alias route check
+        res_alias = self.client.get("/student")
+        self.assertEqual(res_alias.status_code, 200)
+
 if __name__ == "__main__":
     unittest.main()
