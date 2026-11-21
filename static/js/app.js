@@ -10,8 +10,9 @@ class RootsAndRhythmApp {
     this.allUsers = [];
     this.currentSubjectId = 1;
     this.currentTopicId = 6; // Default to Quadratic Equations
-    this.activeTab = "gap-finder";
+    this.activeTab = "main-dashboard"; // 10-Feature Main Dashboard as default landing view
     this.currentLearningMode = "balanced"; // Step-by-Step, Balanced, Fast-Track (Objective 5)
+    this.dashboard = null;
     this.nodeMap = null;
     this.timeline = null;
     this.analytics = null;
@@ -21,6 +22,7 @@ class RootsAndRhythmApp {
   }
 
   async init() {
+    this.dashboard = new MainDashboard("main-dashboard-container");
     this.analytics = new AnalyticsManager();
     this.timeline = new VisualStudyTimeline("timeline-container");
     this.nodeMap = new RootCauseNodeMap("node-map-root");
@@ -30,7 +32,7 @@ class RootsAndRhythmApp {
     await this.fetchSubjects();
     this.setupEventListeners();
     this.updateRoleView();
-    await this.traceCurrentTopicGaps();
+    await this.dashboard.load(this.currentUser.id);
     if (window.I18N) window.I18N.applyTranslations();
   }
 
@@ -134,7 +136,7 @@ class RootsAndRhythmApp {
     } else if (role === "admin") {
       this.setActiveTab("admin-panel");
     } else {
-      this.setActiveTab("gap-finder");
+      this.setActiveTab("main-dashboard");
     }
   }
 
@@ -155,7 +157,9 @@ class RootsAndRhythmApp {
     });
 
     // Lazy load tab data
-    if (tabName === "gap-finder") {
+    if (tabName === "main-dashboard") {
+      if (this.dashboard) this.dashboard.load(this.currentUser.id);
+    } else if (tabName === "gap-finder") {
       this.traceCurrentTopicGaps();
     } else if (tabName === "study-planner") {
       this.timeline.loadData();
@@ -487,6 +491,7 @@ class RootsAndRhythmApp {
     }
 
     if (this.timeline) this.timeline.loadData();
+    if (this.dashboard) this.dashboard.load(this.currentUser.id);
   }
 
   openFlagModal(questionId) {

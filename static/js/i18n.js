@@ -15,6 +15,7 @@ const I18N_DICTIONARY = {
     switch_role_tooltip: "Switch Demo Persona",
 
     // Navigation Tabs
+    nav_dashboard: "Main Dashboard",
     nav_gap_finder: "Root-Cause X-Ray",
     nav_study_planner: "Free-Hour Planner",
     nav_ai_assistant: "AI Assistant (Tutor)",
@@ -118,6 +119,7 @@ const I18N_DICTIONARY = {
     switch_role_tooltip: "डेमो भूमिका बदलें",
 
     // Navigation Tabs
+    nav_dashboard: "मुख्य डैशबोर्ड",
     nav_gap_finder: "मूल-कारण एक्स-रे (Gap Finder)",
     nav_study_planner: "खाली समय योजनाकार",
     nav_ai_assistant: "एआई सहायक (Tutor)",
@@ -221,6 +223,7 @@ const I18N_DICTIONARY = {
     switch_role_tooltip: "ಡೆಮೊ ಪಾತ್ರ ಬದಲಾಯಿಸಿ",
 
     // Navigation Tabs
+    nav_dashboard: "ಮುಖ್ಯ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
     nav_gap_finder: "ಮೂಲ-ಕಾರಣ ಎಕ್ಸ್-ರೇ (Gap Finder)",
     nav_study_planner: "ಖಾಲಿ-ವೇಳೆ ಯೋಜಕ",
     nav_ai_assistant: "ಎಐ ಸಹಾಯಕ (Tutor)",
@@ -324,6 +327,7 @@ const I18N_DICTIONARY = {
     switch_role_tooltip: "டெமோ பாத்திரத்தை மாற்றவும்",
 
     // Navigation Tabs
+    nav_dashboard: "முதன்மை டாஷ்போர்டு",
     nav_gap_finder: "மூலக்-காரண எக்ஸ்-ரே (Gap Finder)",
     nav_study_planner: "ஓய்வு நேரத் திட்டமிடுபவர்",
     nav_ai_assistant: "ஏஐ உதவியாளர் (Tutor)",
@@ -427,6 +431,7 @@ const I18N_DICTIONARY = {
     switch_role_tooltip: "డెమో పాత్రను మార్చండి",
 
     // Navigation Tabs
+    nav_dashboard: "ప్రధాన డాష్‌బోర్డ్",
     nav_gap_finder: "మూల-కారణ ఎక్స్-రే (Gap Finder)",
     nav_study_planner: "ఖాళీ సమయ ప్లానర్",
     nav_ai_assistant: "ఏఐ అసిస్టెంట్ (Tutor)",

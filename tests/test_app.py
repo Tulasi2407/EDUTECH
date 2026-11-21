@@ -295,5 +295,63 @@ class RootsAndRhythmTestCase(unittest.TestCase):
         data_kn = json.loads(res_kn.data)
         self.assertIn("Fast-Track", data_kn["response_text"])
 
+    def test_14_main_dashboard_overview_10_features(self):
+        """Verify the main dashboard returns all 10 core feature datasets."""
+        with self.client.session_transaction() as sess:
+            sess["user_id"] = 1 # Student Aarav
+
+        res = self.client.get("/api/dashboard/overview")
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)
+
+        # 1. Welcome & Student Profile
+        self.assertIn("student", data)
+        self.assertEqual(data["student"]["name"], "Aarav Sharma")
+
+        # 2. Overall Learning Progress
+        self.assertIn("overall_progress", data)
+        self.assertIn("completion_pct", data["overall_progress"])
+
+        # 3. Quiz Performance
+        self.assertIn("quiz_performance", data)
+        self.assertIn("accuracy_pct", data["quiz_performance"])
+
+        # 4. Learning Streak
+        self.assertIn("learning_streak", data)
+        self.assertGreaterEqual(data["learning_streak"]["streak_days"], 1)
+
+        # 5. Subject Overview
+        self.assertIn("subjects", data)
+        self.assertTrue(len(data["subjects"]) >= 2)
+
+        # 6. Weak Topics
+        self.assertIn("weak_topics", data)
+        self.assertTrue(len(data["weak_topics"]) >= 1)
+
+        # 7. AI Learning Insights
+        self.assertIn("ai_insights", data)
+        self.assertIn("recommended_duration", data["ai_insights"])
+
+        # 8. Today's Study Sessions
+        self.assertIn("today_sessions", data)
+
+        # 9. Performance Analytics
+        self.assertIn("performance_analytics", data)
+
+        # 10. Quick Actions
+        self.assertIn("quick_actions", data)
+        self.assertEqual(len(data["quick_actions"]), 4)
+
+    def test_15_dashboard_privacy_check(self):
+        """Verify privacy: student cannot access another student's dashboard."""
+        with self.client.session_transaction() as sess:
+            sess["user_id"] = 1 # Student Aarav
+
+        # Attempt to access student 2's dashboard
+        res = self.client.get("/api/dashboard/overview?student_id=2")
+        self.assertEqual(res.status_code, 403)
+        data = json.loads(res.data)
+        self.assertIn("Access Denied", data.get("error", ""))
+
 if __name__ == "__main__":
     unittest.main()
