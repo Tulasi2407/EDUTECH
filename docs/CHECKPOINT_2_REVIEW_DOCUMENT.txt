@@ -1,0 +1,205 @@
+================================================================================
+HACKATHON CHECKPOINT 2 REVIEW: REQUIREMENTS, TECH STACK & ROADMAP
+Project Name: Roots & Rhythm 🌿⏱️ (Domain 2: Smart, Inclusive & Personalized Education)
+Lead / Developer: Tulasi2407
+Repository: https://github.com/Tulasi2407/EDUTECH
+Live Prototype: http://127.0.0.1:5000  (Active & Running)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. EXECUTIVE SUMMARY & PROBLEM UNDERSTANDING (CHECKPOINT 1 RECAP)
+--------------------------------------------------------------------------------
+* The Problem:
+  Students do not fail because they lack capability; they struggle because unseen
+  prerequisite gaps from earlier grades compound silently over time. When a student
+  struggles with an advanced topic like Quadratic Equations, traditional platforms
+  give them more quadratic problems, ignoring that their foundation in negative sign
+  rules or factoring polynomials is broken. Additionally, rigid study timetables
+  cause burnout, and English-only STEM content alienates vernacular-medium students.
+
+* The Solution — Roots & Rhythm:
+  A production-grade, mobile-first educational web platform built on two core pillars:
+  1. ROOTS (Prerequisite Gap Finder & Root-Cause Tracer):
+     An educational X-Ray dependency graph (DAG) that inspects learning stumbling
+     blocks backwards to pinpoint exact foundational root causes.
+  2. RHYTHM (Free-Hour Study Planner & Rebalancer):
+     A calm scheduler where students declare their actual daily free hours. Micro-study
+     sessions target their root causes strictly inside declared free hours, with
+     auto-rebalancing when sessions are skipped.
+
+--------------------------------------------------------------------------------
+2. COMPLETE END-TO-END SYSTEM WORKFLOW
+--------------------------------------------------------------------------------
+Step 1: Student Onboarding & 5-Language Preference Setup
+  - The student selects their preferred language (English, Hindi, Kannada, Tamil, Telugu)
+    and learning speed mode (Beginner 15m, Intermediate 25m, Advanced 45m).
+
+Step 2: Diagnostic Assessment (Gap Finder)
+  - Student takes topic-based diagnostic assessments. If performance falls below 70%,
+    the topic is flagged as an active learning gap with severity classification.
+
+Step 3: Root-Cause X-Ray (SVG Topological Dependency Graph)
+  - The engine executes a Directed Acyclic Graph (DAG) backward traversal.
+  - Pinpoints the deepest unmastered foundational prerequisite (e.g. Factoring Polynomials
+    behind Quadratic Equations) and renders an interactive SVG node map with color-coded
+    radar auras (Rose = Root Cause, Amber = Shaky, Emerald = Mastered, Indigo = Target).
+
+Step 4: Availability Declaration (Free-Hour Input)
+  - Student inputs their daily/weekly free hours (e.g. 17:30–18:30 After-School Focus).
+
+Step 5: Constraint-Based Study Scheduler & Auto-Rebalancer
+  - Schedules bite-sized micro-sessions targeting foundational gaps strictly within
+    declared free hours. If a session is missed, the auto-rebalancer redistributes it
+    without cognitive overload or double-booking.
+
+Step 6: AI Learning Assistance & Adaptive Practice
+  - AI Assistant provides step-by-step doubt clearing using intuitive analogies in
+    the student's chosen language.
+  - Practice drills provide calibrated questions with progressive hint ladders and
+    curriculum verification badges.
+
+Step 7: Mastery Dashboard & Multi-Role Oversight
+  - Real-time mastery score updates (+15 points on completion). Once mastery reaches
+    80%, the gap is marked as "Resolved".
+  - Teachers view class-wide heatmaps; parents receive jargon-free weekly summaries.
+
+--------------------------------------------------------------------------------
+3. FEATURE BREAKDOWN (MAPPED TO THE 10 SPECIFIC OBJECTIVES)
+--------------------------------------------------------------------------------
+Objective 1: Identify Learning Gaps -> Gap Finder
+  - Diagnostic assessments evaluate topic accuracy and flag weak areas.
+
+Objective 2: Find Root Causes -> Root-Cause X-Ray
+  - Backward DAG graph traversal isolates foundational prerequisite gaps.
+
+Objective 3: AI Learning Assistance -> AI Assistant
+  - Step-by-step concept explanations, real-world metaphors, and interactive verification.
+
+Objective 4: Support Multiple Languages -> 5-Language Switcher
+  - Full localization in English, Hindi (हिंदी), Kannada (ಕನ್ನಡ), Tamil (தமிழ்), Telugu (తెలుగు).
+
+Objective 5: Personalize Learning Pace -> Three Learning Modes
+  - Step-by-Step (15m micro-steps), Balanced (25m standard), Fast-Track (45m high-yield).
+
+Objective 6: Generate Personalized Practice -> Adaptive Practice Section
+  - Topic-based questions calibrated by mastery level with 2-stage progressive hint ladders.
+
+Objective 7: Create Personalized Study Schedules -> Free-Hour Study Planner
+  - Schedules micro-sessions strictly within student-declared free hours with auto-rebalancing.
+
+Objective 8: Track Learning Progress -> Dashboard & Analytics
+  - Monitors quiz scores, accuracy, completed sessions, learning streaks, and mastery badges.
+
+Objective 9: Provide an Easy-to-Use Platform -> Responsive UI & Navigation
+  - Mobile-first responsive UI, Zen Rhythm Chamber (Pomodoro + 4-7-8 breathing pacer),
+    Spotlight Command Palette (Ctrl+K), Dark Mode, and Web Audio Soundscape synthesizer.
+
+Objective 10: Data Privacy & Responsible AI -> Multi-Role RBAC & Reporting
+  - Student isolation, bcrypt security, input sanitization, curriculum verification badges,
+    and a dedicated review/flag queue for AI-generated answers.
+
+--------------------------------------------------------------------------------
+4. COMPLETE TECHNOLOGY STACK ARCHITECTURE
+--------------------------------------------------------------------------------
+* Backend Application:
+  - Python 3.10+ / 3.14 with Flask 3.1 / ASGI, clean RESTful JSON routes.
+  - Architecture: Layered MVC pattern with dedicated service engines (gap_finder.py,
+    planner.py, ai_service.py, validator.py).
+
+* Database & Persistence:
+  - SQLite 3 relational database with foreign key cascades and relational indexes.
+  - Topological curriculum dependency DAG schema and automated data seeding.
+
+* AI & Pedagogical Layer:
+  - Dual-Engine Architecture:
+    a) Primary: Google Gemini API (gemini-2.0-flash / 1.5-flash) for generative tutoring.
+    b) Deterministic Fallback: High-fidelity offline pedagogical knowledge engine.
+  - Safe Guardrails: OWASP prompt-injection filters and answer verification ratings.
+
+* Frontend & Tactile UX:
+  - Vanilla Modern JavaScript (ES6+), HTML5, SVG dynamic node canvas, Tailwind CSS.
+  - Chart.js for mastery analytics, teacher heatmaps, and parent summaries.
+  - Native Web Audio API Synthesizer (pink/brown noise & alpha binaural beats).
+  - Physics confetti celebration engine (canvas 60fps).
+
+* Security & Multi-Role Access Control (RBAC):
+  - Server-side role-based decorators protecting Student, Teacher, Parent, and Admin views.
+  - Password hashing with Bcrypt, CSRF protection, and strict session isolation.
+
+* Quality Assurance:
+  - Comprehensive automated test suite covering all core user flows and RBAC enforcement.
+
+--------------------------------------------------------------------------------
+5. WHAT WE HAVE ACCOMPLISHED SO FAR (WORK DONE & MVP STATUS)
+--------------------------------------------------------------------------------
+[x] Full full-stack application developed and operational on http://127.0.0.1:5000.
+[x] Pre-seeded with realistic curriculum dependencies across high school STEM.
+[x] Interactive SVG Root-Cause Node Map with color-coded pulsing radar aura.
+[x] Free-Hour Study Planner with automatic rebalancing and streak tracking active.
+[x] 5-Language instant localization switcher functioning (EN, HI, KN, TA, TE).
+[x] 3 learning paces configured (Step-by-Step, Balanced, Fast-Track).
+[x] Zen Rhythm Study Chamber (Pomodoro timer + 4-7-8 breathing + audio synthesizer).
+[x] Spotlight Command Palette (Ctrl+K) for instant keyboard navigation.
+[x] Strict multi-role RBAC protecting Student, Teacher, and Parent dashboards.
+[x] Responsible AI verification badges and answer reporting queue implemented.
+[x] Codebase version-controlled and pushed to GitHub: https://github.com/Tulasi2407/EDUTECH.
+
+--------------------------------------------------------------------------------
+6. PHASED PROJECT ROADMAP (CHECKPOINT 1 THROUGH 5 & FUTURE)
+--------------------------------------------------------------------------------
+Phase 1: Problem Understanding & Architecture Design (Checkpoint 1) [COMPLETED]
+  - Problem identified: unaddressed foundational gaps and schedule burnout.
+  - Concept dependency graph mapped across high school curriculum.
+
+Phase 2: Requirements, Tech Stack & Planning (Checkpoint 2 — CURRENT) [COMPLETED]
+  - Complete feature specification, tech stack justification, and delivery roadmap.
+
+Phase 3: Teamwork & Core Engines Implementation (Checkpoint 3) [COMPLETED / IN ADVANCE]
+  - Built Roots (DAG traversal) and Rhythm (Free-hour scheduler & rebalancer).
+
+Phase 4: Prototype Evaluation & Testing (Checkpoint 4) [READY / WORKING MVP]
+  - Fully functioning live web app running on port 5000 with complete automated tests.
+
+Phase 5: Final Evaluation & Demo (Checkpoint 5) [UPCOMING]
+  - End-to-end live demo demonstrating student diagnostic -> root cause fix -> schedule.
+
+Future Scope (Post-Hackathon):
+  - Spoken Voice-to-Voice AI tutoring in regional Indian languages.
+  - Mobile native application using Flutter / React Native.
+  - Institutional learning analytics for school districts and education boards.
+
+--------------------------------------------------------------------------------
+7. 2-MINUTE ORAL PRESENTATION SCRIPT (VERBATIM REVIEW PITCH)
+--------------------------------------------------------------------------------
+"Good day, respected judges and mentors. Today we are presenting 'Roots & Rhythm'
+for Checkpoint 2 of our hackathon.
+
+The Core Problem:
+Students don't fail advanced topics because of lack of intelligence; they struggle
+because unseen prerequisite gaps from earlier grades compound silently over time.
+When a student struggles with Quadratic Equations, standard apps simply give them
+more quadratic equations. But the true bottleneck is that their foundation in
+Factoring Polynomials or negative sign rules is broken. Furthermore, rigid study
+timetables cause severe burnout, and English-only STEM apps leave vernacular-medium
+students behind.
+
+Our Solution & Key Features:
+Roots & Rhythm tackles this with two core pillars:
+1. 'Roots': Our Prerequisite Gap Finder and Root-Cause Tracer walks backward through
+   a curriculum Directed Acyclic Graph (DAG) and visualizes the exact broken concept
+   on an interactive SVG Node Map with pulsing root-cause radar auras.
+2. 'Rhythm': Our Free-Hour Study Planner lets students declare their real daily free
+   hours. It schedules micro-sessions strictly inside these free windows, and features
+   an auto-rebalancing engine that redistributes missed sessions without burnout.
+3. Inclusive AI: Our AI Assistant delivers step-by-step analogies in 5 languages —
+   English, Hindi, Kannada, Tamil, and Telugu — across 3 distinct learning paces.
+4. Responsible AI & Multi-Role: Includes curriculum verification badges, a teacher/student
+   audit queue to flag inaccurate answers, and role-based views for students, teachers,
+   and parents.
+
+Current Progress & Deliverables:
+We have already developed a complete, working full-stack prototype running live on
+http://127.0.0.1:5000, with automated testing in place and our codebase live on GitHub.
+
+Thank you, and we look forward to your questions!"
+================================================================================

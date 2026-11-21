@@ -21,6 +21,7 @@ const I18N_DICTIONARY = {
     nav_ai_assistant: "AI Assistant (Tutor)",
     nav_practice: "Smart Practice",
     nav_analytics: "My Progress",
+    nav_languages: "Languages (ಭಾಷೆಗಳು)",
     nav_teacher_dashboard: "Class Heatmap",
     nav_parent_view: "Parent Overview",
     nav_admin_panel: "Institution Health",
@@ -125,6 +126,7 @@ const I18N_DICTIONARY = {
     nav_ai_assistant: "एआई सहायक (Tutor)",
     nav_practice: "स्मार्ट अभ्यास",
     nav_analytics: "मेरी प्रगति",
+    nav_languages: "भाषा चयन (Languages)",
     nav_teacher_dashboard: "कक्षा हीटमैप",
     nav_parent_view: "अभिभावक अवलोकन",
     nav_admin_panel: "संस्थान स्वास्थ्य",
@@ -229,6 +231,7 @@ const I18N_DICTIONARY = {
     nav_ai_assistant: "ಎಐ ಸಹಾಯಕ (Tutor)",
     nav_practice: "ಸ್ಮಾರ್ಟ್ ಅಭ್ಯಾಸ",
     nav_analytics: "ನನ್ನ ಪ್ರಗತಿ",
+    nav_languages: "ಭಾಷೆಗಳು (Languages)",
     nav_teacher_dashboard: "ತರಗತಿ ಹೀಟ್‌ಮ್ಯಾಪ್",
     nav_parent_view: "ಪೋಷಕರ ಅವಲೋಕನ",
     nav_admin_panel: "ಸಂಸ್ಥೆಯ ಮಾಹಿತಿ",
@@ -333,6 +336,7 @@ const I18N_DICTIONARY = {
     nav_ai_assistant: "ஏஐ உதவியாளர் (Tutor)",
     nav_practice: "ஸ்மார்ட் பயிற்சி",
     nav_analytics: "என் முன்னேற்றம்",
+    nav_languages: "மொழிகள் (Languages)",
     nav_teacher_dashboard: "வகுப்பறை வெப்ப வரைபடம்",
     nav_parent_view: "பெற்றோர் பார்வை",
     nav_admin_panel: "நிறுவன நலன்",
@@ -437,6 +441,7 @@ const I18N_DICTIONARY = {
     nav_ai_assistant: "ఏఐ అసిస్టెంట్ (Tutor)",
     nav_practice: "స్మార్ట్ ప్రాక్టీస్",
     nav_analytics: "నా పురోగతి",
+    nav_languages: "భాషలు (Languages)",
     nav_teacher_dashboard: "తరగతి హీట్‌మ్యాప్",
     nav_parent_view: "తల్లిదండ్రుల నివేదిక",
     nav_admin_panel: "సంస్థ స్థితి",
@@ -543,6 +548,29 @@ function setLanguage(lang) {
     } else {
       btn.classList.remove("bg-indigo-600", "text-white", "font-bold");
       btn.classList.add("text-slate-600", "hover:bg-slate-100");
+    }
+  });
+
+  // Update topbar language indicator
+  const langNames = { en: "English", hi: "हिंदी", kn: "ಕನ್ನಡ", ta: "தமிழ்", te: "తెలుగు" };
+  const topInd = document.getElementById("current-lang-indicator");
+  if (topInd) {
+    topInd.textContent = langNames[lang] || lang;
+  }
+
+  // Highlight scrollable cards in Language Hub tab
+  document.querySelectorAll(".lang-scroll-card").forEach(card => {
+    const isCurrent = (card.dataset.lang === lang);
+    if (isCurrent) {
+      card.classList.add("border-indigo-600", "ring-2", "ring-indigo-600/30", "bg-indigo-50/40");
+      card.classList.remove("border-slate-200/90");
+    } else {
+      card.classList.remove("border-indigo-600", "ring-2", "ring-indigo-600/30", "bg-indigo-50/40");
+      card.classList.add("border-slate-200/90");
+    }
+    const badge = card.querySelector(".lang-active-badge");
+    if (badge) {
+      badge.classList.toggle("hidden", !isCurrent);
     }
   });
 

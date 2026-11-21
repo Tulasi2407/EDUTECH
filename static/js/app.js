@@ -175,6 +175,8 @@ class RootsAndRhythmApp {
       this.analytics.renderParentView("parent-view-container", 1);
     } else if (tabName === "admin-panel") {
       this.analytics.renderAdminView("admin-panel-container");
+    } else if (tabName === "languages") {
+      if (window.I18N) window.I18N.setLanguage(window.I18N.currentLanguage());
     }
   }
 
