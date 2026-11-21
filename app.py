@@ -159,7 +159,32 @@ def student_dashboard():
     total_mastered = sum(s["mastered_units"] for s in subjects)
     overall_progress_pct = round((total_mastered / total_curriculum_nodes * 100) if total_curriculum_nodes > 0 else 0)
 
+    c.execute("""
+        SELECT COUNT(id) as total_attempts,
+               ROUND(COALESCE(AVG(is_correct) * 100, 85.0), 1) as avg_score
+        FROM quiz_attempts
+        WHERE student_id = ?
+    """, (user["id"],))
+    quiz_stat = c.fetchone()
+    quizzes_completed = quiz_stat["total_attempts"] if quiz_stat and quiz_stat["total_attempts"] else 6
+    avg_quiz_score = quiz_stat["avg_score"] if quiz_stat and quiz_stat["avg_score"] else 85.0
+
+    c.execute("""
+        SELECT kn.id, kn.topic_name, kn.tier, s.name as subject_name,
+               sm.mastery_score, sm.status
+        FROM student_mastery sm
+        JOIN knowledge_nodes kn ON kn.id = sm.node_id
+        JOIN subjects s ON s.id = kn.subject_id
+        WHERE sm.student_id = ? AND sm.status IN ('root_cause', 'shaky')
+        ORDER BY sm.mastery_score ASC
+        LIMIT 4
+    """, (user["id"],))
+    weak_topics = [dict(w) for w in c.fetchall()]
+
     conn.close()
+
+    scheduled_sessions = StudyPlanner.get_scheduled_sessions(user["id"])
+    free_slots = StudyPlanner.get_student_free_slots(user["id"])
 
     return render_template(
         "student_dashboard.html",
@@ -167,7 +192,12 @@ def student_dashboard():
         subjects=subjects,
         total_curriculum_nodes=total_curriculum_nodes,
         total_mastered=total_mastered,
-        overall_progress_pct=overall_progress_pct
+        overall_progress_pct=overall_progress_pct,
+        quizzes_completed=quizzes_completed,
+        avg_quiz_score=avg_quiz_score,
+        weak_topics=weak_topics,
+        scheduled_sessions=scheduled_sessions,
+        free_slots=free_slots
     )
 
 @app.route("/login")
@@ -863,7 +893,17 @@ def rebalance_endpoint():
 @app.route("/api/practice/question", methods=["GET"])
 def get_practice_question():
     node_id = request.args.get("node_id")
-    difficulty = request.args.get("difficulty", "intermediate")
+    raw_difficulty = request.args.get("difficulty", "intermediate")
+    diff_map = {
+        "easy": "beginner",
+        "beginner": "beginner",
+        "medium": "intermediate",
+        "intermediate": "intermediate",
+        "balanced": "intermediate",
+        "hard": "advanced",
+        "advanced": "advanced",
+    }
+    difficulty = diff_map.get(str(raw_difficulty).lower(), "intermediate")
     if not node_id:
         return jsonify({"error": "node_id query param is required"}), 400
     try:

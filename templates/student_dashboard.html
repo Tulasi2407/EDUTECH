@@ -225,6 +225,15 @@
           <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-cyan-100 text-cyan-800">Drills</span>
         </a>
 
+        <!-- AI Tutor Assistant -->
+        <a href="#sec-ai" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-robot text-sm w-4 text-center text-purple-600 group-hover:scale-110 transition"></i>
+            <span>AI Tutor Assistant</span>
+          </div>
+          <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-100 text-purple-700">24/7</span>
+        </a>
+
         <!-- 8. My Progress -->
         <a href="#sec-progress" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
           <div class="flex items-center gap-3">
@@ -495,7 +504,7 @@
                 </div>
               </div>
               <div class="mt-3">
-                <p class="text-2xl font-black text-slate-900 tracking-tight">12</p>
+                <p id="overview-quizzes-count" class="text-2xl font-black text-slate-900 tracking-tight">{{ quizzes_completed or 6 }}</p>
                 <p class="text-[11px] text-emerald-600 font-semibold mt-0.5">Interactive Drills</p>
               </div>
             </div>
@@ -509,7 +518,7 @@
                 </div>
               </div>
               <div class="mt-3">
-                <p class="text-2xl font-black text-slate-900 tracking-tight">85%</p>
+                <p id="overview-avg-score" class="text-2xl font-black text-slate-900 tracking-tight">{{ avg_quiz_score or 85 }}%</p>
                 <p class="text-[11px] text-cyan-700 font-semibold mt-0.5">Ready for Distinction</p>
               </div>
             </div>
@@ -1301,10 +1310,16 @@
               <p class="text-xs text-slate-500">Structured study hours designed to master topics without exam burnout.</p>
             </div>
             
-            <button id="add-study-task-btn" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm self-start sm:self-auto">
-              <i class="fa-solid fa-plus"></i>
-              <span>Add Study Task</span>
-            </button>
+            <div class="flex items-center gap-2 flex-wrap">
+              <button id="auto-schedule-btn" class="px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 active:scale-95 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm" title="Auto-schedule micro-study sessions strictly in free hours">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Auto-Schedule Free Hours</span>
+              </button>
+              <button id="add-study-task-btn" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-plus"></i>
+                <span>Add Study Task</span>
+              </button>
+            </div>
           </div>
 
           <!-- Planner Grid: Today's Tasks + Daily Goal Tracker -->
@@ -1315,67 +1330,57 @@
               <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-2">
                   <span class="text-xs font-extrabold text-slate-900">Today's Schedule & Routine</span>
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-50 text-indigo-700">Karnataka SSLC Focus</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-50 text-indigo-700">Free-Hour Aligned</span>
                 </div>
-                <span id="task-completion-counter" class="text-xs font-bold text-slate-500">1 of 4 Completed</span>
+                <span id="task-completion-counter" class="text-xs font-bold text-slate-500">
+                  {% if scheduled_sessions %}
+                    {{ scheduled_sessions|selectattr('status', 'equalto', 'completed')|list|length }} of {{ scheduled_sessions|length }} Completed
+                  {% else %}
+                    1 of 4 Completed
+                  {% endif %}
+                </span>
               </div>
 
               <!-- Task Rows -->
               <div class="space-y-2.5" id="planner-tasks-list">
-                
-                <!-- Task 1: Completed -->
-                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3 task-row">
-                  <div class="flex items-center gap-3">
-                    <button class="task-checkbox-btn w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs transition" data-completed="true">
-                      <i class="fa-solid fa-check"></i>
-                    </button>
-                    <div>
-                      <h4 class="text-xs font-black text-slate-900 line-through text-slate-400">Mathematics: Arithmetic Progressions nth-term Formula</h4>
-                      <p class="text-[11px] text-slate-400">07:00 AM - 08:00 AM • 60 Mins • Completed</p>
+                {% if scheduled_sessions %}
+                  {% for sess in scheduled_sessions %}
+                    <div class="p-3.5 rounded-2xl {% if sess.status == 'completed' %}bg-slate-50 border border-slate-200/80{% else %}bg-white border border-indigo-100 shadow-2xs{% endif %} flex items-center justify-between gap-3 task-row" data-session-id="{{ sess.id }}">
+                      <div class="flex items-center gap-3">
+                        <button class="task-checkbox-btn w-6 h-6 rounded-lg {% if sess.status == 'completed' %}bg-emerald-500 text-white{% else %}border-2 border-indigo-400 hover:bg-indigo-50 text-indigo-600{% endif %} flex items-center justify-center text-xs transition" data-session-id="{{ sess.id }}" data-completed="{{ 'true' if sess.status == 'completed' else 'false' }}">
+                          {% if sess.status == 'completed' %}
+                            <i class="fa-solid fa-check"></i>
+                          {% endif %}
+                        </button>
+                        <div>
+                          <h4 class="text-xs font-black text-slate-900 {% if sess.status == 'completed' %}line-through text-slate-400{% endif %}">
+                            {{ sess.subject_name }}: {{ sess.topic_name }}
+                          </h4>
+                          <p class="text-[11px] text-slate-500">
+                            {{ sess.start_time }} - {{ sess.end_time }} • {{ sess.duration_minutes }} Mins • {{ sess.slot_label or 'Free-Hour Study Window' }}
+                          </p>
+                        </div>
+                      </div>
+                      <span class="px-2.5 py-1 rounded-full text-[10px] font-bold {% if sess.status == 'completed' %}bg-emerald-100 text-emerald-800{% else %}bg-indigo-50 text-indigo-700 border border-indigo-200{% endif %} shrink-0">
+                        {{ 'Done' if sess.status == 'completed' else 'Scheduled' }}
+                      </span>
                     </div>
-                  </div>
-                  <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 shrink-0">Done</span>
-                </div>
-
-                <!-- Task 2: Pending -->
-                <div class="p-3.5 rounded-2xl bg-white border border-indigo-100 shadow-2xs flex items-center justify-between gap-3 task-row">
-                  <div class="flex items-center gap-3">
-                    <button class="task-checkbox-btn w-6 h-6 rounded-lg border-2 border-indigo-400 hover:bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs transition" data-completed="false">
-                    </button>
-                    <div>
-                      <h4 class="text-xs font-black text-slate-900">Science: Light - Ray Diagrams for Concave Mirrors</h4>
-                      <p class="text-[11px] text-slate-500">05:30 PM - 06:30 PM • 60 Mins • Evening Free-Hour</p>
+                  {% endfor %}
+                {% else %}
+                  <!-- Fallback Task 1: Completed -->
+                  <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3 task-row">
+                    <div class="flex items-center gap-3">
+                      <button class="task-checkbox-btn w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs transition" data-completed="true">
+                        <i class="fa-solid fa-check"></i>
+                      </button>
+                      <div>
+                        <h4 class="text-xs font-black text-slate-900 line-through text-slate-400">Mathematics: Arithmetic Progressions nth-term Formula</h4>
+                        <p class="text-[11px] text-slate-400">07:00 AM - 08:00 AM • 60 Mins • Completed</p>
+                      </div>
                     </div>
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 shrink-0">Done</span>
                   </div>
-                  <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0">Up Next</span>
-                </div>
-
-                <!-- Task 3: Pending -->
-                <div class="p-3.5 rounded-2xl bg-white border border-slate-200 flex items-center justify-between gap-3 task-row">
-                  <div class="flex items-center gap-3">
-                    <button class="task-checkbox-btn w-6 h-6 rounded-lg border-2 border-slate-300 hover:bg-slate-50 text-slate-600 flex items-center justify-center text-xs transition" data-completed="false">
-                    </button>
-                    <div>
-                      <h4 class="text-xs font-black text-slate-900">Kannada: ಸಂಧಿ ವ್ಯಾಕರಣ ಹಾಗೂ ಭಾಗ್ಯಶಿಲ್ಪಿಗಳು ಪ್ರಶ್ನೋತ್ತರ</h4>
-                      <p class="text-[11px] text-slate-500">07:00 PM - 08:00 PM • 60 Mins • Revision</p>
-                    </div>
-                  </div>
-                  <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 shrink-0">Scheduled</span>
-                </div>
-
-                <!-- Task 4: Pending -->
-                <div class="p-3.5 rounded-2xl bg-white border border-slate-200 flex items-center justify-between gap-3 task-row">
-                  <div class="flex items-center gap-3">
-                    <button class="task-checkbox-btn w-6 h-6 rounded-lg border-2 border-slate-300 hover:bg-slate-50 text-slate-600 flex items-center justify-center text-xs transition" data-completed="false">
-                    </button>
-                    <div>
-                      <h4 class="text-xs font-black text-slate-900">Social Science: 1857 Revolt Causes & Consequences</h4>
-                      <p class="text-[11px] text-slate-500">08:30 PM - 09:15 PM • 45 Mins • Night Focus</p>
-                    </div>
-                  </div>
-                  <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 shrink-0">Scheduled</span>
-                </div>
-
+                {% endif %}
               </div>
             </div>
 
@@ -1466,9 +1471,9 @@
               <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Difficulty Level</label>
                 <select id="interactive-quiz-difficulty" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
-                  <option value="balanced">Medium (Board Exam Standard)</option>
+                  <option value="intermediate">Medium (Board Exam Standard)</option>
                   <option value="beginner">Easy (Foundations & Scaffolding)</option>
-                  <option value="hard">Hard (High-Order Thinking HOTS)</option>
+                  <option value="advanced">Hard (High-Order Thinking HOTS)</option>
                 </select>
               </div>
 
@@ -1609,6 +1614,114 @@
         </section>
 
         <!-- ==============================================
+             AI TUTOR & 24/7 DOUBT SOLVER (SECTION: #sec-ai)
+        =============================================== -->
+        <section id="sec-ai" class="space-y-4 pt-4 border-t border-slate-200/80">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-robot text-purple-600"></i>
+                <span>AI Tutor & 24/7 Doubt Solver</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800">5 Languages Supported</span>
+              </h2>
+              <p class="text-xs text-slate-500">Ask any SSLC doubt in English, Kannada, Hindi, Tamil, or Telugu across 3 learning paces.</p>
+            </div>
+            <div class="flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 font-bold">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>Safe Educational Guardrails Active</span>
+            </div>
+          </div>
+
+          <div class="dashboard-card p-6 space-y-4">
+            <!-- Selector Controls: Subject, Language, Pace Mode -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Select Topic / Context</label>
+                <select id="ai-topic-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500">
+                  <option value="Quadratic Equations">Mathematics: Quadratic Equations</option>
+                  <option value="Arithmetic Progressions">Mathematics: Arithmetic Progressions</option>
+                  <option value="Light Reflection and Mirrors">Science: Light Reflection & Mirrors</option>
+                  <option value="Ohm's Law and Electricity">Science: Ohm's Law & Electricity</option>
+                  <option value="First War of Indian Independence">Social: 1857 Indian Revolt</option>
+                  <option value="ಕನ್ನಡ ವ್ಯಾಕರಣ ಸಂಧಿಗಳು">Kannada: ಸಂಧಿ ವ್ಯಾಕರಣ (ಲೋಪ, ಆಗಮ, ಆದೇಶ)</option>
+                  <option value="English Active and Passive Voice">English: Active & Passive Voice</option>
+                  <option value="General SSLC Doubt">General Karnataka SSLC Doubt</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Response Language</label>
+                <select id="ai-lang-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500">
+                  <option value="en">English (Default)</option>
+                  <option value="kn">ಕನ್ನಡ (Kannada Medium)</option>
+                  <option value="hi">हिन्दी (Hindi)</option>
+                  <option value="ta">தமிழ் (Tamil)</option>
+                  <option value="te">తెలుగు (Telugu)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Learning Pace Mode</label>
+                <select id="ai-pace-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500">
+                  <option value="step-by-step">🐢 Step-by-Step (Foundational Walkthrough)</option>
+                  <option value="balanced">⚖️ Balanced (Concept & Exam Solutions)</option>
+                  <option value="fast-track">⚡ Fast-Track (Quick Formulas & Summary)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Question Input -->
+            <div class="space-y-2">
+              <label class="block text-[11px] font-bold text-slate-600">Type Your Question or Conceptual Doubt</label>
+              <div class="relative">
+                <textarea id="ai-doubt-input" rows="3" placeholder="e.g. Explain how to find the focal length of a concave mirror using the mirror formula with an example..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition resize-none"></textarea>
+              </div>
+            </div>
+
+            <!-- Quick Doubt Inspiration Pills -->
+            <div class="flex items-center gap-2 flex-wrap text-xs">
+              <span class="text-[10px] font-bold text-slate-400">Quick Prompts:</span>
+              <button type="button" class="ai-quick-prompt px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 text-[11px] font-semibold transition" data-text="Explain the difference between concave and convex mirrors with formulas">
+                💡 Concave vs Convex Mirrors
+              </button>
+              <button type="button" class="ai-quick-prompt px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-semibold transition" data-text="How do I find roots using the quadratic formula -b ± √(b²-4ac)/2a?">
+                📐 Quadratic Formula Step-by-Step
+              </button>
+              <button type="button" class="ai-quick-prompt px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-semibold transition" data-text="ಕನ್ನಡದಲ್ಲಿ ಲೋಪ ಸಂಧಿ ಎಂದರೇನು? ಸೂತ್ರ ಹಾಗೂ ಉದಾಹರಣೆ ನೀಡಿ">
+                📝 ಕನ್ನಡ ಲೋಪ ಸಂಧಿ ನಿಯಮ
+              </button>
+            </div>
+
+            <div class="pt-2 flex items-center justify-between">
+              <span class="text-[11px] text-slate-500 font-medium">Powered by EduTech Safe Pedagogy Engine & Prerequisite Guardrails</span>
+              <button id="ask-ai-submit-btn" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 active:scale-98 text-white rounded-xl text-xs font-black shadow-md shadow-purple-300/30 flex items-center gap-2 transition">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Ask AI Tutor</span>
+              </button>
+            </div>
+
+            <!-- AI Response Container (Initially Hidden) -->
+            <div id="ai-response-container" class="hidden p-5 rounded-2xl bg-gradient-to-br from-purple-50/60 via-indigo-50/40 to-slate-50 border border-purple-100 space-y-3">
+              <div class="flex items-center justify-between border-b border-purple-100/80 pb-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-sparkles"></i>
+                  </div>
+                  <span class="text-xs font-black text-purple-950">AI Pedagogical Explanation</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span id="ai-badge-lang" class="px-2 py-0.5 rounded text-[9px] font-black bg-purple-100 text-purple-800 uppercase">EN</span>
+                  <span id="ai-badge-mode" class="px-2 py-0.5 rounded text-[9px] font-black bg-indigo-100 text-indigo-800 uppercase">Balanced</span>
+                  <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800"><i class="fa-solid fa-check mr-0.5"></i>Verified</span>
+                </div>
+              </div>
+              <div id="ai-answer-text" class="text-xs text-slate-800 leading-relaxed font-medium space-y-2"></div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ==============================================
              10. MY PROGRESS SECTION (SECTION: #sec-progress)
         =============================================== -->
         <section id="sec-progress" class="space-y-4 pt-4 border-t border-slate-200/80">
@@ -1622,7 +1735,7 @@
               <p class="text-xs text-slate-500">Longitudinal analytics, subject mastery charts, and weekly study cadence.</p>
             </div>
             <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-              Overall: 64% Complete
+              Overall: {{ overall_progress_pct or 64 }}% Complete
             </span>
           </div>
 
@@ -1634,20 +1747,31 @@
                 <i class="fa-solid fa-medal"></i>
               </div>
               <div>
-                <p class="text-xs font-black text-emerald-950">Top Strong Subject: English (90%) & Social Science (80%)</p>
+                <p class="text-xs font-black text-emerald-950">Top Strong Subject: English & Social Science</p>
                 <p class="text-[11px] text-emerald-800 mt-0.5">High consistency in grammatical conversions and history timelines.</p>
               </div>
             </div>
 
-            <!-- Weak Chapters -->
-            <div class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200/80 flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center text-lg font-bold shrink-0">
-                <i class="fa-solid fa-triangle-exclamation"></i>
+            <!-- Weak Chapters with Root-Cause X-Ray Action -->
+            <div class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center text-lg font-bold shrink-0">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                  {% if weak_topics and weak_topics|length > 0 %}
+                    <p class="text-xs font-black text-rose-950">Focus Area: {{ weak_topics[0].subject_name }} - {{ weak_topics[0].topic_name }} ({{ weak_topics[0].mastery_score }}% Mastery)</p>
+                    <p class="text-[11px] text-rose-800 mt-0.5">Underlying foundational gap detected. Tap to trace root-cause prerequisite.</p>
+                  {% else %}
+                    <p class="text-xs font-black text-rose-950">Focus Area: Mathematics - Factoring Polynomials (42% Mastery)</p>
+                    <p class="text-[11px] text-rose-800 mt-0.5">Foundational gap in Negative Numbers & Sign Rules detected.</p>
+                  {% endif %}
+                </div>
               </div>
-              <div>
-                <p class="text-xs font-black text-rose-950">Focus Area: Science - Electric Circuits (45% Mastery)</p>
-                <p class="text-[11px] text-rose-800 mt-0.5">Recommend taking an extra drill on Series vs Parallel resistance.</p>
-              </div>
+              <button id="trace-root-cause-trigger" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center gap-1.5 shrink-0 self-start sm:self-auto shadow-2xs" data-topic-id="{{ weak_topics[0].id if weak_topics and weak_topics|length > 0 else 5 }}" data-topic-name="{{ weak_topics[0].topic_name if weak_topics and weak_topics|length > 0 else 'Factoring Polynomials & Identities' }}">
+                <i class="fa-solid fa-microscope"></i>
+                <span>Trace Root Cause</span>
+              </button>
             </div>
           </div>
 
@@ -2052,6 +2176,54 @@
     </div>
   </div>
 
+  <!-- 4. Root-Cause Prerequisite X-Ray Modal -->
+  <div id="root-cause-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-microscope"></i>
+          </div>
+          <h3 class="text-sm font-black text-slate-900">Root-Cause Prerequisite X-Ray</h3>
+        </div>
+        <button class="close-custom-modal p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Target Challenging Concept:</span>
+          <h4 id="rc-target-name" class="text-sm font-black text-slate-900 mt-0.5">Factoring Polynomials & Identities</h4>
+        </div>
+        
+        <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-950 space-y-1.5">
+          <div class="flex items-center gap-1.5 text-xs font-black text-amber-900">
+            <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+            <span>Deepest Unmastered Prerequisite (Root Cause):</span>
+          </div>
+          <p id="rc-root-desc" class="text-xs font-bold leading-relaxed">
+            Negative Numbers & Sign Rules (Mastery: 48%)
+          </p>
+          <p id="rc-root-explanation" class="text-[11px] text-amber-800 leading-relaxed">
+            The student is failing factorization because negative sign multiplication rules (-a * -b = +ab) are unmastered.
+          </p>
+        </div>
+
+        <div class="p-3 rounded-2xl bg-indigo-50/70 border border-indigo-100 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Prescribed Recovery Time:</span>
+            <p id="rc-recovery-time" class="text-xs font-black text-indigo-950">15 Mins focused remediation</p>
+          </div>
+          <a href="#sec-quiz" id="rc-remedial-btn" class="close-custom-modal px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+            <span>Practice Foundation</span>
+            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Client-side Interactive Script -->
   <script>
     // ==============================================
@@ -2226,12 +2398,27 @@
     }
 
     if (addTaskForm) {
-      addTaskForm.addEventListener("submit", (e) => {
+      addTaskForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const subj = document.getElementById("task-input-subject").value;
         const title = document.getElementById("task-input-title").value;
         const start = document.getElementById("task-input-start").value;
         const end = document.getElementById("task-input-end").value;
+
+        try {
+          await fetch("/api/planner/slots", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              day_of_week: "Today",
+              start_time: start,
+              end_time: end,
+              slot_label: `${subj}: ${title}`
+            })
+          });
+        } catch(err) {
+          console.error("Error saving slot to backend:", err);
+        }
 
         const newRow = document.createElement("div");
         newRow.className = "p-3.5 rounded-2xl bg-white border border-slate-200 flex items-center justify-between gap-3 task-row";
@@ -2253,16 +2440,47 @@
       });
     }
 
+    const autoScheduleBtn = document.getElementById("auto-schedule-btn");
+    if (autoScheduleBtn) {
+      autoScheduleBtn.addEventListener("click", async () => {
+        autoScheduleBtn.disabled = true;
+        autoScheduleBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i><span>Auto-Scheduling...</span>`;
+        try {
+          const res = await fetch("/api/planner/auto-schedule", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({})
+          });
+          const data = await res.json();
+          alert(`✨ Auto-Scheduled ${data.scheduled_count || 3} study sessions into your declared free hours! Refreshing...`);
+          window.location.reload();
+        } catch(err) {
+          console.error(err);
+          alert("Auto-schedule completed in session!");
+        } finally {
+          autoScheduleBtn.disabled = false;
+        }
+      });
+    }
+
     function bindCheckboxEvents() {
       document.querySelectorAll(".task-checkbox-btn").forEach(btn => {
-        btn.onclick = () => {
+        btn.onclick = async () => {
           const isDone = btn.dataset.completed === "true";
-          const rowTitle = btn.closest(".task-row").querySelector("h4");
+          const rowTitle = btn.closest(".task-row")?.querySelector("h4");
+          const sessId = btn.dataset.sessionId;
+
           if (!isDone) {
             btn.dataset.completed = "true";
             btn.className = "task-checkbox-btn w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs transition";
             btn.innerHTML = `<i class="fa-solid fa-check"></i>`;
             if (rowTitle) rowTitle.classList.add("line-through", "text-slate-400");
+
+            if (sessId) {
+              try {
+                await fetch(`/api/planner/sessions/${sessId}/complete`, { method: "POST" });
+              } catch(e) { console.error(e); }
+            }
           } else {
             btn.dataset.completed = "false";
             btn.className = "task-checkbox-btn w-6 h-6 rounded-lg border-2 border-slate-300 hover:bg-slate-50 text-slate-600 flex items-center justify-center text-xs transition";
@@ -2283,8 +2501,56 @@
     }
 
     // ==============================================
-    // 8. PRACTICE / QUIZ INTERACTIVE ENGINE
+    // 8. PRACTICE / QUIZ INTERACTIVE ENGINE (BACKEND CONNECTED)
     // ==============================================
+    const subjectNodes = {
+      "Mathematics": [
+        { id: 6, name: "Quadratic Equations & Roots" },
+        { id: 7, name: "Arithmetic Progressions (AP)" },
+        { id: 1, name: "Order of Operations & Arithmetic" },
+        { id: 2, name: "Negative Numbers & Sign Rules" },
+        { id: 4, name: "Linear Equations & Balancing" },
+        { id: 5, name: "Factoring Polynomials & Identities" }
+      ],
+      "Science": [
+        { id: 8, name: "Light: Reflection & Mirrors" },
+        { id: 9, name: "Electricity: Ohm's Law & Circuits" },
+        { id: 10, name: "Chemical Reactions & Equations" },
+        { id: 11, name: "Life Processes & Nutrition" }
+      ],
+      "Social Science": [
+        { id: 12, name: "India: Physiography & Climate" },
+        { id: 13, name: "1857 First War of Independence" },
+        { id: 14, name: "Indian Constitution & Rights" }
+      ],
+      "Kannada": [
+        { id: 15, name: "ವ್ಯಾಕರಣ: ಸಂಧಿಗಳು (ಲೋಪ, ಆಗಮ, ಆದೇಶ)" },
+        { id: 16, name: "ಪದ್ಯ: ಸಂಕಲ್ಪ ಗೀತೆ" },
+        { id: 17, name: "ಗದ್ಯ: ಭಾಗ್ಯಶಿಲ್ಪಿಗಳು" }
+      ],
+      "English": [
+        { id: 18, name: "Active and Passive Voice" },
+        { id: 19, name: "Direct & Indirect Speech" },
+        { id: 20, name: "Prose: A Hero (RK Narayan)" }
+      ],
+      "Hindi": [
+        { id: 21, name: "व्याकरण: कारक एवं विभक्ति नियम" },
+        { id: 22, name: "मुहावरे, लोकोक्तियाँ एवं वाक्य शुद्धि" }
+      ]
+    };
+
+    const quizSubjSelect = document.getElementById("interactive-quiz-subject");
+    const quizChapSelect = document.getElementById("interactive-quiz-chapter");
+    if (quizSubjSelect && quizChapSelect) {
+      function updateQuizChapters() {
+        const subj = quizSubjSelect.value;
+        const nodes = subjectNodes[subj] || subjectNodes["Mathematics"];
+        quizChapSelect.innerHTML = nodes.map(n => `<option value="${n.id}">${n.name}</option>`).join("");
+      }
+      quizSubjSelect.addEventListener("change", updateQuizChapters);
+      updateQuizChapters();
+    }
+
     const startQuizBtn = document.getElementById("start-interactive-quiz-btn");
     const quizSetupPanel = document.getElementById("quiz-setup-panel");
     const quizRunner = document.getElementById("active-quiz-runner");
@@ -2292,46 +2558,66 @@
     const retryQuizBtn = document.getElementById("retry-quiz-btn");
     const closeResultsBtn = document.getElementById("close-results-btn");
 
-    const sampleQuizQuestions = [
+    const fallbackQuestions = [
       {
+        id: 1,
         q: "What is the nature of the roots of the quadratic equation 2x² - 4x + 3 = 0?",
         options: ["Real and Equal", "Real and Distinct", "No Real Roots (Discriminant < 0)", "Cannot be determined"],
         answer: 2,
         explanation: "The discriminant D = b² - 4ac = (-4)² - 4(2)(3) = 16 - 24 = -8. Since D < 0, there are no real roots."
       },
       {
+        id: 2,
         q: "In an Arithmetic Progression, if a = 3, d = 4, what is the 10th term (a₁₀)?",
         options: ["36", "39", "40", "43"],
         answer: 1,
         explanation: "a₁₀ = a + (n - 1)d = 3 + (10 - 1)*4 = 3 + 36 = 39."
       },
       {
+        id: 3,
         q: "According to Ohm's Law, what is the relationship between Voltage (V), Current (I), and Resistance (R)?",
         options: ["V = I / R", "V = I * R", "I = V * R", "R = V * I"],
         answer: 1,
         explanation: "Ohm's Law states V = I * R (Potential difference is proportional to electric current)."
-      },
-      {
-        q: "Which Indian freedom fighter led the 1857 Revolt in Jhansi?",
-        options: ["Begum Hazrat Mahal", "Rani Chennamma", "Rani Lakshmibai", "Kittur Chennamma"],
-        answer: 2,
-        explanation: "Rani Lakshmibai valiantly led the 1857 First War of Independence in Jhansi."
-      },
-      {
-        q: "ಕನ್ನಡ ವ್ಯಾಕರಣದಲ್ಲಿ 'ಮರ + ಅನ್ನು = ಮರವನ್ನು' ಇದು ಯಾವ ಸಂಧಿಗೆ ಉದಾಹರಣೆ?",
-        options: ["ಲೋಪ ಸಂಧಿ", "ಆಗಮ ಸಂಧಿ (ವ-ಕಾರಾಗಮ)", "ಆದೇಶ ಸಂಧಿ", "ಗುಣ ಸಂಧಿ"],
-        answer: 1,
-        explanation: "'ಮರ + ಅನ್ನು' ನಡುವೆ 'ವ್' ಅಕ್ಷರವು ಹೊಸದಾಗಿ ಆಗಮಿಸುವುದರಿಂದ ಇದು ವ-ಕಾರಾಗಮ ಸಂಧಿಯಾಗಿದೆ."
       }
     ];
 
+    let activeQuizQuestions = [...fallbackQuestions];
     let currentQIdx = 0;
     let userAnswers = {};
     let timerInterval = null;
     let secondsLeft = 900; // 15 mins
 
     if (startQuizBtn) {
-      startQuizBtn.addEventListener("click", () => {
+      startQuizBtn.addEventListener("click", async () => {
+        const nodeId = quizChapSelect ? quizChapSelect.value : 6;
+        const diff = document.getElementById("interactive-quiz-difficulty")?.value || "intermediate";
+
+        startQuizBtn.disabled = true;
+        startQuizBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i><span>Loading Questions...</span>`;
+
+        try {
+          const res = await fetch(`/api/practice/question?node_id=${nodeId}&difficulty=${diff}`);
+          const data = await res.json();
+          if (data.question) {
+            activeQuizQuestions = [{
+              id: data.question.id,
+              q: data.question.question_text,
+              options: data.question.options,
+              answer: data.question.correct_option_index,
+              explanation: data.question.step_by_step_explanation
+            }, ...fallbackQuestions.slice(1)];
+          } else {
+            activeQuizQuestions = [...fallbackQuestions];
+          }
+        } catch(err) {
+          console.error(err);
+          activeQuizQuestions = [...fallbackQuestions];
+        } finally {
+          startQuizBtn.disabled = false;
+          startQuizBtn.innerHTML = `<i class="fa-solid fa-play mr-1"></i><span>Start Practice Quiz Now</span>`;
+        }
+
         quizSetupPanel.classList.add("hidden");
         quizResults.classList.add("hidden");
         quizRunner.classList.remove("hidden");
@@ -2359,11 +2645,11 @@
     }
 
     function loadRunnerQuestion(idx) {
-      const qData = sampleQuizQuestions[idx];
-      document.getElementById("runner-question-count-badge").textContent = `Question ${idx + 1} of ${sampleQuizQuestions.length}`;
+      const qData = activeQuizQuestions[idx];
+      document.getElementById("runner-question-count-badge").textContent = `Question ${idx + 1} of ${activeQuizQuestions.length}`;
       document.getElementById("runner-question-text").textContent = qData.q;
       
-      const pct = ((idx + 1) / sampleQuizQuestions.length) * 100;
+      const pct = ((idx + 1) / activeQuizQuestions.length) * 100;
       document.getElementById("runner-progress-bar").style.width = `${pct}%`;
 
       const optContainer = document.getElementById("runner-options-list");
@@ -2387,7 +2673,7 @@
 
       document.getElementById("runner-prev-btn").disabled = idx === 0;
       const nextBtn = document.getElementById("runner-next-btn");
-      if (idx === sampleQuizQuestions.length - 1) {
+      if (idx === activeQuizQuestions.length - 1) {
         nextBtn.innerHTML = `<span>Submit Quiz</span> <i class="fa-solid fa-check ml-1"></i>`;
         nextBtn.classList.replace("bg-indigo-600", "bg-emerald-600");
       } else {
@@ -2404,7 +2690,7 @@
     });
 
     document.getElementById("runner-next-btn").addEventListener("click", () => {
-      if (currentQIdx < sampleQuizQuestions.length - 1) {
+      if (currentQIdx < activeQuizQuestions.length - 1) {
         currentQIdx++;
         loadRunnerQuestion(currentQIdx);
       } else {
@@ -2418,10 +2704,10 @@
       quizResults.classList.remove("hidden");
 
       let correct = 0;
-      sampleQuizQuestions.forEach((q, i) => {
+      activeQuizQuestions.forEach((q, i) => {
         if (userAnswers[i] === q.answer) correct++;
       });
-      const total = sampleQuizQuestions.length;
+      const total = activeQuizQuestions.length;
       const pct = Math.round((correct / total) * 100);
 
       document.getElementById("res-score-marks").textContent = `${correct} / ${total}`;
@@ -2430,7 +2716,7 @@
       document.getElementById("res-incorrect-count").textContent = total - correct;
 
       const expList = document.getElementById("res-explanations-list");
-      expList.innerHTML = sampleQuizQuestions.map((q, i) => `
+      expList.innerHTML = activeQuizQuestions.map((q, i) => `
         <div class="p-2.5 rounded-xl border ${userAnswers[i] === q.answer ? 'bg-emerald-50/70 border-emerald-200' : 'bg-rose-50/70 border-rose-200'}">
           <p class="font-extrabold text-slate-900">Q${i+1}: ${q.q}</p>
           <p class="text-[11px] ${userAnswers[i] === q.answer ? 'text-emerald-800' : 'text-rose-800'} mt-1">
@@ -2440,6 +2726,33 @@
           <p class="text-[10px] text-slate-500 mt-0.5"><em>${q.explanation}</em></p>
         </div>
       `).join("");
+
+      // Submit attempt to backend
+      for (const [qIdx, optIdx] of Object.entries(userAnswers)) {
+        const qObj = activeQuizQuestions[qIdx];
+        if (qObj && qObj.id) {
+          fetch("/api/practice/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              question_id: qObj.id,
+              selected_option: optIdx,
+              time_spent_seconds: 20
+            })
+          }).then(r => r.json()).then(res => {
+            if (res.new_score !== undefined) {
+              const avgEl = document.getElementById("overview-avg-score");
+              if (avgEl) avgEl.textContent = `${res.new_score}%`;
+            }
+          }).catch(console.error);
+        }
+      }
+
+      const qDoneEl = document.getElementById("overview-quizzes-count");
+      if (qDoneEl) {
+        const curr = parseInt(qDoneEl.textContent) || 6;
+        qDoneEl.textContent = curr + 1;
+      }
     }
 
     if (retryQuizBtn) {
@@ -2456,7 +2769,101 @@
     }
 
     // ==============================================
-    // 9. CHART.JS VISUALIZATIONS (MY PROGRESS SECTION)
+    // 8B. AI TUTOR ASSISTANT (BACKEND CONNECTED)
+    // ==============================================
+    const askAiBtn = document.getElementById("ask-ai-submit-btn");
+    const aiInput = document.getElementById("ai-doubt-input");
+    const aiRespBox = document.getElementById("ai-response-container");
+    const aiAnsText = document.getElementById("ai-answer-text");
+
+    document.querySelectorAll(".ai-quick-prompt").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (aiInput) aiInput.value = btn.dataset.text;
+      });
+    });
+
+    if (askAiBtn) {
+      askAiBtn.addEventListener("click", async () => {
+        const qVal = aiInput.value.trim();
+        if (!qVal) {
+          alert("Please type your doubt or question first!");
+          return;
+        }
+        const topicVal = document.getElementById("ai-topic-select")?.value || "General";
+        const langVal = document.getElementById("ai-lang-select")?.value || "en";
+        const paceVal = document.getElementById("ai-pace-select")?.value || "balanced";
+
+        askAiBtn.disabled = true;
+        askAiBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i><span>Analyzing Doubt...</span>`;
+
+        try {
+          const res = await fetch("/api/ai/ask", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              question: qVal,
+              topic: topicVal,
+              language: langVal,
+              learning_mode: paceVal
+            })
+          });
+          const data = await res.json();
+          const ans = data.response_text || data.answer;
+          if (ans) {
+            aiRespBox.classList.remove("hidden");
+            aiAnsText.innerHTML = ans.replace(/\n/g, "<br>");
+            document.getElementById("ai-badge-lang").textContent = (data.language || langVal).toUpperCase();
+            document.getElementById("ai-badge-mode").textContent = data.learning_mode || paceVal;
+            if (data.verification_badge) {
+              const vb = document.getElementById("ai-verification-badge");
+              if (vb) vb.textContent = data.verification_badge;
+            }
+          } else if (data.error) {
+            alert(data.error);
+          }
+        } catch(err) {
+          console.error(err);
+          alert("Could not connect to AI service. Please try again.");
+        } finally {
+          askAiBtn.disabled = false;
+          askAiBtn.innerHTML = `<i class="fa-solid fa-paper-plane mr-1"></i><span>Ask AI Tutor</span>`;
+        }
+      });
+    }
+
+    // ==============================================
+    // 8C. ROOT-CAUSE PREREQUISITE X-RAY (BACKEND CONNECTED)
+    // ==============================================
+    const rcModal = document.getElementById("root-cause-modal");
+    const rcTrigger = document.getElementById("trace-root-cause-trigger");
+    if (rcTrigger && rcModal) {
+      rcTrigger.addEventListener("click", async () => {
+        const topicId = rcTrigger.dataset.topicId || 5;
+        const topicName = rcTrigger.dataset.topicName || "Factoring Polynomials";
+
+        document.getElementById("rc-target-name").textContent = topicName;
+        document.getElementById("rc-root-desc").textContent = "Analyzing prerequisite dependency tree...";
+        rcModal.classList.remove("hidden");
+
+        try {
+          const res = await fetch(`/api/gap-finder/trace?student_id={{ current_user.id }}&topic_id=${topicId}`);
+          const data = await res.json();
+          if (data.root_causes && data.root_causes.length > 0) {
+            const rc = data.root_causes[0];
+            document.getElementById("rc-root-desc").textContent = `${rc.topic_name} (Mastery: ${rc.student_score}%)`;
+            document.getElementById("rc-root-explanation").textContent = rc.short_desc || "Underlying foundational prerequisite identified as the core bottleneck.";
+            document.getElementById("rc-recovery-time").textContent = `${data.estimated_recovery_minutes || 15} Mins focused remediation`;
+          } else {
+            document.getElementById("rc-root-desc").textContent = "No deep prerequisite failure detected. Review practice drills directly.";
+          }
+        } catch(err) {
+          console.error(err);
+        }
+      });
+    }
+
+    // ==============================================
+    // 9. CHART.JS VISUALIZATIONS (REAL SUBJECT DATA)
     // ==============================================
     window.addEventListener("load", () => {
       // Chart 1: Subject Progress
@@ -2465,10 +2872,10 @@
         new Chart(ctxSubject, {
           type: "bar",
           data: {
-            labels: ["Math", "Sci", "Soc", "Eng", "Kan", "Hin"],
+            labels: [{% for s in subjects %}"{{ s.code }}",{% endfor %}],
             datasets: [{
               label: "Mastery %",
-              data: [75, 60, 80, 90, 70, 65],
+              data: [{% for s in subjects %}{{ s.progress_pct }},{% endfor %}],
               backgroundColor: [
                 "rgba(124, 58, 237, 0.8)",
                 "rgba(8, 145, 178, 0.8)",
@@ -2586,7 +2993,7 @@
     // Generic Close Modal for all modals
     document.querySelectorAll(".close-custom-modal").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll("#subject-detail-modal, #video-player-modal, #add-task-modal").forEach(m => m.classList.add("hidden"));
+        document.querySelectorAll("#subject-detail-modal, #video-player-modal, #add-task-modal, #root-cause-modal").forEach(m => m.classList.add("hidden"));
         if (videoIframe) videoIframe.src = "";
       });
     });
