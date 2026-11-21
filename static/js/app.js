@@ -13,6 +13,8 @@ class RootsAndRhythmApp {
     this.activeTab = "main-dashboard"; // 10-Feature Main Dashboard as default landing view
     this.currentLearningMode = "balanced"; // Step-by-Step, Balanced, Fast-Track (Objective 5)
     this.dashboard = null;
+    this.currentLearningMode = "balanced"; // Step-by-Step, Balanced, Fast-Track (Objective 5)
+    this.dashboard = null;
     this.nodeMap = null;
     this.timeline = null;
     this.analytics = null;
@@ -790,13 +792,13 @@ class RootsAndRhythmApp {
 }
 
 // Global hook helpers for node map interactions
-window.startPracticeSession = function(nodeId, difficulty = "intermediate") {
+window.startPracticeSession = function (nodeId, difficulty = "intermediate") {
   if (window.appInstance) {
     window.appInstance.openPracticeModal(nodeId, difficulty);
   }
 };
 
-window.scheduleNodeIntoFreeSlot = async function(nodeId) {
+window.scheduleNodeIntoFreeSlot = async function (nodeId) {
   try {
     const res = await fetch("/api/planner/auto-schedule", {
       method: "POST",
@@ -813,7 +815,7 @@ window.scheduleNodeIntoFreeSlot = async function(nodeId) {
   }
 };
 
-window.showToast = function(msg, type = "success") {
+window.showToast = function (msg, type = "success") {
   if (window.appInstance) {
     window.appInstance.showToast(msg, type);
   }

@@ -97,29 +97,33 @@ e:\EDUTECH\
 
 ---
 
-## ⚡ Quickstart Guide
+## ⚡ Quickstart Guide (Run on Any Laptop)
 
-### 1. Prerequisites
-- Python 3.10+ (Tested on Python 3.13)
-- Modern web browser (Chrome, Edge, Firefox, Safari)
-
-### 2. Run Database Setup & Automated Tests
-Initialize the database and verify all test assertions:
+### 1. Clone & Setup
 ```bash
-# Initialize and seed realistic curriculum data
-python database.py
+# Clone the repository
+git clone https://github.com/Tulasi2407/EDUTECH.git
+cd EDUTECH
 
-# Run all 12 test assertions
-python -m unittest tests/test_app.py
+# Install dependencies (only lightweight Flask, Werkzeug, Jinja2)
+pip install -r requirements.txt
 ```
 
-### 3. Launch the Server
+### 2. Launch the Application
 ```bash
-python app.py
+python run.py
 ```
+*(Or alternatively: `python app.py`)*
+
 Open your browser and navigate to:
 ```
 http://127.0.0.1:5000
+```
+
+### 3. (Optional) Run the Automated Test Suite
+To verify all 15 test suites:
+```bash
+python -m unittest tests/test_app.py
 ```
 
 ### 4. (Optional) Configure Gemini API Key
