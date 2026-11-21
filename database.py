@@ -4,6 +4,7 @@ import sqlite3
 import json
 import os
 from datetime import datetime, date, timedelta
+from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 
 def get_db_connection():
@@ -29,7 +30,9 @@ def init_db(force_reseed=False):
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
+        username TEXT UNIQUE,
         email TEXT UNIQUE NOT NULL,
+        password_hash TEXT,
         role TEXT NOT NULL CHECK(role IN ('student', 'teacher', 'parent', 'admin')),
         grade_or_cohort TEXT,
         language_preference TEXT DEFAULT 'en',
@@ -37,6 +40,14 @@ def init_db(force_reseed=False):
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
+
+    # Ensure username and password_hash columns exist (migration for existing DBs)
+    cursor.execute("PRAGMA table_info(users)")
+    existing_cols = [col["name"] for col in cursor.fetchall()]
+    if "username" not in existing_cols:
+        cursor.execute("ALTER TABLE users ADD COLUMN username TEXT")
+    if "password_hash" not in existing_cols:
+        cursor.execute("ALTER TABLE users ADD COLUMN password_hash TEXT")
 
     # 2. Subjects table
     cursor.execute("""
@@ -210,6 +221,23 @@ def init_db(force_reseed=False):
     # Commit tables
     conn.commit()
 
+    # Backfill default credentials for existing users if missing
+    cursor.execute("SELECT id, name, username FROM users")
+    existing_users = cursor.fetchall()
+    default_pass = generate_password_hash("password123")
+    default_usernames = {
+        1: "aarav",
+        2: "diya",
+        3: "kiran",
+        4: "meera",
+        5: "rajesh",
+        6: "arvind"
+    }
+    for u in existing_users:
+        if not u["username"] and u["id"] in default_usernames:
+            cursor.execute("UPDATE users SET username = ?, password_hash = ? WHERE id = ?", (default_usernames[u["id"]], default_pass, u["id"]))
+    conn.commit()
+
     # Check if we need to seed
     cursor.execute("SELECT COUNT(*) AS cnt FROM users")
     if cursor.fetchone()["cnt"] == 0:
@@ -220,25 +248,26 @@ def init_db(force_reseed=False):
 def seed_database(conn):
     """Seed comprehensive realistic data for the full multi-role experience."""
     cursor = conn.cursor()
+    default_pass = generate_password_hash("password123")
 
     # 1. Seed Users
     users_data = [
         # id=1: Student
-        (1, "Aarav Sharma", "aarav@rootsrhythm.edu", "student", "Grade 10-A", "en", "https://api.dicebear.com/7.x/bottts/svg?seed=Aarav"),
+        (1, "Aarav Sharma", "aarav", "aarav@rootsrhythm.edu", default_pass, "student", "Grade 10-A", "en", "https://api.dicebear.com/7.x/bottts/svg?seed=Aarav"),
         # id=2: Student
-        (2, "Diya Rao", "diya@rootsrhythm.edu", "student", "Grade 10-A", "kn", "https://api.dicebear.com/7.x/bottts/svg?seed=Diya"),
+        (2, "Diya Rao", "diya", "diya@rootsrhythm.edu", default_pass, "student", "Grade 10-A", "kn", "https://api.dicebear.com/7.x/bottts/svg?seed=Diya"),
         # id=3: Student
-        (3, "Kiran Kumar", "kiran@rootsrhythm.edu", "student", "Grade 10-B", "te", "https://api.dicebear.com/7.x/bottts/svg?seed=Kiran"),
+        (3, "Kiran Kumar", "kiran", "kiran@rootsrhythm.edu", default_pass, "student", "Grade 10-B", "te", "https://api.dicebear.com/7.x/bottts/svg?seed=Kiran"),
         # id=4: Teacher
-        (4, "Meera Patel", "meera.patel@rootsrhythm.edu", "teacher", "Faculty of Mathematics & Science", "en", "https://api.dicebear.com/7.x/personas/svg?seed=Meera"),
+        (4, "Meera Patel", "meera", "meera.patel@rootsrhythm.edu", default_pass, "teacher", "Faculty of Mathematics & Science", "en", "https://api.dicebear.com/7.x/personas/svg?seed=Meera"),
         # id=5: Parent
-        (5, "Rajesh Sharma", "rajesh.sharma@rootsrhythm.edu", "parent", "Guardian of Aarav Sharma", "en", "https://api.dicebear.com/7.x/personas/svg?seed=Rajesh"),
+        (5, "Rajesh Sharma", "rajesh", "rajesh.sharma@rootsrhythm.edu", default_pass, "parent", "Guardian of Aarav Sharma", "en", "https://api.dicebear.com/7.x/personas/svg?seed=Rajesh"),
         # id=6: Admin
-        (6, "Dr. Arvind Swaminathan", "principal@rootsrhythm.edu", "admin", "Dean & Principal", "en", "https://api.dicebear.com/7.x/personas/svg?seed=Arvind")
+        (6, "Dr. Arvind Swaminathan", "arvind", "principal@rootsrhythm.edu", default_pass, "admin", "Dean & Principal", "en", "https://api.dicebear.com/7.x/personas/svg?seed=Arvind")
     ]
     cursor.executemany("""
-    INSERT INTO users (id, name, email, role, grade_or_cohort, language_preference, avatar_url)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO users (id, name, username, email, password_hash, role, grade_or_cohort, language_preference, avatar_url)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, users_data)
 
     # 2. Seed Parent & Teacher Relationships

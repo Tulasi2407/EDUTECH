@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sign In & Register - Roots & Rhythm</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Simple Header -->
+  <header class="py-4 px-6 border-b border-slate-200/80 bg-white/80 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-800 flex items-center justify-center text-white shadow-md shadow-indigo-200">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-black tracking-tight bg-gradient-to-r from-indigo-900 via-indigo-700 to-indigo-950 bg-clip-text text-transparent">
+            Roots & Rhythm
+          </h1>
+          <p class="text-[10px] text-slate-500 font-medium">Smart, Inclusive & Personalized Education</p>
+        </div>
+      </a>
+
+      <a href="/" class="text-xs font-semibold text-slate-500 hover:text-indigo-600 flex items-center gap-1 transition">
+        <span>Skip to Demo Dashboard</span>
+        <span>→</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Auth Card Container -->
+  <main class="flex-1 flex items-center justify-center p-4 sm:p-6 my-auto">
+    <div class="max-w-md w-full bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-6 sm:p-8 space-y-6">
+
+      <!-- Form Mode Toggle Tabs -->
+      <div class="flex items-center bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs font-bold">
+        <button id="tab-login-btn" class="flex-1 py-2 rounded-xl transition-all duration-200 text-center {% if active_tab != 'register' %}bg-white text-indigo-900 shadow-sm{% else %}text-slate-500 hover:text-slate-900{% endif %}">
+          Sign In
+        </button>
+        <button id="tab-register-btn" class="flex-1 py-2 rounded-xl transition-all duration-200 text-center {% if active_tab == 'register' %}bg-white text-indigo-900 shadow-sm{% else %}text-slate-500 hover:text-slate-900{% endif %}">
+          Create Account
+        </button>
+      </div>
+
+      <!-- Alert / Status Banner -->
+      <div id="auth-alert" class="hidden p-3.5 rounded-2xl text-xs font-semibold flex items-start gap-2.5">
+        <span id="alert-icon" class="text-base shrink-0"></span>
+        <span id="alert-text" class="leading-relaxed"></span>
+      </div>
+
+      <!-- ==============================
+           1. LOGIN FORM
+      =============================== -->
+      <form id="login-form" class="space-y-4 {% if active_tab == 'register' %}hidden{% endif %}">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">Username or Email</label>
+          <div class="relative">
+            <input type="text" id="login-username" required placeholder="e.g. aarav or aarav@rootsrhythm.edu" class="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition">
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-bold text-slate-700">Password</label>
+            <span class="text-[10px] text-slate-400">Demo default: <code class="font-mono text-indigo-600">password123</code></span>
+          </div>
+          <input type="password" id="login-password" required placeholder="••••••••" class="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition">
+        </div>
+
+        <button type="submit" id="login-submit-btn" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-800 hover:from-indigo-500 hover:to-indigo-700 active:scale-98 text-white font-extrabold text-xs rounded-2xl shadow-lg shadow-indigo-600/25 transition flex items-center justify-center gap-2">
+          <span>Sign In to Dashboard</span>
+          <span>→</span>
+        </button>
+
+        <!-- Quick-Fill Demo Personas Grid -->
+        <div class="pt-3 border-t border-slate-100">
+          <span class="text-[11px] font-bold text-slate-400 block mb-2 text-center uppercase tracking-wider">
+            Quick-Fill Demo Persona:
+          </span>
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <button type="button" class="demo-fill-btn p-2 rounded-xl border border-slate-200 hover:border-indigo-400 bg-slate-50 text-left transition" data-user="aarav">
+              <span class="font-bold text-slate-800 block">Aarav (Student)</span>
+              <span class="text-[10px] text-slate-400">Grade 10-A</span>
+            </button>
+            <button type="button" class="demo-fill-btn p-2 rounded-xl border border-slate-200 hover:border-emerald-400 bg-slate-50 text-left transition" data-user="meera">
+              <span class="font-bold text-slate-800 block">Meera (Teacher)</span>
+              <span class="text-[10px] text-slate-400">Math Faculty</span>
+            </button>
+            <button type="button" class="demo-fill-btn p-2 rounded-xl border border-slate-200 hover:border-teal-400 bg-slate-50 text-left transition" data-user="rajesh">
+              <span class="font-bold text-slate-800 block">Rajesh (Parent)</span>
+              <span class="text-[10px] text-slate-400">Guardian</span>
+            </button>
+            <button type="button" class="demo-fill-btn p-2 rounded-xl border border-slate-200 hover:border-purple-400 bg-slate-50 text-left transition" data-user="arvind">
+              <span class="font-bold text-slate-800 block">Arvind (Admin)</span>
+              <span class="text-[10px] text-slate-400">Principal</span>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- ==============================
+           2. REGISTER FORM
+      =============================== -->
+      <form id="register-form" class="space-y-3.5 {% if active_tab != 'register' %}hidden{% endif %}">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+          <input type="text" id="reg-name" required placeholder="e.g. Priya Nair" class="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Username</label>
+            <input type="text" id="reg-username" required placeholder="e.g. priya_n" class="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Role</label>
+            <select id="reg-role" class="w-full text-xs font-semibold px-3 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 bg-white transition cursor-pointer">
+              <option value="student" selected>Student</option>
+              <option value="teacher">Teacher / Faculty</option>
+              <option value="parent">Parent / Guardian</option>
+              <option value="admin">School Admin</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+          <input type="email" id="reg-email" required placeholder="priya@example.com" class="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Grade / Department</label>
+            <input type="text" id="reg-cohort" placeholder="e.g. Grade 10-A" value="Grade 10-A" class="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Preferred Language</label>
+            <select id="reg-lang" class="w-full text-xs font-semibold px-3 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 bg-white transition cursor-pointer">
+              <option value="en" selected>English</option>
+              <option value="hi">हिंदी (Hindi)</option>
+              <option value="kn">ಕನ್ನಡ (Kannada)</option>
+              <option value="ta">தமிழ் (Tamil)</option>
+              <option value="te">తెలుగు (Telugu)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Create Password (min. 6 chars)</label>
+          <input type="password" id="reg-password" required minlength="6" placeholder="••••••••" class="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 transition">
+        </div>
+
+        <button type="submit" id="reg-submit-btn" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 active:scale-98 text-white font-extrabold text-xs rounded-2xl shadow-lg shadow-emerald-600/25 transition flex items-center justify-center gap-2">
+          <span>Create Account & Continue</span>
+          <span>→</span>
+        </button>
+      </form>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-100">
+    <span>Roots & Rhythm • Smart, Inclusive & Personalized Education</span>
+  </footer>
+
+  <script>
+    // Tab switching logic
+    const tabLoginBtn = document.getElementById("tab-login-btn");
+    const tabRegisterBtn = document.getElementById("tab-register-btn");
+    const loginForm = document.getElementById("login-form");
+    const registerForm = document.getElementById("register-form");
+    const alertBox = document.getElementById("auth-alert");
+    const alertIcon = document.getElementById("alert-icon");
+    const alertText = document.getElementById("alert-text");
+
+    function showAlert(msg, isError = false) {
+      alertBox.className = `p-3.5 rounded-2xl text-xs font-semibold flex items-start gap-2.5 ${isError ? 'bg-rose-50 text-rose-800 border border-rose-200' : 'bg-emerald-50 text-emerald-800 border border-emerald-200'}`;
+      alertIcon.textContent = isError ? '❌' : '✅';
+      alertText.textContent = msg;
+      alertBox.classList.remove("hidden");
+    }
+
+    function switchTab(mode) {
+      alertBox.classList.add("hidden");
+      if (mode === "login") {
+        tabLoginBtn.className = "flex-1 py-2 rounded-xl transition-all duration-200 text-center bg-white text-indigo-900 shadow-sm";
+        tabRegisterBtn.className = "flex-1 py-2 rounded-xl transition-all duration-200 text-center text-slate-500 hover:text-slate-900";
+        loginForm.classList.remove("hidden");
+        registerForm.classList.add("hidden");
+      } else {
+        tabRegisterBtn.className = "flex-1 py-2 rounded-xl transition-all duration-200 text-center bg-white text-indigo-900 shadow-sm";
+        tabLoginBtn.className = "flex-1 py-2 rounded-xl transition-all duration-200 text-center text-slate-500 hover:text-slate-900";
+        registerForm.classList.remove("hidden");
+        loginForm.classList.add("hidden");
+      }
+    }
+
+    tabLoginBtn.addEventListener("click", () => switchTab("login"));
+    tabRegisterBtn.addEventListener("click", () => switchTab("register"));
+
+    // Quick-fill buttons
+    document.querySelectorAll(".demo-fill-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const u = btn.dataset.user;
+        document.getElementById("login-username").value = u;
+        document.getElementById("login-password").value = "password123";
+        showAlert(`Quick-filled demo credentials for ${u}! Click 'Sign In' below.`);
+      });
+    });
+
+    // Handle Login submission
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById("login-submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span>Signing in...</span>`;
+
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: document.getElementById("login-username").value,
+            password: document.getElementById("login-password").value
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showAlert(data.message || data.error || "Login failed", true);
+        } else {
+          showAlert(data.message || "Login successful! Redirecting...", false);
+          setTimeout(() => {
+            window.location.href = data.redirect || "/welcome";
+          }, 600);
+        }
+      } catch (err) {
+        showAlert("Network error. Please try again.", true);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>Sign In to Dashboard</span> <span>→</span>`;
+      }
+    });
+
+    // Handle Register submission
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById("reg-submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span>Creating account...</span>`;
+
+      try {
+        const res = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: document.getElementById("reg-name").value,
+            username: document.getElementById("reg-username").value,
+            email: document.getElementById("reg-email").value,
+            password: document.getElementById("reg-password").value,
+            role: document.getElementById("reg-role").value,
+            grade_or_cohort: document.getElementById("reg-cohort").value,
+            language_preference: document.getElementById("reg-lang").value
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showAlert(data.message || data.error || "Registration failed", true);
+        } else {
+          showAlert(data.message || "Account registered successfully! Redirecting to welcome...", false);
+          setTimeout(() => {
+            window.location.href = data.redirect || "/welcome";
+          }, 800);
+        }
+      } catch (err) {
+        showAlert("Network error. Please try again.", true);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>Create Account & Continue</span> <span>→</span>`;
+      }
+    });
+  </script>
+</body>
+</html>

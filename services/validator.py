@@ -153,3 +153,64 @@ def validate_session_status_update_payload(data):
         "status": status,
         "notes": notes
     }
+
+def validate_registration_payload(data):
+    """Validate user registration payload."""
+    if not isinstance(data, dict):
+        raise ValidationError("Request body must be a JSON object")
+
+    name = sanitize_string(data.get("name", ""), max_length=100)
+    if len(name) < 2:
+        raise ValidationError("Full Name must be at least 2 characters", "name")
+
+    username = str(data.get("username", "")).strip().lower()
+    if not re.match(r"^[a-zA-Z0-9_]{3,30}$", username):
+        raise ValidationError("Username must be between 3 and 30 characters (letters, numbers, underscore)", "username")
+
+    email = str(data.get("email", "")).strip().lower()
+    if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
+        raise ValidationError("Please provide a valid email address", "email")
+
+    password = str(data.get("password", ""))
+    if len(password) < 6:
+        raise ValidationError("Password must be at least 6 characters", "password")
+
+    role = str(data.get("role", "student")).strip().lower()
+    if role not in {"student", "teacher", "parent", "admin"}:
+        role = "student"
+
+    grade_or_cohort = sanitize_string(data.get("grade_or_cohort", ""), max_length=100)
+    if not grade_or_cohort:
+        grade_or_cohort = "Grade 10-A" if role == "student" else ("Faculty Member" if role == "teacher" else "Guardian")
+
+    language_preference = str(data.get("language_preference", "en")).strip().lower()
+    if language_preference not in {"en", "hi", "kn", "ta", "te"}:
+        language_preference = "en"
+
+    return {
+        "name": name,
+        "username": username,
+        "email": email,
+        "password": password,
+        "role": role,
+        "grade_or_cohort": grade_or_cohort,
+        "language_preference": language_preference
+    }
+
+def validate_login_payload(data):
+    """Validate user login payload."""
+    if not isinstance(data, dict):
+        raise ValidationError("Request body must be a JSON object")
+
+    username = str(data.get("username", "")).strip()
+    if not username:
+        raise ValidationError("Please enter your username or email", "username")
+
+    password = str(data.get("password", ""))
+    if not password:
+        raise ValidationError("Please enter your password", "password")
+
+    return {
+        "username": username,
+        "password": password
+    }

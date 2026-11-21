@@ -353,5 +353,69 @@ class RootsAndRhythmTestCase(unittest.TestCase):
         data = json.loads(res.data)
         self.assertIn("Access Denied", data.get("error", ""))
 
+    def test_16_login_and_welcome_pages_served(self):
+        """Verify login/register and welcome pages render correctly."""
+        res_login = self.client.get("/login")
+        self.assertEqual(res_login.status_code, 200)
+        self.assertIn(b"Sign In", res_login.data)
+        self.assertIn(b"Create Account", res_login.data)
+
+        res_welcome = self.client.get("/welcome")
+        self.assertEqual(res_welcome.status_code, 200)
+        self.assertIn(b"Welcome to Roots & Rhythm", res_welcome.data)
+
+    def test_17_user_registration(self):
+        """Verify new user registration with password hashing and database persistence."""
+        payload = {
+            "name": "Priya Nair",
+            "username": "priya_nair",
+            "email": "priya@rootsrhythm.edu",
+            "password": "securepassword123",
+            "role": "student",
+            "grade_or_cohort": "Grade 10-A",
+            "language_preference": "kn"
+        }
+        res = self.client.post("/api/auth/register", json=payload)
+        self.assertEqual(res.status_code, 201)
+        data = json.loads(res.data)
+        self.assertEqual(data["status"], "success")
+        self.assertEqual(data["user"]["username"], "priya_nair")
+        self.assertEqual(data["user"]["role"], "student")
+
+        # Duplicate username attempt should fail
+        dup_res = self.client.post("/api/auth/register", json=payload)
+        self.assertEqual(dup_res.status_code, 400)
+        dup_data = json.loads(dup_res.data)
+        self.assertIn("already taken", dup_data.get("message", ""))
+
+    def test_18_user_login_valid_and_invalid(self):
+        """Verify login authentication with username and password."""
+        # 1. Invalid login attempt
+        bad_res = self.client.post("/api/auth/login", json={
+            "username": "aarav",
+            "password": "wrongpassword"
+        })
+        self.assertEqual(bad_res.status_code, 401)
+
+        # 2. Valid login attempt
+        good_res = self.client.post("/api/auth/login", json={
+            "username": "aarav",
+            "password": "password123"
+        })
+        self.assertEqual(good_res.status_code, 200)
+        data = json.loads(good_res.data)
+        self.assertEqual(data["status"], "success")
+        self.assertEqual(data["redirect"], "/welcome")
+        self.assertEqual(data["user"]["name"], "Aarav Sharma")
+
+    def test_19_logout_clears_session(self):
+        """Verify logout endpoint clears user session and redirects to /login."""
+        with self.client.session_transaction() as sess:
+            sess["user_id"] = 1
+
+        res = self.client.get("/logout")
+        self.assertEqual(res.status_code, 302)
+        self.assertIn("/login", res.headers.get("Location", ""))
+
 if __name__ == "__main__":
     unittest.main()

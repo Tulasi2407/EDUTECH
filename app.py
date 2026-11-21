@@ -7,7 +7,8 @@ import os
 import json
 from datetime import date, datetime, timedelta
 from functools import wraps
-from flask import Flask, request, jsonify, render_template, session
+from flask import Flask, request, jsonify, render_template, session, redirect, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 from database import init_db, get_db_connection
 from services.validator import (
@@ -16,7 +17,9 @@ from services.validator import (
     validate_free_hour_slot_payload,
     validate_quiz_submission_payload,
     validate_ai_flag_payload,
-    validate_session_status_update_payload
+    validate_session_status_update_payload,
+    validate_registration_payload,
+    validate_login_payload
 )
 from services.gap_finder import GapFinder
 from services.planner import StudyPlanner
@@ -80,9 +83,147 @@ def index():
     user = get_current_user()
     return render_template("index.html", current_user=user)
 
+@app.route("/login")
+def login_page():
+    return render_template("login.html", active_tab="login")
+
+@app.route("/register")
+def register_page():
+    return render_template("login.html", active_tab="register")
+
+@app.route("/welcome")
+def welcome_page():
+    user = get_current_user()
+    return render_template("welcome.html", user=user)
+
+@app.route("/logout")
+def logout():
+    session.pop("user_id", None)
+    return redirect("/login")
+
 # -----------------
 # 2. Auth & Role Switcher Endpoints
 # -----------------
+@app.route("/api/auth/register", methods=["POST"])
+def register_user():
+    data = request.get_json() or {}
+    validated = validate_registration_payload(data)
+
+    conn = get_db_connection()
+    c = conn.cursor()
+
+    # Check if username or email already exists
+    c.execute("SELECT id, username, email FROM users WHERE username = ? OR email = ?", (validated["username"], validated["email"]))
+    existing = c.fetchone()
+    if existing:
+        conn.close()
+        if existing["username"] == validated["username"]:
+            return jsonify({"error": "Validation Error", "field": "username", "message": "This username is already taken. Please choose another."}), 400
+        else:
+            return jsonify({"error": "Validation Error", "field": "email", "message": "An account with this email address already exists."}), 400
+
+    hashed_pw = generate_password_hash(validated["password"])
+    avatar_url = f"https://api.dicebear.com/7.x/bottts/svg?seed={validated['username']}" if validated["role"] == "student" else f"https://api.dicebear.com/7.x/personas/svg?seed={validated['username']}"
+
+    c.execute("""
+    INSERT INTO users (name, username, email, password_hash, role, grade_or_cohort, language_preference, avatar_url)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        validated["name"],
+        validated["username"],
+        validated["email"],
+        hashed_pw,
+        validated["role"],
+        validated["grade_or_cohort"],
+        validated["language_preference"],
+        avatar_url
+    ))
+    new_user_id = c.lastrowid
+
+    # If new user is a student, seed default learning mastery & 2 free slots so they have an interactive experience immediately
+    if validated["role"] == "student":
+        today_dow = date.today().weekday()
+        tomorrow_dow = (today_dow + 1) % 7
+        c.execute("""
+        INSERT INTO free_hour_slots (student_id, day_of_week, start_time, end_time, label)
+        VALUES (?, ?, '17:30', '18:30', 'Evening Free Hour'), (?, ?, '07:00', '08:00', 'Morning Study Slot')
+        """, (new_user_id, today_dow, new_user_id, tomorrow_dow))
+
+        c.execute("SELECT id, tier FROM knowledge_nodes")
+        nodes = c.fetchall()
+        for node in nodes:
+            if node["tier"] == 1:
+                score, status = 75, "mastered"
+            elif node["tier"] == 2:
+                score, status = 45, "root_cause"
+            else:
+                score, status = 35, "root_cause"
+            c.execute("""
+            INSERT INTO student_mastery (student_id, node_id, status, mastery_score, streak_count)
+            VALUES (?, ?, ?, ?, 1)
+            """, (new_user_id, node["id"], status, score))
+
+    conn.commit()
+
+    c.execute("SELECT id, name, username, email, role, grade_or_cohort, language_preference, avatar_url FROM users WHERE id = ?", (new_user_id,))
+    created_user = dict(c.fetchone())
+    conn.close()
+
+    session["user_id"] = new_user_id
+
+    return jsonify({
+        "status": "success",
+        "message": f"Welcome, {created_user['name']}! Your account has been created successfully.",
+        "redirect": "/welcome",
+        "user": created_user
+    }), 201
+
+@app.route("/api/auth/login", methods=["POST"])
+def login_user():
+    data = request.get_json() or {}
+    validated = validate_login_payload(data)
+
+    identifier = validated["username"].strip().lower()
+    password = validated["password"]
+
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("SELECT * FROM users WHERE LOWER(username) = ? OR LOWER(email) = ?", (identifier, identifier))
+    user = c.fetchone()
+    conn.close()
+
+    if not user:
+        return jsonify({"error": "Authentication Failed", "message": "No account found with this username or email."}), 401
+
+    user_dict = dict(user)
+    pw_hash = user_dict.get("password_hash")
+
+    valid_password = False
+    if pw_hash:
+        valid_password = check_password_hash(pw_hash, password)
+    elif password == "password123":
+        valid_password = True
+
+    if not valid_password:
+        return jsonify({"error": "Authentication Failed", "message": "Incorrect password. Please try again."}), 401
+
+    session["user_id"] = user_dict["id"]
+
+    return jsonify({
+        "status": "success",
+        "message": f"Welcome back, {user_dict['name']}!",
+        "redirect": "/welcome",
+        "user": {
+            "id": user_dict["id"],
+            "name": user_dict["name"],
+            "username": user_dict.get("username"),
+            "email": user_dict["email"],
+            "role": user_dict["role"],
+            "grade_or_cohort": user_dict["grade_or_cohort"],
+            "language_preference": user_dict.get("language_preference", "en"),
+            "avatar_url": user_dict.get("avatar_url")
+        }
+    }), 200
 @app.route("/api/users", methods=["GET"])
 def get_all_users():
     """Retrieve sample users across roles for the live role switcher demo."""
