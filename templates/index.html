@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Roots & Rhythm - Smart, Inclusive & Personalized Education</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- ===============================
+       TOP NAVIGATION BAR
+  ================================ -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      
+      <!-- Brand & Tagline -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-800 flex items-center justify-center text-white shadow-md shadow-indigo-200">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-indigo-900 via-indigo-700 to-indigo-950 bg-clip-text text-transparent" data-i18n="brand_name">
+              Roots & Rhythm
+            </h1>
+            <p class="text-[11px] text-slate-500 font-medium hidden sm:block" data-i18n="brand_tagline">
+              Smart, Inclusive & Personalized Education
+            </p>
+          </div>
+        </div>
+
+        <!-- Mobile Language Selector Trigger -->
+        <div class="flex sm:hidden items-center gap-1">
+          <select id="mobile-lang-select" class="text-xs bg-slate-100 border border-slate-200 rounded-lg px-2 py-1" onchange="window.I18N.setLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="kn">ಕನ್ನಡ</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Controls: 5-Language Switcher, Role Switcher Demo, User Badge -->
+      <div class="flex items-center flex-wrap gap-2.5">
+        
+        <!-- 5-Language Switcher (Desktop / Tablet) -->
+        <div class="hidden sm:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80 text-xs font-semibold">
+          <button class="lang-btn px-2 py-1 rounded-lg bg-indigo-600 text-white font-bold" data-lang="en">English</button>
+          <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="hi">हिंदी</button>
+          <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="kn">ಕನ್ನಡ</button>
+          <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="ta">தமிழ்</button>
+          <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="te">తెలుగు</button>
+        </div>
+
+        <!-- Role Switcher Dropdown (Live Multi-Role Demo) -->
+        <div class="flex items-center bg-white border border-slate-200 rounded-xl px-2.5 py-1 text-xs shadow-sm">
+          <span class="text-slate-400 font-semibold mr-1.5 text-[10px] uppercase tracking-wider">Demo Role:</span>
+          <select id="role-switcher-select" class="bg-transparent font-bold text-slate-800 outline-none cursor-pointer">
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+
+        <!-- Current User Avatar & Badge -->
+        <div id="current-user-badge" class="flex items-center gap-2 bg-slate-50 border border-slate-200/90 pl-1.5 pr-2.5 py-1 rounded-full">
+          <img id="current-user-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=Aarav" alt="Avatar" class="w-6 h-6 rounded-full bg-slate-200 object-cover">
+          <span id="current-user-name" class="text-xs font-bold text-slate-800">Aarav Sharma</span>
+          <span id="current-user-role" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-200">STUDENT</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ===============================
+       ROLE-AWARE NAVIGATION BAR
+  ================================ -->
+  <nav class="bg-white border-b border-slate-200/80 px-4 py-2 sticky top-[65px] z-30">
+    <div class="max-w-7xl mx-auto flex items-center space-x-1 overflow-x-auto no-scrollbar">
+      
+      <!-- Student & Admin Tabs -->
+      <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm shrink-0 flex items-center gap-1.5" data-tab="gap-finder">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        <span data-i18n="nav_gap_finder">Root-Cause X-Ray</span>
+      </button>
+
+      <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5" data-tab="study-planner">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span data-i18n="nav_study_planner">Free-Hour Planner</span>
+      </button>
+
+      <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5" data-tab="analytics">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        <span data-i18n="nav_analytics">My Progress</span>
+      </button>
+
+      <!-- Teacher Tabs -->
+      <button class="nav-tab-btn role-teacher-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5 hidden" data-tab="teacher-dashboard">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        <span data-i18n="nav_teacher_dashboard">Class Heatmap & Alerts</span>
+      </button>
+
+      <!-- Parent Tabs -->
+      <button class="nav-tab-btn role-parent-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5 hidden" data-tab="parent-view">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span data-i18n="nav_parent_view">Parent Overview</span>
+      </button>
+
+      <!-- Admin Tab -->
+      <button class="nav-tab-btn role-admin-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5 hidden" data-tab="admin-panel">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+        <span data-i18n="nav_admin_panel">Institution Health</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===============================
+       MAIN CONTENT CONTAINER
+  ================================ -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+    <!-- ==============================================
+         TAB 1: PREREQUISITE GAP FINDER (ROOT-CAUSE TRACER)
+    =============================================== -->
+    <div id="tab-gap-finder" class="tab-content-panel space-y-6">
+      
+      <!-- Control Bar: Subject Selector & Stumbled Topic Selector -->
+      <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+            <span data-i18n="gap_finder_title">Prerequisite Gap Finder (Root-Cause Tracer)</span>
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5" data-i18n="gap_finder_subtitle">
+            Trace where you get stuck backward to foundational concepts before moving forward.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Subject Dropdown -->
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1" data-i18n="select_subject">Select Subject</label>
+            <select id="subject-select" class="bg-slate-50 border border-slate-200 text-xs font-semibold rounded-xl px-3 py-2 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+              <!-- Populated via JS -->
+            </select>
+          </div>
+
+          <!-- Topic Dropdown -->
+          <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1" data-i18n="select_struggling_topic">Struggling Topic</label>
+            <select id="topic-select" class="bg-slate-50 border border-slate-200 text-xs font-semibold rounded-xl px-3 py-2 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+              <!-- Populated via JS -->
+            </select>
+          </div>
+
+          <!-- Trace Button -->
+          <div class="self-end">
+            <button id="trace-gaps-btn" class="tactile-btn px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold text-xs rounded-xl shadow-sm flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              <span data-i18n="btn_trace_gaps">X-Ray Root Causes</span>
+            </button>
+          </div>
+
+          <!-- Quick Diagnostic Button -->
+          <div class="self-end">
+            <button id="quick-diagnostic-btn" class="tactile-btn px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1.5" title="Take a 3-minute quiz to auto-diagnose weak links">
+              <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+              <span data-i18n="btn_quick_diagnostic">Quick 3-Min Diagnostic</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Visual Section: SVG Node Map & Prescribed Remediation Pathway -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Interactive Root-Cause SVG Dependency Map (2 Columns) -->
+        <div class="lg:col-span-2 space-y-2">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-700 px-1">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+              Interactive Dependency Graph & Root-Cause X-Ray
+            </span>
+            <span class="text-slate-400 font-normal text-[11px]" data-i18n="click_node_hint">Click any circle node below to inspect bite-sized guides</span>
+          </div>
+
+          <!-- Node Map Container -->
+          <div id="node-map-root"></div>
+        </div>
+
+        <!-- Prescribed Ordered Remediation Pathway (1 Column) -->
+        <div class="space-y-3">
+          <div class="tactile-card p-5 bg-white space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900" data-i18n="remediation_path_title">Recommended Remediation Pathway</h3>
+                <span id="remediation-count-badge" class="text-[11px] text-rose-600 font-semibold">2 gaps diagnosed</span>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] text-slate-400 block uppercase" data-i18n="recovery_time_label">Est. Total Recovery</span>
+                <span id="recovery-time-badge" class="text-xs font-extrabold text-indigo-600">45 mins</span>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-500 leading-relaxed">
+              To conquer your target topic effortlessly, fix these prerequisite root causes in the topological order below:
+            </p>
+
+            <!-- Ordered Pathway Cards -->
+            <div id="remediation-path-container" class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==============================================
+         TAB 2: FREE-HOUR STUDY PLANNER & REBALANCER
+    =============================================== -->
+    <div id="tab-study-planner" class="tab-content-panel space-y-6 hidden">
+      <div id="timeline-container">
+        <!-- Dynamically rendered by timeline.js -->
+      </div>
+    </div>
+
+    <!-- ==============================================
+         TAB 3: STUDENT PROGRESS & ANALYTICS
+    =============================================== -->
+    <div id="tab-analytics" class="tab-content-panel space-y-6 hidden">
+      <div id="student-analytics-container">
+        <!-- Dynamically rendered by analytics.js -->
+      </div>
+    </div>
+
+    <!-- ==============================================
+         TAB 4: TEACHER CLASS DASHBOARD
+    =============================================== -->
+    <div id="tab-teacher-dashboard" class="tab-content-panel space-y-6 hidden">
+      <div id="teacher-dashboard-container">
+        <!-- Dynamically rendered by analytics.js -->
+      </div>
+    </div>
+
+    <!-- ==============================================
+         TAB 5: PARENT OVERVIEW
+    =============================================== -->
+    <div id="tab-parent-view" class="tab-content-panel space-y-6 hidden">
+      <div id="parent-view-container">
+        <!-- Dynamically rendered by analytics.js -->
+      </div>
+    </div>
+
+    <!-- ==============================================
+         TAB 6: ADMIN INSTITUTION HEALTH
+    =============================================== -->
+    <div id="tab-admin-panel" class="tab-content-panel space-y-6 hidden">
+      <div id="admin-panel-container">
+        <!-- Dynamically rendered by analytics.js -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ===============================
+       FOOTER
+  ================================ -->
+  <footer class="mt-auto border-t border-slate-200 bg-white py-4 px-4 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>Roots & Rhythm • Domain 2: Smart, Inclusive & Personalized Education • Production Ready</p>
+      <div class="flex items-center gap-3 text-slate-400">
+        <span>Strict RBAC</span>
+        <span>•</span>
+        <span>Safe AI Guardrails</span>
+        <span>•</span>
+        <span>Multilingual (5 Languages)</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===============================
+       SLIDE-OVER DRILL-DOWN DRAWER
+  ================================ -->
+  <div id="node-drawer-backdrop" class="fixed inset-0 drawer-backdrop z-50 hidden"></div>
+  <aside id="node-drawer" class="fixed top-0 right-0 bottom-0 w-full sm:w-[460px] bg-white shadow-2xl z-50 transform translate-x-full drawer-panel overflow-y-auto p-6 flex flex-col justify-between">
+    <div id="node-drawer-content">
+      <!-- Injected by node_map.js -->
+    </div>
+  </aside>
+
+  <!-- ===============================
+       MODAL: PRACTICE QUIZ RUNNER
+  ================================ -->
+  <div id="practice-modal" class="modal-container fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto relative animate-in fade-in zoom-in-95 duration-200">
+      <button class="close-modal-btn absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+      <div id="practice-modal-content">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===============================
+       MODAL: DECLARE FREE HOUR SLOT
+  ================================ -->
+  <div id="add-slot-modal" class="modal-container fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative">
+      <button class="close-modal-btn absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <h3 class="text-base font-bold text-slate-900 mb-1 flex items-center gap-2">
+        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+        Declare Your Real Free Time Window
+      </h3>
+      <p class="text-xs text-slate-500 mb-4">Study blocks will only be scheduled inside these declared hours.</p>
+
+      <form id="add-slot-form" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Day of Week</label>
+          <select id="slot-day" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="0">Monday</option>
+            <option value="1">Tuesday</option>
+            <option value="2">Wednesday</option>
+            <option value="3">Thursday</option>
+            <option value="4">Friday</option>
+            <option value="5">Saturday</option>
+            <option value="6">Sunday</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Start Time (24h)</label>
+            <input type="text" id="slot-start" placeholder="18:00" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500 font-mono">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">End Time (24h)</label>
+            <input type="text" id="slot-end" placeholder="19:00" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500 font-mono">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Label / Context</label>
+          <input type="text" id="slot-label" placeholder="e.g. Evening Study Hour, Commute Slot" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <div class="pt-3">
+          <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl font-bold text-xs shadow-sm transition">
+            Save Free-Hour Slot
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===============================
+       MODAL: REVIEW / FLAG AI ANSWER
+  ================================ -->
+  <div id="flag-modal" class="modal-container fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative">
+      <button class="close-modal-btn absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <h3 class="text-base font-bold text-slate-900 mb-1 flex items-center gap-2">
+        <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+        <span data-i18n="flag_modal_title">Review & Flag AI Answer</span>
+      </h3>
+      <p class="text-xs text-slate-500 mb-4" data-i18n="flag_modal_desc">
+        Help faculty maintain educational safety and curriculum precision.
+      </p>
+
+      <form id="flag-form" class="space-y-3.5">
+        <input type="hidden" id="flag-question-id">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="flag_reason_label">Reason for flag / suggestion:</label>
+          <textarea id="flag-reason" rows="3" required placeholder="e.g. Step 2 explanation missed stating the negative multiplication rule clearly" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="flag_edit_label">Suggested correction (optional):</label>
+          <textarea id="flag-edit" rows="2" placeholder="e.g. Update step 2 to: (-7) * (-8) = +56" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+        </div>
+        <div class="pt-2">
+          <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold text-xs shadow-sm transition" data-i18n="btn_send_flag">
+            Submit to Faculty Review
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===============================
+       TOAST NOTIFICATION
+  ================================ -->
+  <div id="app-toast" class="fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-2xl shadow-lg text-xs font-semibold flex items-center gap-2 transition-all duration-300 transform translate-y-20 opacity-0 bg-slate-900 text-white">
+    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    <span id="toast-message">Notification</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/js/i18n.js"></script>
+  <script src="/static/js/node_map.js"></script>
+  <script src="/static/js/timeline.js"></script>
+  <script src="/static/js/analytics.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

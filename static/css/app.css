@@ -1,0 +1,154 @@
+/* Roots & Rhythm - Calm, Tactile, Mobile-First Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+  --primary: #4f46e5;
+  --primary-light: #eef2ff;
+  --primary-dark: #3730a3;
+  --accent: #0ea5e9;
+  --mastered: #10b981;
+  --mastered-bg: #ecfdf5;
+  --shaky: #f59e0b;
+  --shaky-bg: #fffbeb;
+  --root-cause: #ef4444;
+  --root-cause-bg: #fef2f2;
+  --slate-surface: #f8fafc;
+  --slate-border: #e2e8f0;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', 'Noto Sans Kannada', 'Noto Sans Tamil', 'Noto Sans Telugu', system-ui, -apple-system, sans-serif;
+  background-color: #f8fafc;
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tactile Soft Shadow and Card Elevations */
+.tactile-card {
+  background: #ffffff;
+  border: 1px solid var(--slate-border);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  border-radius: 1rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tactile-card:hover {
+  box-shadow: 0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+}
+
+.tactile-btn {
+  transition: all 0.15s ease-in-out;
+  active: scale(0.98);
+}
+.tactile-btn:active {
+  transform: scale(0.97);
+}
+
+/* Root-Cause Visual Node Map Styling */
+.node-map-container {
+  position: relative;
+  background: radial-gradient(#e2e8f0 1.2px, transparent 1.2px), #f8fafc;
+  background-size: 24px 24px;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid var(--slate-border);
+}
+
+.node-circle {
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.08));
+}
+
+.node-circle:hover {
+  transform: scale(1.12);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+}
+
+/* Pulse animation for active Root Cause Nodes */
+@keyframes rootCausePulse {
+  0% {
+    r: 34;
+    stroke-opacity: 0.9;
+    stroke-width: 4;
+  }
+  50% {
+    r: 44;
+    stroke-opacity: 0.1;
+    stroke-width: 8;
+  }
+  100% {
+    r: 34;
+    stroke-opacity: 0.9;
+    stroke-width: 4;
+  }
+}
+
+.root-cause-pulse {
+  animation: rootCausePulse 2.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* Animated flow lines for dependency connections */
+@keyframes flowDash {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+.dependency-edge {
+  stroke-dasharray: 6, 6;
+  animation: flowDash 3s linear infinite;
+}
+
+/* Slide Drawer for Mobile & Desktop */
+.drawer-backdrop {
+  background-color: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.3s ease;
+}
+
+.drawer-panel {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Timeline Rhythm Slot Pill */
+.time-slot-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Code & LaTeX presentation */
+code, pre {
+  font-family: 'Fira Code', monospace;
+}
+
+/* Mobile-first bottom navigation styling */
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
