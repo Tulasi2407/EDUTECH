@@ -53,6 +53,13 @@ Students don't fail because they are not capable; they struggle because unseen p
 - **School/College Admin:** Institutional curriculum health, cohort demographics, teacher activity, and audit logs.
 - **Strict Server-Side Enforcement:** RBAC decorator validates role permissions; students cannot inspect peer data.
 
+### 6. Innovative Tactile UI/UX Craft
+- **🧘 Zen Rhythm Study Chamber:** Immersive focus chamber featuring a Pomodoro countdown timer dynamically adapted to learning speed (15m, 25m, 45m), a 4-7-8 breathing pacer for cognitive anxiety relief, 3D concept flashcards, and native browser Speech Synthesis (TTS).
+- **⚡ Spotlight Command Palette (`Ctrl+K` / `⌘K`):** Keyboard-first instant navigator to jump between features, diagnostic topics, learning pace modes, and 5 languages with arrow-key navigation.
+- **🌧️ Native Web Audio Soundscape Synthesizer:** Real-time synthesis of pink/brown rain audio, 10Hz alpha binaural beats, and uplifting major-triad chord chimes (zero external audio files or downloads).
+- **🎉 Physics Confetti Engine:** Native 60fps HTML5 canvas celebration engine triggering particle bursts upon quiz success and session completion.
+- **🌙 Midnight Study Theme (Dark Mode):** One-click toggle between crisp daytime and deep slate dark mode with radial glowing nodes and persistent localStorage settings.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture
