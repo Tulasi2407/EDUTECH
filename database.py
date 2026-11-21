@@ -218,6 +218,19 @@ def init_db(force_reseed=False):
     )
     """)
 
+    # 12. Parent Encouragement Notes
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS parent_notes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        parent_id INTEGER NOT NULL,
+        student_id INTEGER NOT NULL,
+        message TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (parent_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+    """)
+
     # Commit tables
     conn.commit()
 
@@ -556,6 +569,12 @@ def seed_database(conn):
     cursor.execute("""
     INSERT INTO ai_flag_reviews (question_id, reported_by_id, reported_by_role, reason, suggested_edit, resolution_status, reviewer_notes)
     VALUES (4, 1, 'student', 'The wording in Step 2 could be simpler for middle-schoolers.', 'Add note reminding that (-2) * (-3) = +6', 'open', NULL)
+    """)
+
+    # 12. Seed a sample Parent Note
+    cursor.execute("""
+    INSERT INTO parent_notes (parent_id, student_id, message)
+    VALUES (5, 1, 'Proud of your 5-day study streak, Aarav! Keep up the great work in Science and Math.')
     """)
 
     conn.commit()

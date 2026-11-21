@@ -417,5 +417,59 @@ class RootsAndRhythmTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 302)
         self.assertIn("/login", res.headers.get("Location", ""))
 
+    def test_20_parent_dashboard_page_and_overview_api(self):
+        """Verify dedicated parent dashboard and rich overview API."""
+        with self.client.session_transaction() as sess:
+            sess["user_id"] = 5 # Rajesh Sharma (Parent)
+
+        # 1. Page route serves correctly
+        res_page = self.client.get("/parent")
+        self.assertEqual(res_page.status_code, 200)
+        self.assertIn(b"Parent Portal", res_page.data)
+        self.assertIn(b"Child Progress", res_page.data)
+
+        # 2. Dedicated Parent API overview
+        res_api = self.client.get("/api/parent/overview")
+        self.assertEqual(res_api.status_code, 200)
+        data = json.loads(res_api.data)
+        self.assertEqual(data["active_student"]["name"], "Aarav Sharma")
+        self.assertIn("summary", data)
+        self.assertIn("subjects", data)
+        self.assertIn("root_cause_alerts", data)
+        self.assertIn("ai_parent_insights", data)
+        self.assertIn("parent_notes", data)
+
+    def test_21_parent_notes_and_link_student(self):
+        """Verify parent encouragement notes submission and linking another child."""
+        with self.client.session_transaction() as sess:
+            sess["user_id"] = 5 # Rajesh Sharma
+
+        # 1. Send encouragement note
+        note_res = self.client.post("/api/parent/notes", json={
+            "student_id": 1,
+            "message": "Keep up the fantastic momentum in Science!"
+        })
+        self.assertEqual(note_res.status_code, 201)
+        note_data = json.loads(note_res.data)
+        self.assertEqual(note_data["status"], "success")
+
+        # 2. Link another child (Diya)
+        link_res = self.client.post("/api/parent/link-student", json={
+            "identifier": "diya"
+        })
+        self.assertEqual(link_res.status_code, 200)
+        link_data = json.loads(link_res.data)
+        self.assertEqual(link_data["status"], "success")
+        self.assertEqual(link_data["student"]["name"], "Diya Rao")
+
+    def test_22_parent_root_redirect(self):
+        """Verify logged-in parent visiting / redirects to dedicated /parent portal."""
+        with self.client.session_transaction() as sess:
+            sess["user_id"] = 5 # Rajesh Sharma
+
+        res = self.client.get("/")
+        self.assertEqual(res.status_code, 302)
+        self.assertIn("/parent", res.headers.get("Location", ""))
+
 if __name__ == "__main__":
     unittest.main()

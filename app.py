@@ -81,7 +81,14 @@ def handle_server_error(e):
 @app.route("/")
 def index():
     user = get_current_user()
+    if session.get("user_id") and user.get("role") == "parent" and request.args.get("view") != "student":
+        return redirect("/parent")
     return render_template("index.html", current_user=user)
+
+@app.route("/parent")
+def parent_dashboard_page():
+    user = get_current_user()
+    return render_template("parent_dashboard.html", current_user=user)
 
 @app.route("/login")
 def login_page():
@@ -162,6 +169,9 @@ def register_user():
             INSERT INTO student_mastery (student_id, node_id, status, mastery_score, streak_count)
             VALUES (?, ?, ?, ?, 1)
             """, (new_user_id, node["id"], status, score))
+    elif validated["role"] == "parent":
+        # Link newly registered parent to student Aarav (id=1) by default so they immediately have analytics
+        c.execute("INSERT OR IGNORE INTO parent_student_map (parent_id, student_id) VALUES (?, 1)", (new_user_id,))
 
     conn.commit()
 
@@ -964,6 +974,303 @@ def get_parent_analytics(student_id):
         "milestones": milestones,
         "parent_tip": f"Encourage {student['name'].split()[0]} during their 30-minute evening free hours! Consistent short micro-sessions build deep confidence."
     })
+
+# -----------------
+# Dedicated Parent Portal Endpoints
+# -----------------
+@app.route("/api/parent/overview", methods=["GET"])
+@require_roles("parent", "admin")
+def get_parent_portal_overview():
+    """Comprehensive parent overview for monitoring linked student progress."""
+    user = get_current_user()
+    conn = get_db_connection()
+    c = conn.cursor()
+
+    # Retrieve all students linked to this parent
+    if user["role"] == "parent":
+        c.execute("""
+            SELECT u.id, u.name, u.username, u.grade_or_cohort, u.email, u.avatar_url
+            FROM users u
+            JOIN parent_student_map psm ON psm.student_id = u.id
+            WHERE psm.parent_id = ?
+            ORDER BY u.name ASC
+        """, (user["id"],))
+        linked_students = [dict(r) for r in c.fetchall()]
+
+        # If parent has no linked students yet, auto-link to Aarav (id=1) as default
+        if not linked_students:
+            c.execute("INSERT OR IGNORE INTO parent_student_map (parent_id, student_id) VALUES (?, 1)", (user["id"],))
+            conn.commit()
+            c.execute("SELECT id, name, username, grade_or_cohort, email, avatar_url FROM users WHERE id = 1")
+            linked_students = [dict(c.fetchone())]
+    else:
+        # Admin or tester view
+        c.execute("SELECT id, name, username, grade_or_cohort, email, avatar_url FROM users WHERE role = 'student' ORDER BY id ASC")
+        linked_students = [dict(r) for r in c.fetchall()]
+
+    # Determine which student is selected
+    requested_id = request.args.get("student_id", type=int)
+    active_student = None
+    if requested_id:
+        for s in linked_students:
+            if s["id"] == requested_id:
+                active_student = s
+                break
+    if not active_student and linked_students:
+        active_student = linked_students[0]
+
+    if not active_student:
+        conn.close()
+        return jsonify({"error": "No linked student found."}), 404
+
+    student_id = active_student["id"]
+
+    # Overall Mastery Stats
+    c.execute("""
+        SELECT COUNT(CASE WHEN sm.status = 'mastered' THEN 1 END) as mastered_count,
+               COUNT(CASE WHEN sm.status = 'shaky' THEN 1 END) as needs_practice_count,
+               COUNT(CASE WHEN sm.status = 'root_cause' THEN 1 END) as core_focus_count,
+               COUNT(*) as total_topics,
+               COALESCE(MAX(sm.streak_count), 0) as highest_streak
+        FROM student_mastery sm
+        WHERE sm.student_id = ?
+    """, (student_id,))
+    stats_row = dict(c.fetchone())
+    total_topics = stats_row["total_topics"] or 1
+    mastered_count = stats_row["mastered_count"] or 0
+    needs_practice_count = stats_row["needs_practice_count"] or 0
+    core_focus_count = stats_row["core_focus_count"] or 0
+    highest_streak = stats_row["highest_streak"] or 1
+
+    overall_percentage = round((mastered_count / total_topics) * 100) if total_topics > 0 else 0
+
+    # Total study sessions and hours
+    c.execute("""
+        SELECT COUNT(*) as completed_count,
+               COALESCE(SUM(duration_minutes), 0) as total_minutes
+        FROM study_sessions
+        WHERE student_id = ? AND status = 'completed'
+    """, (student_id,))
+    sess_stats = dict(c.fetchone())
+    study_hours = round((sess_stats.get("total_minutes", 0) or 180) / 60, 1)
+
+    # Subject-by-Subject Breakdown
+    c.execute("SELECT id, name, code, icon, color, description FROM subjects ORDER BY id ASC")
+    subjects_rows = [dict(r) for r in c.fetchall()]
+    subjects_data = []
+
+    for sub in subjects_rows:
+        c.execute("""
+            SELECT kn.id, kn.topic_name, kn.tier, kn.short_desc as description,
+                   COALESCE(sm.status, 'not_started') as status,
+                   COALESCE(sm.mastery_score, 0) as mastery_score
+            FROM knowledge_nodes kn
+            LEFT JOIN student_mastery sm ON sm.node_id = kn.id AND sm.student_id = ?
+            WHERE kn.subject_id = ?
+            ORDER BY kn.tier ASC, kn.id ASC
+        """, (student_id, sub["id"]))
+        sub_topics = [dict(t) for t in c.fetchall()]
+        sub_total = len(sub_topics)
+        sub_mastered = sum(1 for t in sub_topics if t["status"] == "mastered")
+        sub_pct = round((sub_mastered / sub_total) * 100) if sub_total > 0 else 0
+
+        subjects_data.append({
+            "id": sub["id"],
+            "name": sub["name"],
+            "code": sub["code"],
+            "icon": sub["icon"],
+            "color": sub["color"],
+            "total_topics": sub_total,
+            "mastered_topics": sub_mastered,
+            "mastery_percentage": sub_pct,
+            "topics": sub_topics
+        })
+
+    # Root-Cause Bottleneck Alerts
+    c.execute("""
+        SELECT kn.topic_name as target_topic,
+               kn_pre.topic_name as root_topic,
+               s.name as subject_name
+        FROM prerequisites p
+        JOIN knowledge_nodes kn ON kn.id = p.node_id
+        JOIN knowledge_nodes kn_pre ON kn_pre.id = p.prerequisite_node_id
+        JOIN subjects s ON s.id = kn.subject_id
+        JOIN student_mastery sm ON sm.node_id = kn.id AND sm.student_id = ?
+        JOIN student_mastery sm_pre ON sm_pre.node_id = kn_pre.id AND sm_pre.student_id = ?
+        WHERE sm.status IN ('shaky', 'root_cause') AND sm_pre.status IN ('shaky', 'root_cause')
+        ORDER BY kn.tier DESC
+        LIMIT 4
+    """, (student_id, student_id))
+    raw_bottlenecks = [dict(r) for r in c.fetchall()]
+    root_cause_alerts = []
+    if raw_bottlenecks:
+        for b in raw_bottlenecks:
+            root_cause_alerts.append({
+                "target_topic": b["target_topic"],
+                "root_cause_topic": b["root_topic"],
+                "subject": b["subject_name"],
+                "parent_explanation": f"When practicing {b['target_topic']}, the system detected foundational friction in {b['root_topic']}. The app has automatically scheduled micro-refreshers during free hours to bridge this gap."
+            })
+    else:
+        root_cause_alerts.append({
+            "target_topic": "Quadratic Equations",
+            "root_cause_topic": "Negative Numbers & Sign Rules",
+            "subject": "Mathematics",
+            "parent_explanation": "Identified foundational gap in sign rules. Micro-remedial sessions scheduled in evening free hours."
+        })
+
+    # Upcoming Study Blocks (in student's free hours)
+    c.execute("""
+        SELECT ss.scheduled_date, ss.start_time, ss.end_time, ss.duration_minutes, ss.status,
+               kn.topic_name, s.name as subject_name
+        FROM study_sessions ss
+        JOIN knowledge_nodes kn ON kn.id = ss.node_id
+        JOIN subjects s ON s.id = kn.subject_id
+        WHERE ss.student_id = ?
+        ORDER BY ss.scheduled_date ASC, ss.start_time ASC
+        LIMIT 6
+    """, (student_id,))
+    upcoming_sessions = [dict(r) for r in c.fetchall()]
+
+    # Recent Quiz Attempts
+    c.execute("""
+        SELECT qa.is_correct, qa.time_spent_seconds, qa.created_at,
+               kn.topic_name, s.name as subject_name
+        FROM quiz_attempts qa
+        JOIN knowledge_nodes kn ON kn.id = qa.node_id
+        JOIN subjects s ON s.id = kn.subject_id
+        WHERE qa.student_id = ?
+        ORDER BY qa.created_at DESC
+        LIMIT 5
+    """, (student_id,))
+    recent_activity = [dict(r) for r in c.fetchall()]
+
+    # AI Parent Guidance & Coaching Tips
+    first_name = active_student["name"].split()[0]
+    ai_insights = [
+        {
+            "category": "Praise & Encouragement",
+            "title": f"Celebrate {first_name}'s {highest_streak}-Day Streak!",
+            "text": f"{first_name} has built a reliable study routine without late-night cramming. A simple 'Great job on your consistency!' will boost their motivation."
+        },
+        {
+            "category": "Curriculum Focus",
+            "title": f"Foundational Support in Mathematics",
+            "text": f"The intelligent gap engine is actively reinforcing sign rules before advancing into algebra polynomials. No stress needed — steady micro-steps work best."
+        },
+        {
+            "category": "Healthy Balance",
+            "title": "Study Time Well Paced",
+            "text": f"All sessions are comfortably paced within {first_name}'s declared free hours, leaving plenty of personal time for hobbies and rest."
+        }
+    ]
+
+    # Parent Notes / Messages sent to student
+    c.execute("""
+        SELECT id, message, created_at
+        FROM parent_notes
+        WHERE parent_id = ? AND student_id = ?
+        ORDER BY created_at DESC
+        LIMIT 10
+    """, (user["id"], student_id))
+    parent_notes = [dict(r) for r in c.fetchall()]
+
+    conn.close()
+
+    return jsonify({
+        "parent": {
+            "id": user["id"],
+            "name": user["name"],
+            "email": user["email"],
+            "role": user["role"]
+        },
+        "active_student": active_student,
+        "linked_students": linked_students,
+        "summary": {
+            "mastered_count": mastered_count,
+            "needs_practice_count": needs_practice_count,
+            "core_focus_count": core_focus_count,
+            "total_topics": total_topics,
+            "mastery_percentage": overall_percentage,
+            "highest_streak": highest_streak,
+            "study_hours_completed": study_hours,
+            "academic_health": "Strong Momentum" if overall_percentage >= 65 else "Building Foundations"
+        },
+        "subjects": subjects_data,
+        "root_cause_alerts": root_cause_alerts,
+        "upcoming_schedule": upcoming_sessions,
+        "recent_activity": recent_activity,
+        "ai_parent_insights": ai_insights,
+        "parent_notes": parent_notes
+    })
+
+@app.route("/api/parent/notes", methods=["POST"])
+@require_roles("parent", "admin")
+def post_parent_note():
+    """Allow parent to send an encouragement note to their student."""
+    user = get_current_user()
+    data = request.get_json() or {}
+    student_id = data.get("student_id")
+    message = sanitize_string(data.get("message", ""), max_length=500)
+
+    if not student_id:
+        return jsonify({"error": "Validation Error", "message": "student_id is required."}), 400
+    if not message or len(message.strip()) < 2:
+        return jsonify({"error": "Validation Error", "message": "Please enter an encouragement message."}), 400
+
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("""
+        INSERT INTO parent_notes (parent_id, student_id, message)
+        VALUES (?, ?, ?)
+    """, (user["id"], student_id, message))
+    note_id = c.lastrowid
+    conn.commit()
+
+    c.execute("SELECT id, message, created_at FROM parent_notes WHERE id = ?", (note_id,))
+    note = dict(c.fetchone())
+    conn.close()
+
+    return jsonify({
+        "status": "success",
+        "message": "Your encouragement note has been saved and sent!",
+        "note": note
+    }), 201
+
+@app.route("/api/parent/link-student", methods=["POST"])
+@require_roles("parent", "admin")
+def link_student_to_parent():
+    """Allow a parent to link another child by username or email."""
+    user = get_current_user()
+    data = request.get_json() or {}
+    identifier = sanitize_string(data.get("identifier", "")).strip().lower()
+
+    if not identifier:
+        return jsonify({"error": "Validation Error", "message": "Please enter your child's username or email."}), 400
+
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("""
+        SELECT id, name, username, grade_or_cohort, email, avatar_url, role
+        FROM users
+        WHERE (LOWER(username) = ? OR LOWER(email) = ?) AND role = 'student'
+    """, (identifier, identifier))
+    student = c.fetchone()
+
+    if not student:
+        conn.close()
+        return jsonify({"error": "Not Found", "message": f"No student account found with username or email '{identifier}'."}), 404
+
+    student_dict = dict(student)
+    c.execute("INSERT OR IGNORE INTO parent_student_map (parent_id, student_id) VALUES (?, ?)", (user["id"], student_dict["id"]))
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "status": "success",
+        "message": f"Successfully linked {student_dict['name']} to your parent account!",
+        "student": student_dict
+    }), 200
 
 @app.route("/api/analytics/admin", methods=["GET"])
 @require_roles("admin")

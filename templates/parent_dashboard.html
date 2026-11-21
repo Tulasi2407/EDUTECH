@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Parent Portal - Roots & Rhythm</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <style>
+    .portal-bg {
+      background: radial-gradient(circle at 50% 0%, #ecfdf5 0%, #f8fafc 40%, #f1f5f9 100%);
+      min-height: 100vh;
+    }
+    .parent-card {
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+      border-radius: 1.5rem;
+      transition: all 0.2s ease;
+    }
+    .parent-card:hover {
+      box-shadow: 0 16px 30px -6px rgba(5, 150, 105, 0.08), 0 10px 12px -5px rgba(0, 0, 0, 0.03);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="portal-bg text-slate-800 flex flex-col justify-between antialiased selection:bg-emerald-600 selection:text-white">
+
+  <!-- ==========================================
+       TOP NAVIGATION BAR
+  =========================================== -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-emerald-100/80 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+      
+      <!-- Brand & Portal Title -->
+      <div class="flex items-center gap-3">
+        <a href="/parent" class="flex items-center gap-2.5 group">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-700 flex items-center justify-center text-white shadow-md shadow-emerald-600/25 group-hover:scale-105 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base sm:text-lg font-black text-emerald-950 tracking-tight">Roots & Rhythm</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">
+                Parent Portal
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-medium">Child Progress & Growth Monitor</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center / Right Actions -->
+      <div class="flex items-center gap-3">
+        
+        <!-- Child Switcher Selector -->
+        <div class="hidden sm:flex items-center gap-2 bg-emerald-50/80 border border-emerald-200/90 rounded-2xl px-3 py-1.5">
+          <span class="text-xs font-bold text-emerald-900 flex items-center gap-1">
+            <span>🎓 Child:</span>
+          </span>
+          <select id="child-select-dropdown" class="bg-transparent text-xs font-black text-emerald-950 outline-none cursor-pointer">
+            <option value="">Loading child...</option>
+          </select>
+          <button id="open-link-child-btn" class="ml-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-900 hover:underline flex items-center gap-0.5" title="Link another student">
+            <span>+ Link</span>
+          </button>
+        </div>
+
+        <!-- Student View Link -->
+        <a href="/?view=student" class="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-600 transition" title="Preview Student Learning Platform">
+          <span>👁️ Student View</span>
+        </a>
+
+        <!-- Parent Profile Pill -->
+        <div class="flex items-center gap-2 bg-slate-100/90 rounded-full pl-2 pr-3 py-1 border border-slate-200">
+          <img id="parent-avatar" src="{{ current_user.avatar_url or 'https://api.dicebear.com/7.x/personas/svg?seed=Rajesh' }}" alt="Parent" class="w-7 h-7 rounded-full bg-white border border-emerald-200 object-cover">
+          <div class="text-left">
+            <p id="parent-name" class="text-xs font-extrabold text-slate-900 leading-none">{{ current_user.name }}</p>
+            <p class="text-[9px] font-semibold text-emerald-700 uppercase tracking-wider">Guardian</p>
+          </div>
+        </div>
+
+        <!-- Sign Out -->
+        <a href="/logout" class="px-3 py-1.5 rounded-xl border border-rose-200 bg-rose-50/70 hover:bg-rose-100 text-rose-700 text-xs font-bold transition flex items-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+          <span class="hidden sm:inline">Logout</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Mobile Child Switcher Bar -->
+    <div class="sm:hidden px-4 py-2 bg-emerald-50/90 border-t border-emerald-100 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-emerald-900">Child:</span>
+        <select id="child-select-dropdown-mobile" class="bg-white border border-emerald-200 rounded-lg px-2 py-1 text-xs font-bold text-emerald-950">
+          <option value="">Loading...</option>
+        </select>
+      </div>
+      <button id="open-link-child-btn-mobile" class="text-xs font-bold text-emerald-700 hover:underline">
+        + Link Child
+      </button>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       MAIN DASHBOARD CONTENT
+  =========================================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 flex-1 w-full">
+
+    <!-- Loading Placeholder -->
+    <div id="portal-loading" class="text-center py-16 space-y-3">
+      <div class="inline-block w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-sm font-bold text-emerald-900">Retrieving student academic progress...</p>
+    </div>
+
+    <!-- Main Content Container (Hidden until API loads) -->
+    <div id="portal-content" class="hidden space-y-6">
+
+      <!-- ==========================================
+           1. HERO GREETING & STUDENT PROGRESS BANNER
+      =========================================== -->
+      <div class="parent-card p-6 sm:p-8 bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 text-white relative overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-16 -bottom-16 w-72 h-72 bg-teal-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          
+          <!-- Left: Greeting & Child Snapshot -->
+          <div class="space-y-3 max-w-2xl">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                🟢 Active Study Rhythm
+              </span>
+              <span id="banner-student-grade" class="px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-slate-200 border border-white/10">
+                Grade 10-A
+              </span>
+              <span id="banner-health-status" class="px-3 py-1 rounded-full text-xs font-bold bg-teal-500/20 text-teal-200 border border-teal-400/30">
+                Strong Momentum
+              </span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight">
+              Monitoring Progress for <span id="banner-student-name" class="bg-gradient-to-r from-emerald-300 via-teal-200 to-green-300 bg-clip-text text-transparent">Aarav Sharma</span>
+            </h1>
+
+            <p class="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-normal">
+              No cramming, no exam stress. Your child’s learning path identifies foundational prerequisite gaps backwards and spaces micro-study sessions strictly inside their declared free time.
+            </p>
+          </div>
+
+          <!-- Right: Key Progress Metrics Pill Stack -->
+          <div class="grid grid-cols-3 gap-3 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 text-center sm:min-w-[340px]">
+            <div class="space-y-0.5">
+              <p class="text-[10px] font-bold text-emerald-200 uppercase tracking-wider">Overall Mastery</p>
+              <p id="kpi-mastery-pct" class="text-2xl sm:text-3xl font-black text-white">--%</p>
+              <p class="text-[10px] text-emerald-300 font-semibold">Curriculum Ready</p>
+            </div>
+            <div class="space-y-0.5 border-x border-white/10 px-2">
+              <p class="text-[10px] font-bold text-emerald-200 uppercase tracking-wider">Study Streak</p>
+              <p id="kpi-streak" class="text-2xl sm:text-3xl font-black text-amber-300">--</p>
+              <p class="text-[10px] text-amber-200 font-semibold">Days Continuous</p>
+            </div>
+            <div class="space-y-0.5">
+              <p class="text-[10px] font-bold text-emerald-200 uppercase tracking-wider">Free Hours</p>
+              <p id="kpi-hours" class="text-2xl sm:text-3xl font-black text-teal-300">--</p>
+              <p class="text-[10px] text-teal-200 font-semibold">Paced This Week</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ==========================================
+           2. FOUR KEY PERFORMANCE CARDS (KPIS)
+      =========================================== -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Card 1: Mastered Concepts -->
+        <div class="parent-card p-5 space-y-2 border-l-4 border-l-emerald-500">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Concepts Mastered</span>
+            <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">✓</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="metric-mastered-count" class="text-3xl font-black text-slate-900">0</span>
+            <span id="metric-total-topics" class="text-xs font-semibold text-slate-500">of 12 topics</span>
+          </div>
+          <p class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
+            <span>Verified with confident recall</span>
+          </p>
+        </div>
+
+        <!-- Card 2: Active Practice Areas -->
+        <div class="parent-card p-5 space-y-2 border-l-4 border-l-amber-500">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Practice</span>
+            <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">⚡</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="metric-needs-practice" class="text-3xl font-black text-slate-900">0</span>
+            <span class="text-xs font-semibold text-slate-500">topics in revision</span>
+          </div>
+          <p class="text-[11px] text-amber-700 font-semibold flex items-center gap-1">
+            <span>Being reinforced before tests</span>
+          </p>
+        </div>
+
+        <!-- Card 3: Root-Cause Bottlenecks -->
+        <div class="parent-card p-5 space-y-2 border-l-4 border-l-rose-500">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Root-Cause Focus</span>
+            <span class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold">🔍</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="metric-root-causes" class="text-3xl font-black text-slate-900">0</span>
+            <span class="text-xs font-semibold text-slate-500">foundations targeted</span>
+          </div>
+          <p class="text-[11px] text-rose-700 font-semibold flex items-center gap-1">
+            <span>Fixing root reasons, not symptoms</span>
+          </p>
+        </div>
+
+        <!-- Card 4: Study Habit Health -->
+        <div class="parent-card p-5 space-y-2 border-l-4 border-l-teal-500">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Paced Schedule</span>
+            <span class="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">⏱️</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span id="metric-sessions-completed" class="text-3xl font-black text-slate-900">0</span>
+            <span class="text-xs font-semibold text-slate-500">sessions completed</span>
+          </div>
+          <p class="text-[11px] text-teal-700 font-semibold flex items-center gap-1">
+            <span>Zero late-night burnouts</span>
+          </p>
+        </div>
+
+      </div>
+
+      <!-- ==========================================
+           3. INTERACTIVE SECTION TABS
+      =========================================== -->
+      <div class="border-b border-slate-200">
+        <nav class="flex space-x-6 overflow-x-auto scrollbar-none" aria-label="Tabs">
+          <button type="button" class="tab-btn py-3 px-1 border-b-2 font-bold text-xs uppercase tracking-wider flex items-center gap-2 border-emerald-600 text-emerald-800" data-target="tab-subjects">
+            <span>📚 Subject Mastery</span>
+          </button>
+          <button type="button" class="tab-btn py-3 px-1 border-b-2 font-bold text-xs uppercase tracking-wider flex items-center gap-2 border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300" data-target="tab-root-causes">
+            <span>🔍 Root-Cause Diagnostics</span>
+          </button>
+          <button type="button" class="tab-btn py-3 px-1 border-b-2 font-bold text-xs uppercase tracking-wider flex items-center gap-2 border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300" data-target="tab-schedule">
+            <span>📅 Free-Hour Schedule</span>
+          </button>
+          <button type="button" class="tab-btn py-3 px-1 border-b-2 font-bold text-xs uppercase tracking-wider flex items-center gap-2 border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300" data-target="tab-insights">
+            <span>💡 AI Parent Guidance</span>
+          </button>
+          <button type="button" class="tab-btn py-3 px-1 border-b-2 font-bold text-xs uppercase tracking-wider flex items-center gap-2 border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300" data-target="tab-notes">
+            <span>💌 Send Encouragement</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- ==========================================
+           TAB 1: SUBJECT MASTERY BREAKDOWN
+      =========================================== -->
+      <div id="tab-subjects" class="tab-pane space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900">Academic Subject Mastery</h3>
+            <p class="text-xs text-slate-500">Track your child’s grasp of foundational and advanced topics across enrolled subjects.</p>
+          </div>
+          <span class="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+            Real-Time Diagnostic Status
+          </span>
+        </div>
+
+        <div id="subjects-container" class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <!-- Dynamic Subject Cards injected here -->
+        </div>
+      </div>
+
+      <!-- ==========================================
+           TAB 2: ROOT-CAUSE TRANSPARENCY
+      =========================================== -->
+      <div id="tab-root-causes" class="tab-pane hidden space-y-4">
+        <div class="parent-card p-6 bg-gradient-to-r from-amber-50/70 via-rose-50/50 to-emerald-50/60 border-amber-200/80 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">💡</span>
+            <h3 class="text-base font-black text-slate-900">Why does Roots & Rhythm trace Root Causes?</h3>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Most students don't struggle because they lack talent — they struggle because of a forgotten prerequisite from months or years ago (like negative numbers or fraction rules). Our system identifies the <strong>exact prerequisite bottleneck</strong> and fixes it during their free hours, completely eliminating math & science anxiety.
+          </p>
+        </div>
+
+        <div id="root-causes-list" class="space-y-3">
+          <!-- Dynamic Root-Cause Alerts injected here -->
+        </div>
+      </div>
+
+      <!-- ==========================================
+           TAB 3: UPCOMING STUDY SCHEDULE
+      =========================================== -->
+      <div id="tab-schedule" class="tab-pane hidden space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900">Upcoming Micro-Study Sessions</h3>
+            <p class="text-xs text-slate-500">Sessions are strictly scheduled inside your child's declared free hours.</p>
+          </div>
+          <span class="text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full">
+            No Late-Night Study
+          </span>
+        </div>
+
+        <div id="schedule-container" class="space-y-3">
+          <!-- Dynamic Study Sessions injected here -->
+        </div>
+      </div>
+
+      <!-- ==========================================
+           TAB 4: AI PARENT INSIGHTS & COACHING
+      =========================================== -->
+      <div id="tab-insights" class="tab-pane hidden space-y-4">
+        <div>
+          <h3 class="text-base font-extrabold text-slate-900">Weekly Guidance & Actionable Coaching</h3>
+          <p class="text-xs text-slate-500">Plain-English, non-technical advice to help you support your child at home.</p>
+        </div>
+
+        <div id="insights-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Dynamic AI Insights injected here -->
+        </div>
+      </div>
+
+      <!-- ==========================================
+           TAB 5: SEND ENCOURAGEMENT NOTES
+      =========================================== -->
+      <div id="tab-notes" class="tab-pane hidden space-y-6">
+        <div class="parent-card p-6 sm:p-7 space-y-4 bg-white">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">💌</span>
+            <h3 class="text-base font-extrabold text-slate-900">Send Words of Encouragement</h3>
+          </div>
+          <p class="text-xs text-slate-500">
+            A quick message of praise from a parent significantly boosts a student's confidence and study persistence. Your note will be displayed directly on your child's learning screen.
+          </p>
+
+          <!-- Quick Suggestion Buttons -->
+          <div class="space-y-1.5">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Quick Suggestions:</span>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="quick-note-chip text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 transition">
+                🌟 Proud of your consistency today!
+              </button>
+              <button type="button" class="quick-note-chip text-xs font-semibold px-3 py-1.5 rounded-full bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 transition">
+                💪 Great job on your Math practice!
+              </button>
+              <button type="button" class="quick-note-chip text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 transition">
+                ☕ Remember to take a refreshing break!
+              </button>
+            </div>
+          </div>
+
+          <!-- Note Form -->
+          <form id="note-form" class="space-y-3">
+            <textarea 
+              id="note-message-input" 
+              rows="3" 
+              required 
+              placeholder="Write an encouraging note for your child (e.g. 'Proud of your hard work today, keep it up!')..."
+              class="w-full text-xs font-medium p-3.5 rounded-2xl border border-slate-200 outline-none text-slate-800 placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 transition resize-none"
+            ></textarea>
+
+            <div class="flex items-center justify-between">
+              <span id="note-char-count" class="text-[11px] font-semibold text-slate-400">0 / 500 characters</span>
+              <button 
+                type="submit" 
+                id="send-note-btn" 
+                class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-700/20 transition flex items-center gap-1.5"
+              >
+                <span>Send to Child</span>
+                <span>→</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- History of Sent Notes -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Recent Encouragement Notes Sent</h4>
+          <div id="notes-history-container" class="space-y-2">
+            <!-- Dynamic notes injected here -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       LINK ANOTHER CHILD MODAL
+  =========================================== -->
+  <div id="link-child-modal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-4">
+      
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm">
+            👨‍👧
+          </div>
+          <h3 class="text-base font-black text-slate-900">Link Another Student</h3>
+        </div>
+        <button id="close-link-child-modal" class="text-slate-400 hover:text-slate-600 font-bold text-lg p-1">
+          ✕
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-500 leading-relaxed">
+        Enter the username or student email of your child to monitor their learning progress from your single parent account.
+      </p>
+
+      <div id="link-modal-alert" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
+
+      <form id="link-child-form" class="space-y-3.5">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">Student Username or Email</label>
+          <input 
+            type="text" 
+            id="link-student-identifier" 
+            required 
+            placeholder="e.g. aarav or diya" 
+            class="w-full text-xs font-semibold px-3.5 py-3 rounded-2xl border border-slate-200 outline-none text-slate-800 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 transition"
+          >
+          <p class="text-[10px] text-slate-400 mt-1">Available demo student usernames: <strong>aarav</strong>, <strong>diya</strong>, <strong>kiran</strong></p>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" id="cancel-link-child-btn" class="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-800">
+            Cancel
+          </button>
+          <button type="submit" id="submit-link-child-btn" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/25 transition">
+            Link Student
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200/80 bg-white/50">
+    <span>Roots & Rhythm • Smart, Inclusive & Personalized Education — Parent Portal</span>
+  </footer>
+
+  <!-- ==========================================
+       PARENT PORTAL SCRIPT
+  =========================================== -->
+  <script>
+    let currentPortalData = null;
+    let selectedStudentId = null;
+
+    // Tab Switching Logic
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => {
+          b.className = "tab-btn py-3 px-1 border-b-2 font-bold text-xs uppercase tracking-wider flex items-center gap-2 border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300";
+        });
+        btn.className = "tab-btn py-3 px-1 border-b-2 font-bold text-xs uppercase tracking-wider flex items-center gap-2 border-emerald-600 text-emerald-800";
+
+        const target = btn.dataset.target;
+        document.querySelectorAll(".tab-pane").forEach(pane => {
+          if (pane.id === target) pane.classList.remove("hidden");
+          else pane.classList.add("hidden");
+        });
+      });
+    });
+
+    // Fetch and render Parent Portal data
+    async function loadParentPortal(studentId = null) {
+      const loading = document.getElementById("portal-loading");
+      const content = document.getElementById("portal-content");
+      loading.classList.remove("hidden");
+      content.classList.add("hidden");
+
+      try {
+        let url = "/api/parent/overview";
+        if (studentId) url += `?student_id=${studentId}`;
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Failed to load portal data");
+        const data = await res.json();
+        currentPortalData = data;
+        selectedStudentId = data.active_student.id;
+
+        renderPortal(data);
+
+        loading.classList.add("hidden");
+        content.classList.remove("hidden");
+      } catch (err) {
+        console.error(err);
+        loading.innerHTML = `
+          <div class="p-6 bg-rose-50 border border-rose-200 text-rose-800 rounded-2xl max-w-md mx-auto">
+            <p class="font-bold">Unable to load student progress data.</p>
+            <p class="text-xs mt-1">Please ensure you are signed in as a parent or linked to a student.</p>
+            <a href="/login" class="inline-block mt-3 px-4 py-2 bg-rose-600 text-white rounded-xl text-xs font-bold">Sign In Again</a>
+          </div>
+        `;
+      }
+    }
+
+    function renderPortal(data) {
+      const s = data.active_student;
+      const sum = data.summary;
+
+      // 1. Top Banner
+      document.getElementById("banner-student-name").textContent = s.name;
+      document.getElementById("banner-student-grade").textContent = s.grade_or_cohort || "Grade 10";
+      document.getElementById("banner-health-status").textContent = sum.academic_health;
+      document.getElementById("kpi-mastery-pct").textContent = `${sum.mastery_percentage}%`;
+      document.getElementById("kpi-streak").textContent = `${sum.highest_streak}d`;
+      document.getElementById("kpi-hours").textContent = `${sum.study_hours_completed}h`;
+
+      // 2. Metric Cards
+      document.getElementById("metric-mastered-count").textContent = sum.mastered_count;
+      document.getElementById("metric-total-topics").textContent = `of ${sum.total_topics} topics`;
+      document.getElementById("metric-needs-practice").textContent = sum.needs_practice_count;
+      document.getElementById("metric-root-causes").textContent = sum.core_focus_count;
+      document.getElementById("metric-sessions-completed").textContent = sum.mastered_count > 0 ? (sum.mastered_count * 2) : "4";
+
+      // 3. Child Switcher Dropdowns
+      populateChildSelect(data.linked_students, s.id);
+
+      // 4. Render Subjects Tab
+      renderSubjects(data.subjects);
+
+      // 5. Render Root-Causes Tab
+      renderRootCauses(data.root_cause_alerts);
+
+      // 6. Render Schedule Tab
+      renderSchedule(data.upcoming_schedule);
+
+      // 7. Render AI Insights Tab
+      renderInsights(data.ai_parent_insights);
+
+      // 8. Render Notes Tab
+      renderNotesHistory(data.parent_notes);
+    }
+
+    function populateChildSelect(students, activeId) {
+      const dropdowns = [
+        document.getElementById("child-select-dropdown"),
+        document.getElementById("child-select-dropdown-mobile")
+      ];
+      dropdowns.forEach(dd => {
+        if (!dd) return;
+        dd.innerHTML = "";
+        students.forEach(st => {
+          const opt = document.createElement("option");
+          opt.value = st.id;
+          opt.textContent = `${st.name} (${st.grade_or_cohort || 'Grade 10'})`;
+          if (st.id === activeId) opt.selected = true;
+          dd.appendChild(opt);
+        });
+
+        dd.onchange = (e) => {
+          loadParentPortal(e.target.value);
+        };
+      });
+    }
+
+    function renderSubjects(subjects) {
+      const container = document.getElementById("subjects-container");
+      container.innerHTML = "";
+
+      subjects.forEach(sub => {
+        const card = document.createElement("div");
+        card.className = "parent-card p-5 space-y-4 bg-white flex flex-col justify-between";
+        
+        let topicsHtml = sub.topics.map(t => {
+          let badgeClass = "bg-slate-100 text-slate-600 border-slate-200";
+          let icon = "⚪";
+          let label = "Pending";
+          if (t.status === "mastered") {
+            badgeClass = "bg-emerald-50 text-emerald-800 border-emerald-200";
+            icon = "✓";
+            label = "Mastered";
+          } else if (t.status === "shaky") {
+            badgeClass = "bg-amber-50 text-amber-800 border-amber-200";
+            icon = "⚡";
+            label = "Practice Needed";
+          } else if (t.status === "root_cause") {
+            badgeClass = "bg-rose-50 text-rose-800 border-rose-200";
+            icon = "🔍";
+            label = "Foundational Focus";
+          }
+
+          return `
+            <li class="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-none">
+              <span class="font-medium text-slate-700 truncate pr-2">${t.topic_name}</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0 ${badgeClass}">${icon} ${label}</span>
+            </li>
+          `;
+        }).join("");
+
+        card.innerHTML = `
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center text-white font-bold text-xs" style="background-color: ${sub.color};">
+                  ${sub.code}
+                </div>
+                <div>
+                  <h4 class="text-sm font-black text-slate-900">${sub.name}</h4>
+                  <p class="text-[10px] text-slate-400 font-semibold">${sub.mastered_topics} of ${sub.total_topics} topics mastered</p>
+                </div>
+              </div>
+              <span class="text-sm font-black text-slate-800">${sub.mastery_percentage}%</span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500" style="width: ${sub.mastery_percentage}%; background-color: ${sub.color};"></div>
+            </div>
+
+            <!-- Topic Items List -->
+            <ul class="space-y-0.5 pt-1">
+              ${topicsHtml}
+            </ul>
+          </div>
+
+          <div class="pt-2 text-[11px] text-slate-500 italic">
+            ${sub.description}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderRootCauses(alerts) {
+      const container = document.getElementById("root-causes-list");
+      container.innerHTML = "";
+
+      if (!alerts || alerts.length === 0) {
+        container.innerHTML = `
+          <div class="parent-card p-6 text-center text-xs text-slate-500">
+            🎉 No prerequisite bottlenecks currently detected! Your student's foundations are solid.
+          </div>
+        `;
+        return;
+      }
+
+      alerts.forEach(a => {
+        const item = document.createElement("div");
+        item.className = "parent-card p-5 bg-white space-y-3 border-l-4 border-l-rose-500";
+        item.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-rose-100 text-rose-800 border border-rose-200">
+                ${a.subject || 'Academic Gap'}
+              </span>
+              <h4 class="text-sm font-extrabold text-slate-900">
+                Foundational Gap: <span class="text-rose-700">${a.root_cause_topic}</span>
+              </h4>
+            </div>
+            <span class="text-xs font-semibold text-slate-500">Affecting: <strong>${a.target_topic}</strong></span>
+          </div>
+
+          <p class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">
+            ${a.parent_explanation}
+          </p>
+
+          <div class="flex items-center gap-2 text-[11px] font-bold text-emerald-700">
+            <span>🌿 System Solution:</span>
+            <span class="text-slate-600 font-medium">Automatic micro-study modules queued in declared evening free hours.</span>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function renderSchedule(sessions) {
+      const container = document.getElementById("schedule-container");
+      container.innerHTML = "";
+
+      if (!sessions || sessions.length === 0) {
+        container.innerHTML = `
+          <div class="parent-card p-6 text-center text-xs text-slate-500">
+            No study sessions currently scheduled. Free-hour planner rebalances automatically each week.
+          </div>
+        `;
+        return;
+      }
+
+      sessions.forEach(sess => {
+        const item = document.createElement("div");
+        item.className = "parent-card p-4 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3";
+        item.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-200 text-teal-800 flex flex-col items-center justify-center font-bold text-xs shrink-0">
+              <span>⏱️</span>
+              <span class="text-[9px]">${sess.duration_minutes}m</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">${sess.subject_name || 'Subject'}</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">${sess.status}</span>
+              </div>
+              <h5 class="text-sm font-extrabold text-slate-900">${sess.topic_name}</h5>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs font-semibold text-slate-600 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100 shrink-0">
+            <span>📅 ${sess.scheduled_date}</span>
+            <span>•</span>
+            <span>🕒 ${sess.start_time} - ${sess.end_time}</span>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function renderInsights(insights) {
+      const container = document.getElementById("insights-container");
+      container.innerHTML = "";
+
+      insights.forEach(tip => {
+        const card = document.createElement("div");
+        card.className = "parent-card p-5 space-y-2 bg-white flex flex-col justify-between";
+        card.innerHTML = `
+          <div class="space-y-2">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200 inline-block">
+              ${tip.category}
+            </span>
+            <h4 class="text-sm font-black text-slate-900">${tip.title}</h4>
+            <p class="text-xs text-slate-600 leading-relaxed font-normal">${tip.text}</p>
+          </div>
+          <div class="pt-3 border-t border-slate-100 text-[10px] text-emerald-700 font-bold flex items-center gap-1">
+            <span>Actionable Parent Tip</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderNotesHistory(notes) {
+      const container = document.getElementById("notes-history-container");
+      container.innerHTML = "";
+
+      if (!notes || notes.length === 0) {
+        container.innerHTML = `
+          <p class="text-xs text-slate-400 italic">No encouragement notes sent yet. Write your first note above!</p>
+        `;
+        return;
+      }
+
+      notes.forEach(n => {
+        const item = document.createElement("div");
+        item.className = "p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start justify-between gap-3 text-xs";
+        item.innerHTML = `
+          <div class="space-y-1">
+            <p class="font-semibold text-slate-800">"${n.message}"</p>
+            <p class="text-[10px] text-slate-400">${n.created_at || 'Recently'}</p>
+          </div>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 shrink-0">
+            Delivered
+          </span>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Quick suggestion click handlers
+    document.querySelectorAll(".quick-note-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const input = document.getElementById("note-message-input");
+        input.value = chip.textContent.trim();
+        document.getElementById("note-char-count").textContent = `${input.value.length} / 500 characters`;
+        input.focus();
+      });
+    });
+
+    const noteInput = document.getElementById("note-message-input");
+    if (noteInput) {
+      noteInput.addEventListener("input", () => {
+        document.getElementById("note-char-count").textContent = `${noteInput.value.length} / 500 characters`;
+      });
+    }
+
+    // Submit Encouragement Note
+    const noteForm = document.getElementById("note-form");
+    if (noteForm) {
+      noteForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const msg = noteInput.value.trim();
+        if (!msg || !selectedStudentId) return;
+
+        const btn = document.getElementById("send-note-btn");
+        btn.disabled = true;
+        btn.textContent = "Sending...";
+
+        try {
+          const res = await fetch("/api/parent/notes", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              student_id: selectedStudentId,
+              message: msg
+            })
+          });
+          const resData = await res.json();
+          if (res.ok) {
+            noteInput.value = "";
+            document.getElementById("note-char-count").textContent = "0 / 500 characters";
+            // Prepend new note into history
+            if (currentPortalData) {
+              currentPortalData.parent_notes.unshift(resData.note);
+              renderNotesHistory(currentPortalData.parent_notes);
+            }
+            alert("✨ Your encouragement note was delivered to your child!");
+          } else {
+            alert(resData.message || "Failed to send note");
+          }
+        } catch (err) {
+          alert("Network error sending note");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = "<span>Send to Child</span> <span>→</span>";
+        }
+      });
+    }
+
+    // Link Child Modal Handlers
+    const linkModal = document.getElementById("link-child-modal");
+    const openLinkBtns = [
+      document.getElementById("open-link-child-btn"),
+      document.getElementById("open-link-child-btn-mobile")
+    ];
+    const closeLinkBtn = document.getElementById("close-link-child-modal");
+    const cancelLinkBtn = document.getElementById("cancel-link-child-btn");
+
+    openLinkBtns.forEach(b => {
+      if (b) b.addEventListener("click", () => linkModal.classList.remove("hidden"));
+    });
+    if (closeLinkBtn) closeLinkBtn.addEventListener("click", () => linkModal.classList.add("hidden"));
+    if (cancelLinkBtn) cancelLinkBtn.addEventListener("click", () => linkModal.classList.add("hidden"));
+
+    const linkForm = document.getElementById("link-child-form");
+    if (linkForm) {
+      linkForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const identifier = document.getElementById("link-student-identifier").value.trim();
+        const alertBox = document.getElementById("link-modal-alert");
+        const btn = document.getElementById("submit-link-child-btn");
+
+        alertBox.className = "hidden p-3 rounded-xl text-xs font-semibold";
+        btn.disabled = true;
+        btn.textContent = "Linking...";
+
+        try {
+          const res = await fetch("/api/parent/link-student", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ identifier })
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            alertBox.className = "p-3 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 block";
+            alertBox.textContent = data.message;
+            setTimeout(() => {
+              linkModal.classList.add("hidden");
+              loadParentPortal(data.student.id);
+            }, 1000);
+          } else {
+            alertBox.className = "p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200 block";
+            alertBox.textContent = data.message || "Could not link student.";
+          }
+        } catch (err) {
+          alertBox.className = "p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200 block";
+          alertBox.textContent = "Network error while linking student.";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Link Student";
+        }
+      });
+    }
+
+    // Initialize on load
+    document.addEventListener("DOMContentLoaded", () => {
+      loadParentPortal();
+    });
+  </script>
+</body>
+</html>

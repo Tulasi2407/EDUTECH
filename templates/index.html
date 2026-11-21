@@ -16,6 +16,18 @@
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
+  <!-- Parent View Indicator Banner -->
+  {% if current_user.role == 'parent' %}
+  <aside aria-label="Parent Preview Notice" class="bg-gradient-to-r from-emerald-700 to-teal-800 text-white px-4 py-2 text-xs font-bold flex items-center justify-between shadow-xs sticky top-0 z-50">
+    <div class="flex items-center gap-2">
+      <span>👨‍👧 You are currently previewing the Student Learning Platform as a Parent.</span>
+    </div>
+    <a href="/parent" class="bg-white text-emerald-900 px-3 py-1 rounded-lg text-xs font-black hover:bg-emerald-50 transition flex items-center gap-1 shadow-sm">
+      <span>← Return to Parent Dashboard</span>
+    </a>
+  </aside>
+  {% endif %}
+
   <!-- ===============================
        TOP NAVIGATION BAR
   ================================ -->
