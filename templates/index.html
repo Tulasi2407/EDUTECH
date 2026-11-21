@@ -79,6 +79,28 @@
           <span id="current-user-role" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-200">STUDENT</span>
         </div>
 
+        <!-- Command Palette Trigger Button (Ctrl+K) -->
+        <button id="cmd-palette-btn" class="tactile-btn px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/90 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs" title="Open Command Palette (Ctrl+K / ⌘K)">
+          <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <span class="hidden md:inline">Commands</span>
+          <kbd class="px-1.5 py-0.2 text-[9px] font-mono bg-white text-slate-500 rounded border border-slate-300">⌘K</kbd>
+        </button>
+
+        <!-- Zen Study Chamber Trigger -->
+        <button id="topbar-zen-btn" class="tactile-btn px-2.5 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm" title="Launch Zen Study Chamber">
+          <span>🧘 Zen Focus</span>
+        </button>
+
+        <!-- Sound Chime / Mute Toggle Button -->
+        <button id="audio-toggle-btn" class="tactile-btn p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/90 rounded-xl text-xs font-bold flex items-center justify-center shadow-xs" title="Toggle Sound Feedback">
+          <span id="audio-toggle-icon">🔔</span>
+        </button>
+
+        <!-- Dark Mode Toggle Button -->
+        <button id="dark-mode-toggle-btn" class="tactile-btn p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/90 rounded-xl text-xs font-bold flex items-center justify-center shadow-xs" title="Toggle Dark / Midnight Mode">
+          <span id="dark-mode-toggle-icon">🌙</span>
+        </button>
+
         <!-- 10 Core Objectives Alignment Button -->
         <button id="view-objectives-btn" class="tactile-btn px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300/80 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm">
           <span>🎯 10 Objectives</span>
@@ -635,6 +657,10 @@
 
   <!-- Scripts -->
   <script src="/static/js/i18n.js"></script>
+  <script src="/static/js/confetti.js"></script>
+  <script src="/static/js/ambient_audio.js"></script>
+  <script src="/static/js/command_palette.js"></script>
+  <script src="/static/js/zen_chamber.js"></script>
   <script src="/static/js/node_map.js"></script>
   <script src="/static/js/timeline.js"></script>
   <script src="/static/js/analytics.js"></script>

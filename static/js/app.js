@@ -24,6 +24,7 @@ class RootsAndRhythmApp {
   }
 
   async init() {
+    this.initThemeAndAudio();
     this.dashboard = new MainDashboard("main-dashboard-container");
     this.analytics = new AnalyticsManager();
     this.timeline = new VisualStudyTimeline("timeline-container");
@@ -36,6 +37,37 @@ class RootsAndRhythmApp {
     this.updateRoleView();
     await this.dashboard.load(this.currentUser.id);
     if (window.I18N) window.I18N.applyTranslations();
+  }
+
+  initThemeAndAudio() {
+    const isDark = localStorage.getItem("roots_dark_mode") === "true";
+    if (isDark) {
+      document.body.classList.add("dark-mode");
+      const icon = document.getElementById("dark-mode-toggle-icon");
+      if (icon) icon.textContent = "☀️";
+    }
+
+    const isMuted = localStorage.getItem("roots_sound_muted") === "true";
+    const audioIcon = document.getElementById("audio-toggle-icon");
+    if (audioIcon) {
+      audioIcon.textContent = isMuted ? "🔕" : "🔔";
+    }
+  }
+
+  toggleDarkMode() {
+    const isDark = document.body.classList.toggle("dark-mode");
+    localStorage.setItem("roots_dark_mode", isDark);
+    const icon = document.getElementById("dark-mode-toggle-icon");
+    if (icon) icon.textContent = isDark ? "☀️" : "🌙";
+    this.showToast(isDark ? "🌙 Midnight Study Mode enabled" : "☀️ Daytime Mode enabled");
+  }
+
+  toggleAudio() {
+    if (!window.soundSynth) return;
+    const isMuted = window.soundSynth.toggleMute();
+    const icon = document.getElementById("audio-toggle-icon");
+    if (icon) icon.textContent = isMuted ? "🔕" : "🔔";
+    this.showToast(isMuted ? "🔕 Audio soundscapes muted" : "🔔 Ambient soundscapes active");
   }
 
   async fetchCurrentUser() {
@@ -462,6 +494,10 @@ class RootsAndRhythmApp {
     if (!feedbackArea) return;
 
     const isCorrect = result.is_correct;
+    if (isCorrect) {
+      if (window.confetti) window.confetti.burst();
+      if (window.soundSynth) window.soundSynth.playSuccessChime();
+    }
     const alertBg = isCorrect ? "bg-emerald-50 border-emerald-200 text-emerald-900" : "bg-rose-50 border-rose-200 text-rose-900";
     const title = isCorrect ? "✅ Excellent! Correct Answer!" : "❌ Not Quite. Let's Learn From The Root Cause:";
 
@@ -699,6 +735,34 @@ class RootsAndRhythmApp {
       diagBtn.addEventListener("click", () => {
         this.openPracticeModal(this.currentTopicId, "beginner");
       });
+    }
+
+    // Command Palette Trigger (Ctrl+K)
+    const cmdPaletteBtn = document.getElementById("cmd-palette-btn");
+    if (cmdPaletteBtn) {
+      cmdPaletteBtn.addEventListener("click", () => {
+        if (window.commandPalette) window.commandPalette.toggle();
+      });
+    }
+
+    // Topbar Zen Focus Study Chamber Trigger
+    const topbarZenBtn = document.getElementById("topbar-zen-btn");
+    if (topbarZenBtn) {
+      topbarZenBtn.addEventListener("click", () => {
+        if (window.zenChamber) window.zenChamber.open();
+      });
+    }
+
+    // Dark Mode Toggle
+    const darkToggleBtn = document.getElementById("dark-mode-toggle-btn");
+    if (darkToggleBtn) {
+      darkToggleBtn.addEventListener("click", () => this.toggleDarkMode());
+    }
+
+    // Audio Synthesizer Soundscapes Toggle
+    const audioToggleBtn = document.getElementById("audio-toggle-btn");
+    if (audioToggleBtn) {
+      audioToggleBtn.addEventListener("click", () => this.toggleAudio());
     }
 
     // Add slot form submission

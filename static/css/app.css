@@ -1,6 +1,6 @@
 /* Roots & Rhythm - Calm, Tactile, Mobile-First Design System */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Fira+Code:wght@400;500;600&display=swap');
 
 :root {
   --primary: #4f46e5;
@@ -17,43 +17,128 @@
   --slate-border: #e2e8f0;
   --text-main: #0f172a;
   --text-muted: #64748b;
+  --card-bg: #ffffff;
 }
 
 body {
   font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', 'Noto Sans Kannada', 'Noto Sans Tamil', 'Noto Sans Telugu', system-ui, -apple-system, sans-serif;
-  background-color: #f8fafc;
+  background-color: var(--slate-surface);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Tactile Soft Shadow and Card Elevations */
+/* =========================================
+   DARK / MIDNIGHT STUDY MODE
+========================================= */
+body.dark-mode {
+  --slate-surface: #090d16;
+  --slate-border: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --card-bg: #0f172a;
+  background-color: #090d16;
+  color: #f8fafc;
+}
+
+body.dark-mode header,
+body.dark-mode nav,
+body.dark-mode footer,
+body.dark-mode .tactile-card {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+  color: #f8fafc;
+}
+
+body.dark-mode .bg-slate-50,
+body.dark-mode .bg-white {
+  background-color: #131c31 !important;
+  color: #f8fafc;
+}
+
+body.dark-mode .text-slate-900,
+body.dark-mode .text-slate-800,
+body.dark-mode .text-slate-700 {
+  color: #f1f5f9 !important;
+}
+
+body.dark-mode .text-slate-500,
+body.dark-mode .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .node-map-container {
+  background: radial-gradient(#334155 1.2px, transparent 1.2px), #0b1120;
+  border-color: #1e293b;
+}
+
+body.dark-mode #node-drawer {
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+body.dark-mode .border-slate-200,
+body.dark-mode .border-slate-100 {
+  border-color: #1e293b !important;
+}
+
+body.dark-mode #command-palette-modal .bg-white {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+body.dark-mode #command-palette-modal #palette-search-input {
+  color: #f8fafc !important;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* =========================================
+   TACTILE CARDS & 3D PERSPECTIVE TILT
+========================================= */
 .tactile-card {
-  background: #ffffff;
+  background: var(--card-bg);
   border: 1px solid var(--slate-border);
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
-  border-radius: 1rem;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  border-radius: 1.25rem;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tactile-card:hover {
-  box-shadow: 0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 12px 30px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+  transform: translateY(-2px);
 }
 
 .tactile-btn {
   transition: all 0.15s ease-in-out;
-  active: scale(0.98);
 }
 .tactile-btn:active {
   transform: scale(0.97);
 }
 
-/* Root-Cause Visual Node Map Styling */
+/* =========================================
+   ROOT-CAUSE NODE MAP STYLING
+========================================= */
 .node-map-container {
   position: relative;
   background: radial-gradient(#e2e8f0 1.2px, transparent 1.2px), #f8fafc;
   background-size: 24px 24px;
   overflow: hidden;
-  border-radius: 1rem;
+  border-radius: 1.25rem;
   border: 1px solid var(--slate-border);
 }
 
@@ -114,27 +199,20 @@ body {
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Timeline Rhythm Slot Pill */
-.time-slot-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+/* 3D Flashcard Flip Effect */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
 }
 
 /* Code & LaTeX presentation */
 code, pre {
   font-family: 'Fira Code', monospace;
-}
-
-/* Mobile-first bottom navigation styling */
-@media (max-width: 768px) {
-  .mobile-bottom-nav {
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
-  }
 }
 
 /* Custom Scrollbars */

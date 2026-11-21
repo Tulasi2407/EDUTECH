@@ -250,6 +250,8 @@ class VisualStudyTimeline {
         try {
           const res = await fetch(`/api/planner/sessions/${sessId}/complete`, { method: "POST" });
           const data = await res.json();
+          if (window.confetti) window.confetti.burst();
+          if (window.soundSynth) window.soundSynth.playLevelUpFanfare();
           if (window.showToast) window.showToast(data.message || "Session completed!");
           await this.loadData();
           if (window.refreshProgress) window.refreshProgress();

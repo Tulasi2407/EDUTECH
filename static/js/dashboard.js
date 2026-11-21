@@ -99,6 +99,9 @@ class MainDashboard {
 
             <!-- Active Mode & Language Status Badges -->
             <div class="flex flex-wrap items-center gap-2 shrink-0 self-start md:self-center">
+              <button id="dash-hero-zen-btn" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-400 hover:to-indigo-400 text-white text-xs font-black shadow-md flex items-center gap-1.5 transition active:scale-95" title="Launch immersive Pomodoro & Soundscape focus session">
+                <span>🧘 Enter Zen Chamber</span>
+              </button>
               <span class="px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 text-xs font-bold text-white flex items-center gap-1.5">
                 <span>🌱 Learning Mode:</span>
                 <span class="text-emerald-300 font-extrabold capitalize">${window.appInstance?.currentLearningMode || 'Balanced'}</span>
@@ -453,6 +456,8 @@ class MainDashboard {
         try {
           const res = await fetch(`/api/planner/sessions/${sessId}/complete`, { method: "POST" });
           const data = await res.json();
+          if (window.confetti) window.confetti.burst();
+          if (window.soundSynth) window.soundSynth.playLevelUpFanfare();
           if (window.showToast) window.showToast(data.message || "Session completed!");
           await this.load();
         } catch (e) {
@@ -460,6 +465,14 @@ class MainDashboard {
         }
       });
     });
+
+    // Hero Zen button
+    const heroZenBtn = document.getElementById("dash-hero-zen-btn");
+    if (heroZenBtn) {
+      heroZenBtn.addEventListener("click", () => {
+        if (window.zenChamber) window.zenChamber.open();
+      });
+    }
   }
 
   renderCharts() {
