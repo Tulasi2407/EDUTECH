@@ -259,5 +259,41 @@ class RootsAndRhythmTestCase(unittest.TestCase):
         self.assertEqual(res_flag.status_code, 400)
         self.assertIn("at least 5 characters", json.loads(res_flag.data)["message"])
 
+    def test_13_ai_learning_assistant_modes_and_languages(self):
+        """Verify AI Learning Assistant answers doubts in Step-by-Step, Balanced, and Fast-Track modes across languages."""
+        # 1. English Step-by-Step
+        res = self.client.post("/api/ai/ask", json={
+            "question": "Why do two negatives make a positive?",
+            "topic": "Negative Numbers",
+            "learning_mode": "step-by-step",
+            "language": "en"
+        })
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)
+        self.assertIn("Step-by-Step", data["response_text"])
+        self.assertIn("confidence_score", data)
+
+        # 2. Hindi Balanced mode
+        res_hi = self.client.post("/api/ai/ask", json={
+            "question": "द्विघात समीकरण कैसे हल करें?",
+            "topic": "Quadratic Equations",
+            "learning_mode": "balanced",
+            "language": "hi"
+        })
+        self.assertEqual(res_hi.status_code, 200)
+        data_hi = json.loads(res_hi.data)
+        self.assertIn("द्विघात", data_hi["response_text"])
+
+        # 3. Kannada Fast-Track mode
+        res_kn = self.client.post("/api/ai/ask", json={
+            "question": "ವರ್ಗ ಸಮೀಕರಣ ಸೂತ್ರ ಯಾವುದು?",
+            "topic": "Quadratic Equations",
+            "learning_mode": "fast-track",
+            "language": "kn"
+        })
+        self.assertEqual(res_kn.status_code, 200)
+        data_kn = json.loads(res_kn.data)
+        self.assertIn("Fast-Track", data_kn["response_text"])
+
 if __name__ == "__main__":
     unittest.main()

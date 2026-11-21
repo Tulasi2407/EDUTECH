@@ -17,11 +17,31 @@ const I18N_DICTIONARY = {
     // Navigation Tabs
     nav_gap_finder: "Root-Cause X-Ray",
     nav_study_planner: "Free-Hour Planner",
+    nav_ai_assistant: "AI Assistant (Tutor)",
     nav_practice: "Smart Practice",
     nav_analytics: "My Progress",
     nav_teacher_dashboard: "Class Heatmap",
     nav_parent_view: "Parent Overview",
     nav_admin_panel: "Institution Health",
+
+    // AI Learning Assistant (Objective 3)
+    ai_assistant_title: "AI Learning Assistant (Doubt Solver)",
+    ai_assistant_desc: "Clear doubts and understand difficult concepts through simple, step-by-step explanations.",
+    ai_assistant_placeholder: "Type your question or doubt here (e.g., Why do two negative numbers multiply to a positive?)...",
+    btn_ask_ai: "Get Step-by-Step Explanation",
+    ai_confidence_badge: "Curriculum-Verified AI Guardrail",
+    ai_prompt_hint_1: "Why do two negatives make a positive?",
+    ai_prompt_hint_2: "How do I solve quadratic equations?",
+    ai_prompt_hint_3: "How does factoring polynomials work?",
+
+    // Three Learning Modes (Objective 5)
+    learning_modes_title: "Learning Pace Modes",
+    mode_step_by_step: "Step-by-Step",
+    mode_step_by_step_desc: "Gentle pacing, 15m micro-doses, extra scaffolding",
+    mode_balanced: "Balanced",
+    mode_balanced_desc: "Standard 25m Pomodoro, guided concept application",
+    mode_fast_track: "Fast-Track",
+    mode_fast_track_desc: "High-yield review, shortcuts & rapid drills",
 
     // Prerequisite Gap Finder
     gap_finder_title: "Prerequisite Gap Finder (Root-Cause Tracer)",
@@ -100,11 +120,31 @@ const I18N_DICTIONARY = {
     // Navigation Tabs
     nav_gap_finder: "मूल-कारण एक्स-रे (Gap Finder)",
     nav_study_planner: "खाली समय योजनाकार",
+    nav_ai_assistant: "एआई सहायक (Tutor)",
     nav_practice: "स्मार्ट अभ्यास",
     nav_analytics: "मेरी प्रगति",
     nav_teacher_dashboard: "कक्षा हीटमैप",
     nav_parent_view: "अभिभावक अवलोकन",
     nav_admin_panel: "संस्थान स्वास्थ्य",
+
+    // AI Learning Assistant (Objective 3)
+    ai_assistant_title: "एआई शिक्षण सहायक (संदेह निवारक)",
+    ai_assistant_desc: "सरल, चरण-दर-चरण स्पष्टीकरण के माध्यम से कठिन अवधारणाओं को समझें।",
+    ai_assistant_placeholder: "अपना प्रश्न या संदेह यहां लिखें (उदा. दो ऋणात्मक संख्याएं गुणा होकर धनात्मक क्यों बनती हैं?)...",
+    btn_ask_ai: "चरण-दर-चरण समाधान प्राप्त करें",
+    ai_confidence_badge: "पाठ्यक्रम-सत्यापित एआई सुरक्षा",
+    ai_prompt_hint_1: "दो ऋणात्मक मिलकर धनात्मक क्यों बनते हैं?",
+    ai_prompt_hint_2: "द्विघात समीकरण कैसे हल करें?",
+    ai_prompt_hint_3: "बीजगणितीय गुणनखंड कैसे काम करता है?",
+
+    // Three Learning Modes (Objective 5)
+    learning_modes_title: "सीखने की गति मोड",
+    mode_step_by_step: "चरण-दर-चरण (Step-by-Step)",
+    mode_step_by_step_desc: "धीमी गति, 15 मिनट के छोटे पाठ, बुनियादी उदाहरण",
+    mode_balanced: "संतुलित (Balanced)",
+    mode_balanced_desc: "मानक 25 मिनट का पोमोडोरो, संतुलित अभ्यास",
+    mode_fast_track: "फास्ट-ट्रैक (Fast-Track)",
+    mode_fast_track_desc: "त्वरित पुनरावृत्ति, मुख्य सूत्र और शॉर्टकट ट्रिक्स",
 
     // Prerequisite Gap Finder
     gap_finder_title: "पूर्वापेक्षित अंतर खोजक (Root-Cause Tracer)",
@@ -183,11 +223,31 @@ const I18N_DICTIONARY = {
     // Navigation Tabs
     nav_gap_finder: "ಮೂಲ-ಕಾರಣ ಎಕ್ಸ್-ರೇ (Gap Finder)",
     nav_study_planner: "ಖಾಲಿ-ವೇಳೆ ಯೋಜಕ",
+    nav_ai_assistant: "ಎಐ ಸಹಾಯಕ (Tutor)",
     nav_practice: "ಸ್ಮಾರ್ಟ್ ಅಭ್ಯಾಸ",
     nav_analytics: "ನನ್ನ ಪ್ರಗತಿ",
     nav_teacher_dashboard: "ತರಗತಿ ಹೀಟ್‌ಮ್ಯಾಪ್",
     nav_parent_view: "ಪೋಷಕರ ಅವಲೋಕನ",
     nav_admin_panel: "ಸಂಸ್ಥೆಯ ಮಾಹಿತಿ",
+
+    // AI Learning Assistant (Objective 3)
+    ai_assistant_title: "ಎಐ ಕಲಿಕಾ ಸಹಾಯಕ (ಸಂಶಯ ಪರಿಹಾರಕ)",
+    ai_assistant_desc: "ಸರಳ ಮತ್ತು ಹಂತ-ಹಂತದ ವಿವರಣೆಗಳ ಮೂಲಕ ಕಷ್ಟದ ವಿಷಯಗಳನ್ನು ಸುಲಭವಾಗಿ ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ.",
+    ai_assistant_placeholder: "ನಿಮ್ಮ ಪ್ರಶ್ನೆ ಅಥವಾ ಸಂಶಯವನ್ನು ಇಲ್ಲಿ ಬರೆಯಿರಿ...",
+    btn_ask_ai: "ಹಂತ-ಹಂತದ ವಿವರಣೆ ಪಡೆಯಿರಿ",
+    ai_confidence_badge: "ಪಠ್ಯಕ್ರಮ-ದೃಢೀಕೃತ ಎಐ ಭದ್ರತೆ",
+    ai_prompt_hint_1: "ಎರಡು ಋಣಾತ್ಮಕ ಸಂಖ್ಯೆಗಳು ಧನಾತ್ಮಕವಾಗುವುದು ಏಕೆ?",
+    ai_prompt_hint_2: "ವರ್ಗ ಸಮೀಕರಣ ಹೇಗೆ ಬಿಡಿಸುವುದು?",
+    ai_prompt_hint_3: "ಅಪವರ್ತಿಸುವಿಕೆ ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ?",
+
+    // Three Learning Modes (Objective 5)
+    learning_modes_title: "ಕಲಿಕೆಯ ವೇಗ ವಿಧಾನಗಳು",
+    mode_step_by_step: "ಹಂತ-ಹಂತವಾಗಿ (Step-by-Step)",
+    mode_step_by_step_desc: "ನಿಧಾನ ವೇಗ, 15 ನಿಮಿಷಗಳ ಸಣ್ಣ ಪಾಠಗಳು, ಮೂಲ ಉದಾಹರಣೆಗಳು",
+    mode_balanced: "ಸಮತೋಲಿತ (Balanced)",
+    mode_balanced_desc: "ಪ್ರಮಾಣಿತ 25 ನಿಮಿಷಗಳ ಅಧ್ಯಯನ, ನೇರ ಅಭ್ಯಾಸ",
+    mode_fast_track: "ವೇಗದ ಹಾದಿ (Fast-Track)",
+    mode_fast_track_desc: "ತ್ವರಿತ ಸಾರಾಂಶ, ಮುಖ್ಯ ಸೂತ್ರಗಳು ಮತ್ತು ಸುಲಭ ವಿಧಾನಗಳು",
 
     // Prerequisite Gap Finder
     gap_finder_title: "ಪೂರ್ವಾಪೇಕ್ಷಿತ ಕೊರತೆ ಶೋಧಕ (Root-Cause Tracer)",
@@ -266,11 +326,31 @@ const I18N_DICTIONARY = {
     // Navigation Tabs
     nav_gap_finder: "மூலக்-காரண எக்ஸ்-ரே (Gap Finder)",
     nav_study_planner: "ஓய்வு நேரத் திட்டமிடுபவர்",
+    nav_ai_assistant: "ஏஐ உதவியாளர் (Tutor)",
     nav_practice: "ஸ்மார்ட் பயிற்சி",
     nav_analytics: "என் முன்னேற்றம்",
     nav_teacher_dashboard: "வகுப்பறை வெப்ப வரைபடம்",
     nav_parent_view: "பெற்றோர் பார்வை",
     nav_admin_panel: "நிறுவன நலன்",
+
+    // AI Learning Assistant (Objective 3)
+    ai_assistant_title: "ஏஐ கற்றல் உதவியாளர் (சந்தேக தீர்வு)",
+    ai_assistant_desc: "எளிமையான, படி-படியான விளக்கங்களின் மூலம் கடினமான பாடக் கருத்துகளைப் புரிந்து கொள்ளுங்கள்.",
+    ai_assistant_placeholder: "உங்கள் கேள்வியை இங்கே தட்டச்சு செய்யவும்...",
+    btn_ask_ai: "படி-படியான விளக்கம் பெறுக",
+    ai_confidence_badge: "பாடத்திட்டத்தால் சரிபார்க்கப்பட்ட ஏஐ பாதுகாப்பு",
+    ai_prompt_hint_1: "இரண்டு எதிரெதிர் எண்கள் பெருக்கலில் நேர்மறையாக மாறுவது ஏன்?",
+    ai_prompt_hint_2: "இருபடிச் சமன்பாடுகளை எவ்வாறு தீர்ப்பது?",
+    ai_prompt_hint_3: "காரணிப்படுத்துதல் எவ்வாறு செயல்படுகிறது?",
+
+    // Three Learning Modes (Objective 5)
+    learning_modes_title: "கற்றல் வேக முறைகள்",
+    mode_step_by_step: "படி-படியாக (Step-by-Step)",
+    mode_step_by_step_desc: "மெதுவான வேகம், 15 நிமிட நுண்ணிய பகுதிகள், அடிப்படை உதாரணங்கள்",
+    mode_balanced: "சமநிலை (Balanced)",
+    mode_balanced_desc: "நிலையான 25 நிமிட பொமோடோரோ, சமநிலையான பயிற்சி",
+    mode_fast_track: "விரைவுப் பாதை (Fast-Track)",
+    mode_fast_track_desc: "வேகமான மறுபார்வை, முக்கிய சூத்திரங்கள் மற்றும் விரைவு குறுக்குவழிகள்",
 
     // Prerequisite Gap Finder
     gap_finder_title: "முன்தேவை இடைவெளி கண்டுபிடிப்பான் (Root-Cause Tracer)",
@@ -349,11 +429,31 @@ const I18N_DICTIONARY = {
     // Navigation Tabs
     nav_gap_finder: "మూల-కారణ ఎక్స్-రే (Gap Finder)",
     nav_study_planner: "ఖాళీ సమయ ప్లానర్",
+    nav_ai_assistant: "ఏఐ అసిస్టెంట్ (Tutor)",
     nav_practice: "స్మార్ట్ ప్రాక్టీస్",
     nav_analytics: "నా పురోగతి",
     nav_teacher_dashboard: "తరగతి హీట్‌మ్యాప్",
     nav_parent_view: "తల్లిదండ్రుల నివేదిక",
     nav_admin_panel: "సంస్థ స్థితి",
+
+    // AI Learning Assistant (Objective 3)
+    ai_assistant_title: "ఏఐ లెర్నింగ్ అసిస్టెంట్ (సందేహాల నివృత్తి)",
+    ai_assistant_desc: "సులభమైన, దశలవారీ వివరణల ద్వారా కష్టమైన అంశాలను సులభంగా అర్థం చేసుకోండి.",
+    ai_assistant_placeholder: "మీ ప్రశ్న లేదా సందేహాన్ని ఇక్కడ రాయండి...",
+    btn_ask_ai: "దశలవారీ వివరణ పొందండి",
+    ai_confidence_badge: "పాఠ్యాంశం-ధృవీకరించబడిన ఏఐ రక్షణ",
+    ai_prompt_hint_1: "రెండు రుణాత్మక సంఖ్యల గుణకారం ధనాత్మకంగా ఎందుకు మారుతుంది?",
+    ai_prompt_hint_2: "వర్గ సమీకరణాలను ఎలా పరిష్కరించాలి?",
+    ai_prompt_hint_3: "కారణాంకాలు ఎలా పనిచేస్తాయి?",
+
+    // Three Learning Modes (Objective 5)
+    learning_modes_title: "అభ్యాస వేగ మోడ్లు",
+    mode_step_by_step: "దశలవారీగా (Step-by-Step)",
+    mode_step_by_step_desc: "నిదానమైన వేగం, 15 నిమిషాల మైక్రో పాఠాలు, ప్రాథమిక ఉదాహరణలు",
+    mode_balanced: "సమతుల్య (Balanced)",
+    mode_balanced_desc: "ప్రామాణిక 25 నిమిషాల పోమోడోరో, సమతుల్య అభ్యాసం",
+    mode_fast_track: "ఫాస్ట్ ట్రాక్ (Fast-Track)",
+    mode_fast_track_desc: "శీఘ్ర పునశ్చరణ, ముఖ్యమైన సూత్రాలు మరియు షార్ట్‌కట్ పద్ధతులు",
 
     // Prerequisite Gap Finder
     gap_finder_title: "ముందస్తు అంతరాల గుర్తింపు (Root-Cause Tracer)",

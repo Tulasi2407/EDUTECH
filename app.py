@@ -11,6 +11,7 @@ from config import Config
 from database import init_db, get_db_connection
 from services.validator import (
     ValidationError,
+    sanitize_string,
     validate_free_hour_slot_payload,
     validate_quiz_submission_payload,
     validate_ai_flag_payload,
@@ -342,6 +343,32 @@ def get_ai_explanation():
     difficulty = request.args.get("difficulty", "intermediate")
     explanation = AIService.generate_explanation(topic, difficulty)
     return jsonify(explanation)
+
+@app.route("/api/ai/ask", methods=["POST"])
+def ask_ai_assistant():
+    """
+    AI Learning Assistant endpoint (Objective 3, 4 & 5).
+    Clears student doubts, providing simple, step-by-step explanations
+    tailored to learning mode (Step-by-Step, Balanced, Fast-Track) and language.
+    """
+    data = request.get_json() or {}
+    question = sanitize_string(data.get("question", ""), max_length=500)
+    topic = sanitize_string(data.get("topic", "General"), max_length=100)
+    learning_mode = sanitize_string(data.get("learning_mode", "balanced"), max_length=30).lower()
+    language = sanitize_string(data.get("language", "en"), max_length=10).lower()
+
+    if not question:
+        return jsonify({"error": "Question cannot be empty"}), 400
+
+    valid_modes = {"step-by-step", "balanced", "fast-track"}
+    if learning_mode not in valid_modes:
+        learning_mode = "balanced"
+
+    if language not in Config.SUPPORTED_LANGUAGES:
+        language = "en"
+
+    response = AIService.ask_assistant(question, topic, learning_mode, language)
+    return jsonify(response)
 
 @app.route("/api/ai/flag", methods=["POST"])
 def flag_ai_question():

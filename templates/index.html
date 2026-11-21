@@ -78,50 +78,79 @@
           <span id="current-user-name" class="text-xs font-bold text-slate-800">Aarav Sharma</span>
           <span id="current-user-role" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-200">STUDENT</span>
         </div>
+
+        <!-- 10 Core Objectives Alignment Button -->
+        <button id="view-objectives-btn" class="tactile-btn px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300/80 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm">
+          <span>🎯 10 Objectives</span>
+        </button>
       </div>
 
     </div>
   </header>
 
   <!-- ===============================
-       ROLE-AWARE NAVIGATION BAR
+       ROLE-AWARE NAVIGATION & LEARNING MODES BAR
   ================================ -->
   <nav class="bg-white border-b border-slate-200/80 px-4 py-2 sticky top-[65px] z-30">
-    <div class="max-w-7xl mx-auto flex items-center space-x-1 overflow-x-auto no-scrollbar">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-2">
       
-      <!-- Student & Admin Tabs -->
-      <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm shrink-0 flex items-center gap-1.5" data-tab="gap-finder">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-        <span data-i18n="nav_gap_finder">Root-Cause X-Ray</span>
-      </button>
+      <!-- Tabs List -->
+      <div class="flex items-center space-x-1 overflow-x-auto no-scrollbar">
+        <!-- Student & Admin Tabs -->
+        <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm shrink-0 flex items-center gap-1.5" data-tab="gap-finder">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          <span data-i18n="nav_gap_finder">Root-Cause X-Ray</span>
+        </button>
 
-      <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5" data-tab="study-planner">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <span data-i18n="nav_study_planner">Free-Hour Planner</span>
-      </button>
+        <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5" data-tab="study-planner">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span data-i18n="nav_study_planner">Free-Hour Planner</span>
+        </button>
 
-      <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5" data-tab="analytics">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-        <span data-i18n="nav_analytics">My Progress</span>
-      </button>
+        <!-- Dedicated AI Assistant Tab (Objective 3) -->
+        <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5" data-tab="ai-assistant">
+          <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+          <span data-i18n="nav_ai_assistant">AI Assistant (Tutor)</span>
+        </button>
 
-      <!-- Teacher Tabs -->
-      <button class="nav-tab-btn role-teacher-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5 hidden" data-tab="teacher-dashboard">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-        <span data-i18n="nav_teacher_dashboard">Class Heatmap & Alerts</span>
-      </button>
+        <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5" data-tab="analytics">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          <span data-i18n="nav_analytics">My Progress</span>
+        </button>
 
-      <!-- Parent Tabs -->
-      <button class="nav-tab-btn role-parent-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5 hidden" data-tab="parent-view">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <span data-i18n="nav_parent_view">Parent Overview</span>
-      </button>
+        <!-- Teacher Tabs -->
+        <button class="nav-tab-btn role-teacher-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5 hidden" data-tab="teacher-dashboard">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          <span data-i18n="nav_teacher_dashboard">Class Heatmap & Alerts</span>
+        </button>
 
-      <!-- Admin Tab -->
-      <button class="nav-tab-btn role-admin-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5 hidden" data-tab="admin-panel">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-        <span data-i18n="nav_admin_panel">Institution Health</span>
-      </button>
+        <!-- Parent Tabs -->
+        <button class="nav-tab-btn role-parent-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5 hidden" data-tab="parent-view">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span data-i18n="nav_parent_view">Parent Overview</span>
+        </button>
+
+        <!-- Admin Tab -->
+        <button class="nav-tab-btn role-admin-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5 hidden" data-tab="admin-panel">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+          <span data-i18n="nav_admin_panel">Institution Health</span>
+        </button>
+      </div>
+
+      <!-- Three Learning Modes Bar (Objective 5) -->
+      <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/90 text-[11px] font-bold self-start md:self-auto shrink-0">
+        <span class="text-slate-400 px-2 uppercase text-[9px] tracking-wider hidden sm:inline" data-i18n="learning_modes_title">Mode:</span>
+        <button class="learning-mode-btn px-2.5 py-1 rounded-lg text-slate-600 hover:bg-slate-200 transition" data-mode="step-by-step" title="Foundational pace, micro-doses, extra scaffolding">
+          🌱 <span data-i18n="mode_step_by_step">Step-by-Step</span>
+        </button>
+        <button class="learning-mode-btn px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-extrabold shadow-xs transition" data-mode="balanced" title="Standard 25m Pomodoro, guided concept application">
+          ⚖️ <span data-i18n="mode_balanced">Balanced</span>
+        </button>
+        <button class="learning-mode-btn px-2.5 py-1 rounded-lg text-slate-600 hover:bg-slate-200 transition" data-mode="fast-track" title="Rapid review, high-yield drill & shortcuts">
+          ⚡ <span data-i18n="mode_fast_track">Fast-Track</span>
+        </button>
+      </div>
+
     </div>
   </nav>
 
@@ -234,6 +263,90 @@
     <div id="tab-study-planner" class="tab-content-panel space-y-6 hidden">
       <div id="timeline-container">
         <!-- Dynamically rendered by timeline.js -->
+      </div>
+    </div>
+
+    <!-- ==============================================
+         TAB: AI LEARNING ASSISTANT (OBJECTIVE 3)
+    =============================================== -->
+    <div id="tab-ai-assistant" class="tab-content-panel space-y-6 hidden">
+      <div class="tactile-card p-6 bg-white space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-xs">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+            </div>
+            <div>
+              <h2 class="text-lg font-bold text-slate-900" data-i18n="ai_assistant_title">AI Learning Assistant (Doubt Solver)</h2>
+              <p class="text-xs text-slate-500" data-i18n="ai_assistant_desc">Clear doubts and understand difficult concepts through simple, step-by-step explanations.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span data-i18n="ai_confidence_badge">Curriculum-Verified AI Guardrail</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Quick Prompt Recommendation Chips -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Tap a Common Doubt or Type Below:</label>
+          <div class="flex flex-wrap gap-2">
+            <button class="ai-prompt-chip px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 text-xs font-semibold border border-slate-200/80 transition" data-prompt="Why do two negative numbers multiply to a positive?">
+              🌱 Why do two negatives make a positive?
+            </button>
+            <button class="ai-prompt-chip px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 text-xs font-semibold border border-slate-200/80 transition" data-prompt="How do I solve quadratic equations step-by-step using the quadratic formula?">
+              📐 How to solve quadratic equations?
+            </button>
+            <button class="ai-prompt-chip px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 text-xs font-semibold border border-slate-200/80 transition" data-prompt="How does factoring polynomials work? What are standard identities?">
+              🔍 How does factoring polynomials work?
+            </button>
+            <button class="ai-prompt-chip px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 text-xs font-semibold border border-slate-200/80 transition" data-prompt="Give me a real-life analogy for parabolas and quadratic equations">
+              💡 Real-life analogy for parabolas
+            </button>
+          </div>
+        </div>
+
+        <!-- Question Input Form -->
+        <form id="ai-assistant-form" class="space-y-3">
+          <div class="relative">
+            <textarea id="ai-question-input" rows="3" required placeholder="Type your question or doubt here (e.g., Why do two negative numbers multiply to a positive?)..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs font-medium text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition leading-relaxed"></textarea>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <span>Active Pacing:</span>
+              <span id="ai-active-mode-label" class="font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">Balanced Mode</span>
+            </div>
+            <button type="submit" id="ai-submit-btn" class="tactile-btn px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              <span data-i18n="btn_ask_ai">Get Step-by-Step Explanation</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- AI Assistant Output Card -->
+        <div id="ai-response-card" class="hidden mt-4 p-5 rounded-2xl bg-indigo-50/40 border border-indigo-100 space-y-3">
+          <div class="flex items-center justify-between border-b border-indigo-100/70 pb-2.5">
+            <span class="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+              Step-by-Step Educational Solution
+            </span>
+            <div class="flex items-center gap-2">
+              <span id="ai-confidence-score-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-emerald-700 border border-emerald-200">
+                98% Confidence (Curriculum Verified)
+              </span>
+              <button id="flag-ai-response-btn" class="text-[11px] text-slate-400 hover:text-amber-600 font-semibold flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                Report / Flag
+              </button>
+            </div>
+          </div>
+          <div id="ai-response-body" class="text-xs text-slate-700 leading-relaxed font-normal prose prose-sm max-w-none">
+            <!-- Injected by app.js -->
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -402,6 +515,98 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ===============================
+       MODAL: 10 OBJECTIVES MATRIX ALIGNMENT
+  ================================ -->
+  <div id="objectives-modal" class="modal-container fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 shadow-2xl border border-slate-100 relative max-h-[90vh] overflow-y-auto">
+      <button class="close-modal-btn absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <div class="border-b border-slate-100 pb-3 mb-4">
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600 block">Domain 2: Smart, Inclusive & Personalized Education</span>
+        <h3 class="text-base font-bold text-slate-900">Roots & Rhythm • 10 Core Educational Objectives Alignment</h3>
+        <p class="text-xs text-slate-500 mt-0.5">How each objective is concretely fulfilled within the application architecture.</p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="border-b border-slate-200 text-slate-400 font-bold uppercase text-[10px]">
+              <th class="pb-2.5">#</th>
+              <th class="pb-2.5">Specific Objective</th>
+              <th class="pb-2.5">Implementation Feature</th>
+              <th class="pb-2.5 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700 font-medium">
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 font-bold text-indigo-600">1</td>
+              <td class="py-2.5"><strong>Identify Learning Gaps:</strong> Identify struggling subjects & topics through diagnostic check.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">Gap Finder</span></td>
+              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="gap-finder">Go to Gap Finder →</button></td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 font-bold text-indigo-600">2</td>
+              <td class="py-2.5"><strong>Find Root Causes:</strong> Foundational concepts to master before advancing.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">Root-Cause X-Ray</span></td>
+              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="gap-finder">View Node Map →</button></td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 font-bold text-indigo-600">3</td>
+              <td class="py-2.5"><strong>AI Learning Assistance:</strong> Simple, step-by-step doubt clearing tutor.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">AI Assistant</span></td>
+              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="ai-assistant">Ask AI Tutor →</button></td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 font-bold text-indigo-600">4</td>
+              <td class="py-2.5"><strong>Multiple Languages:</strong> English, Hindi, Kannada, Tamil & Telugu.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Language Switcher</span></td>
+              <td class="py-2.5 text-right"><span class="text-slate-400 text-[11px]">Top Bar Switcher</span></td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 font-bold text-indigo-600">5</td>
+              <td class="py-2.5"><strong>Personalize Learning Pace:</strong> Step-by-Step, Balanced, and Fast-Track modes.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Three Learning Modes</span></td>
+              <td class="py-2.5 text-right"><span class="text-slate-400 text-[11px]">Active in Nav Bar</span></td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 font-bold text-indigo-600">6</td>
+              <td class="py-2.5"><strong>Personalized Practice:</strong> Topic-based weak-area practice questions.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Practice Section</span></td>
+              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="gap-finder">Start Practice →</button></td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 font-bold text-indigo-600">7</td>
+              <td class="py-2.5"><strong>Personalized Study Schedules:</strong> Strictly within declared free hours.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-50 text-teal-700 border border-teal-200">Free-Hour Planner</span></td>
+              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="study-planner">Open Planner →</button></td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 font-bold text-indigo-600">8</td>
+              <td class="py-2.5"><strong>Track Learning Progress:</strong> Quiz scores, accuracy, streaks, mastery charts.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">Analytics Dashboard</span></td>
+              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="analytics">View Progress →</button></td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 font-bold text-indigo-600">9</td>
+              <td class="py-2.5"><strong>Easy-to-Use Platform:</strong> Responsive UI for mobile, tablet, and desktop.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">Tactile Mobile UI</span></td>
+              <td class="py-2.5 text-right"><span class="text-slate-400 text-[11px]">All Screens</span></td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 font-bold text-indigo-600">10</td>
+              <td class="py-2.5"><strong>Privacy & Responsible AI:</strong> RBAC data isolation, validation & answer reporting.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">Auth, RBAC & Flagging</span></td>
+              <td class="py-2.5 text-right"><span class="text-slate-400 text-[11px]">Server Verified</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 

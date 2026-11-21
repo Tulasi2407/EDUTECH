@@ -11,11 +11,13 @@ class RootsAndRhythmApp {
     this.currentSubjectId = 1;
     this.currentTopicId = 6; // Default to Quadratic Equations
     this.activeTab = "gap-finder";
+    this.currentLearningMode = "balanced"; // Step-by-Step, Balanced, Fast-Track (Objective 5)
     this.nodeMap = null;
     this.timeline = null;
     this.analytics = null;
     this.currentPracticeQuestion = null;
     this.selectedOptionIndex = null;
+    this.lastAIResponse = null;
   }
 
   async init() {
@@ -496,7 +498,173 @@ class RootsAndRhythmApp {
     }
   }
 
+  setLearningMode(mode) {
+    this.currentLearningMode = mode;
+    document.querySelectorAll(".learning-mode-btn").forEach(btn => {
+      if (btn.dataset.mode === mode) {
+        btn.classList.add("bg-indigo-600", "text-white", "font-extrabold", "shadow-xs");
+        btn.classList.remove("text-slate-600", "hover:bg-slate-200");
+      } else {
+        btn.classList.remove("bg-indigo-600", "text-white", "font-extrabold", "shadow-xs");
+        btn.classList.add("text-slate-600", "hover:bg-slate-200");
+      }
+    });
+
+    const activeModeLabel = document.getElementById("ai-active-mode-label");
+    if (activeModeLabel) {
+      const modeNames = {
+        "step-by-step": "🌱 Step-by-Step Mode",
+        "balanced": "⚖️ Balanced Mode",
+        "fast-track": "⚡ Fast-Track Mode"
+      };
+      activeModeLabel.textContent = modeNames[mode] || "⚖️ Balanced Mode";
+    }
+
+    const toastMsgs = {
+      "step-by-step": "Pacing: Step-by-Step Mode (15m micro-doses, extra foundational scaffolding)",
+      "balanced": "Pacing: Balanced Mode (Standard 25m Pomodoro, guided concepts)",
+      "fast-track": "Pacing: Fast-Track Mode (High-yield review, shortcuts & rapid drills)"
+    };
+    this.showToast(toastMsgs[mode] || "Pacing updated");
+  }
+
+  async askAIAssistant(customQuestion = null) {
+    const inputEl = document.getElementById("ai-question-input");
+    const submitBtn = document.getElementById("ai-submit-btn");
+    const responseCard = document.getElementById("ai-response-card");
+    const responseBody = document.getElementById("ai-response-body");
+    const badgeEl = document.getElementById("ai-confidence-score-badge");
+
+    const question = customQuestion || (inputEl ? inputEl.value : "");
+    if (!question || !question.trim()) {
+      this.showToast("Please enter a question or select a prompt chip", "error");
+      return;
+    }
+
+    if (inputEl) inputEl.value = question;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `
+        <svg class="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+        <span>Synthesizing Step-by-Step...</span>
+      `;
+    }
+
+    try {
+      const currentTopicName = document.getElementById("topic-select")?.selectedOptions?.[0]?.text || "General";
+      const res = await fetch("/api/ai/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: question.trim(),
+          topic: currentTopicName,
+          learning_mode: this.currentLearningMode,
+          language: window.I18N ? window.I18N.currentLanguage() : "en"
+        })
+      });
+
+      const data = await res.json();
+      if (data.error) {
+        this.showToast(data.error, "error");
+        return;
+      }
+
+      this.lastAIResponse = data;
+
+      // Render markdown response safely
+      if (responseBody) {
+        let formatted = data.response_text || "";
+        // Convert headers
+        formatted = formatted.replace(/### (.*?)\n/g, '<h4 class="text-sm font-bold text-indigo-950 mt-2 mb-1">$1</h4>');
+        // Convert bold
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Convert italic
+        formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        // Convert inline code
+        formatted = formatted.replace(/`(.*?)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-100 font-mono text-[11px] text-indigo-700">$1</code>');
+        // Convert newlines
+        formatted = formatted.replace(/\n/g, '<br/>');
+
+        responseBody.innerHTML = formatted;
+      }
+
+      if (badgeEl) {
+        const pct = Math.round((data.confidence_score || 0.98) * 100);
+        badgeEl.textContent = `${pct}% Confidence (${data.verification_badge || 'Curriculum-Verified'})`;
+      }
+
+      if (responseCard) {
+        responseCard.classList.remove("hidden");
+        responseCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+    } catch (e) {
+      console.error(e);
+      this.showToast("Failed to fetch response from AI Assistant", "error");
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          <span data-i18n="btn_ask_ai">Get Step-by-Step Explanation</span>
+        `;
+        if (window.I18N) window.I18N.applyTranslations();
+      }
+    }
+  }
+
   setupEventListeners() {
+    // Learning mode switcher (Objective 5)
+    document.querySelectorAll(".learning-mode-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        this.setLearningMode(btn.dataset.mode);
+      });
+    });
+
+    // 10 Core Objectives Matrix Modal trigger
+    const viewObjBtn = document.getElementById("view-objectives-btn");
+    if (viewObjBtn) {
+      viewObjBtn.addEventListener("click", () => {
+        const modal = document.getElementById("objectives-modal");
+        if (modal) modal.classList.remove("hidden");
+      });
+    }
+
+    // Jump buttons inside Objectives Modal
+    document.querySelectorAll(".obj-jump-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const targetTab = btn.dataset.target;
+        const modal = document.getElementById("objectives-modal");
+        if (modal) modal.classList.add("hidden");
+        if (targetTab) this.setActiveTab(targetTab);
+      });
+    });
+
+    // AI Assistant Form submission (Objective 3)
+    const aiForm = document.getElementById("ai-assistant-form");
+    if (aiForm) {
+      aiForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        this.askAIAssistant();
+      });
+    }
+
+    // AI Prompt Chips
+    document.querySelectorAll(".ai-prompt-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const promptText = chip.dataset.prompt;
+        this.askAIAssistant(promptText);
+      });
+    });
+
+    // Flag AI response button in Assistant tab
+    const flagAIBtn = document.getElementById("flag-ai-response-btn");
+    if (flagAIBtn) {
+      flagAIBtn.addEventListener("click", () => {
+        this.openFlagModal(this.currentPracticeQuestion ? this.currentPracticeQuestion.id : 1);
+      });
+    }
+
     // Tab switching
     document.querySelectorAll(".nav-tab-btn").forEach(btn => {
       btn.addEventListener("click", () => {
