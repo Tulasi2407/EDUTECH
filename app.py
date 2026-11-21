@@ -246,7 +246,149 @@ def get_all_users():
 
 @app.route("/api/auth/current-user", methods=["GET"])
 def get_current_user_info():
-    return jsonify({"user": get_current_user()})
+    user = get_current_user()
+    user_data = {k: v for k, v in user.items() if k != "password_hash"}
+
+    conn = get_db_connection()
+    c = conn.cursor()
+
+    # Linked guardian info
+    guardian = None
+    if user["role"] == "student":
+        c.execute("""
+            SELECT u.id, u.name, u.email 
+            FROM parent_student_map psm
+            JOIN users u ON psm.parent_id = u.id
+            WHERE psm.student_id = ?
+            LIMIT 1
+        """, (user["id"],))
+        g_row = c.fetchone()
+        if g_row:
+            guardian = dict(g_row)
+    elif user["role"] == "parent":
+        c.execute("""
+            SELECT u.id, u.name, u.email, u.grade_or_cohort
+            FROM parent_student_map psm
+            JOIN users u ON psm.student_id = u.id
+            WHERE psm.parent_id = ?
+            LIMIT 1
+        """, (user["id"],))
+        s_row = c.fetchone()
+        if s_row:
+            guardian = {"linked_student": dict(s_row)}
+
+    # Academic & Study Stats
+    c.execute("""
+        SELECT 
+            COUNT(CASE WHEN status = 'mastered' THEN 1 END) as mastered_nodes,
+            COUNT(*) as total_nodes,
+            COALESCE(MAX(streak_count), 0) as current_streak,
+            ROUND(AVG(mastery_score), 1) as avg_mastery
+        FROM student_mastery
+        WHERE student_id = ?
+    """, (user["id"],))
+    mastery_stat = c.fetchone()
+
+    c.execute("""
+        SELECT COUNT(*) as completed_sessions,
+               COALESCE(SUM(duration_minutes), 0) as total_study_minutes
+        FROM study_sessions
+        WHERE student_id = ? AND status = 'completed'
+    """, (user["id"],))
+    sess_stat = c.fetchone()
+
+    c.execute("""
+        SELECT COUNT(*) as total_quizzes,
+               ROUND(COALESCE(AVG(is_correct) * 100, 80.0), 1) as avg_quiz_score
+        FROM quiz_attempts
+        WHERE student_id = ?
+    """, (user["id"],))
+    quiz_stat = c.fetchone()
+
+    # Enrolled core subjects (Karnataka 10th State Board)
+    c.execute("SELECT id, name, code, icon, color FROM subjects ORDER BY id ASC")
+    enrolled_subjects = [dict(s) for s in c.fetchall()]
+
+    conn.close()
+
+    user_data["guardian"] = guardian
+    user_data["academic_board"] = "Karnataka 10th High School State Board (KSEEB)"
+    user_data["enrolled_subjects"] = enrolled_subjects
+    user_data["stats"] = {
+        "mastered_nodes": (mastery_stat["mastered_nodes"] if mastery_stat else 0) or 0,
+        "total_nodes": (mastery_stat["total_nodes"] if mastery_stat else 0) or 22,
+        "current_streak": max(1, (mastery_stat["current_streak"] if mastery_stat else 0) or 1),
+        "avg_mastery": (mastery_stat["avg_mastery"] if mastery_stat else 72.0) or 72.0,
+        "completed_sessions": (sess_stat["completed_sessions"] if sess_stat else 0) or 0,
+        "total_study_minutes": (sess_stat["total_study_minutes"] if sess_stat else 0) or 0,
+        "total_quizzes": (quiz_stat["total_quizzes"] if quiz_stat else 0) or 0,
+        "avg_quiz_score": (quiz_stat["avg_quiz_score"] if quiz_stat else 80.0) or 80.0
+    }
+
+    return jsonify({"user": user_data})
+
+@app.route("/api/auth/profile", methods=["POST"])
+def update_user_profile():
+    user = get_current_user()
+    data = request.get_json() or {}
+
+    name = sanitize_string(data.get("name", ""), max_length=100)
+    if not name:
+        return jsonify({"error": "Validation Error", "field": "name", "message": "Name cannot be empty."}), 400
+
+    grade_or_cohort = sanitize_string(data.get("grade_or_cohort", "Grade 10-A"), max_length=50)
+    lang = sanitize_string(data.get("language_preference", "en"), max_length=10).lower()
+    if lang not in Config.SUPPORTED_LANGUAGES:
+        lang = "en"
+
+    avatar_seed = sanitize_string(data.get("avatar_seed", ""), max_length=50)
+    avatar_url = data.get("avatar_url")
+    if avatar_seed:
+        avatar_url = f"https://api.dicebear.com/7.x/bottts/svg?seed={avatar_seed}"
+    elif not avatar_url:
+        avatar_url = user.get("avatar_url") or f"https://api.dicebear.com/7.x/bottts/svg?seed={user['name']}"
+
+    # Password update check
+    current_password = data.get("current_password")
+    new_password = data.get("new_password")
+    new_pw_hash = None
+
+    if new_password:
+        if len(new_password) < 6:
+            return jsonify({"error": "Validation Error", "field": "new_password", "message": "New password must be at least 6 characters long."}), 400
+
+        # Check current password if user has an existing password
+        if user.get("password_hash"):
+            if not current_password or not check_password_hash(user["password_hash"], current_password):
+                return jsonify({"error": "Validation Error", "field": "current_password", "message": "Current password is incorrect."}), 400
+        new_pw_hash = generate_password_hash(new_password)
+
+    conn = get_db_connection()
+    c = conn.cursor()
+    if new_pw_hash:
+        c.execute("""
+            UPDATE users 
+            SET name = ?, grade_or_cohort = ?, language_preference = ?, avatar_url = ?, password_hash = ?
+            WHERE id = ?
+        """, (name, grade_or_cohort, lang, avatar_url, new_pw_hash, user["id"]))
+    else:
+        c.execute("""
+            UPDATE users 
+            SET name = ?, grade_or_cohort = ?, language_preference = ?, avatar_url = ?
+            WHERE id = ?
+        """, (name, grade_or_cohort, lang, avatar_url, user["id"]))
+
+    conn.commit()
+
+    c.execute("SELECT id, name, username, email, role, grade_or_cohort, language_preference, avatar_url FROM users WHERE id = ?", (user["id"],))
+    updated_user = dict(c.fetchone())
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "message": "Profile updated successfully!",
+        "user": updated_user
+    })
 
 # -----------------
 # 2.5 Main Comprehensive Dashboard Endpoint (Features 1 to 10)

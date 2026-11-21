@@ -471,5 +471,42 @@ class RootsAndRhythmTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 302)
         self.assertIn("/parent", res.headers.get("Location", ""))
 
+    def test_23_current_user_and_profile_update(self):
+        """Verify /api/auth/current-user returns profile & academic details and /api/auth/profile updates profile safely."""
+        with self.client.session_transaction() as sess:
+            sess["user_id"] = 1 # Aarav Sharma
+
+        # 1. Fetch current user profile
+        res = self.client.get("/api/auth/current-user")
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)
+        self.assertIn("user", data)
+        user = data["user"]
+        self.assertEqual(user["name"], "Aarav Sharma")
+        self.assertIn("academic_board", user)
+        self.assertIn("stats", user)
+        self.assertIn("guardian", user)
+        self.assertIn("enrolled_subjects", user)
+        self.assertEqual(len(user["enrolled_subjects"]), 6)
+
+        # 2. Update user profile
+        update_res = self.client.post("/api/auth/profile", json={
+            "name": "Aarav K. Sharma",
+            "grade_or_cohort": "Grade 10-B",
+            "language_preference": "kn",
+            "avatar_seed": "Sparky100"
+        })
+        self.assertEqual(update_res.status_code, 200)
+        update_data = json.loads(update_res.data)
+        self.assertTrue(update_data["success"])
+        self.assertEqual(update_data["user"]["name"], "Aarav K. Sharma")
+        self.assertEqual(update_data["user"]["grade_or_cohort"], "Grade 10-B")
+        self.assertEqual(update_data["user"]["language_preference"], "kn")
+        self.assertIn("Sparky100", update_data["user"]["avatar_url"])
+
+        # 3. Empty name validation check
+        err_res = self.client.post("/api/auth/profile", json={"name": ""})
+        self.assertEqual(err_res.status_code, 400)
+
 if __name__ == "__main__":
     unittest.main()

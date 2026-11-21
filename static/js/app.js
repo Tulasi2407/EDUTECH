@@ -168,7 +168,9 @@ class RootsAndRhythmApp {
       "my-subjects": "2. My Subjects (10th State Board Curriculum)",
       "study-planner": "3. Study Planner (Free-Hour Rhythm)",
       "practice-quiz": "4. Practice & Quiz Engine",
-      "my-progress": "5. My Progress & Root-Cause X-Ray",
+      "ai-assistant": "5. AI Assistant (24/7 Doubt Solver & Tutor)",
+      "my-progress": "6. My Progress & Root-Cause X-Ray",
+      "my-profile": "7. My Profile & Account Settings",
       "gap-finder": "Root-Cause X-Ray & Prerequisite Tracer",
       "analytics": "My Progress & Performance"
     };
@@ -199,9 +201,14 @@ class RootsAndRhythmApp {
       this.timeline.loadData();
     } else if (tabName === "practice-quiz") {
       this.loadPracticeQuizPane();
+    } else if (tabName === "ai-assistant") {
+      const subSel = document.getElementById("ai-subject-selector");
+      if (subSel && !subSel.value) subSel.value = "General";
     } else if (tabName === "my-progress" || tabName === "analytics" || tabName === "gap-finder") {
       if (this.analytics) this.analytics.renderStudentAnalytics("student-analytics-container", this.currentUser.id);
       this.traceCurrentTopicGaps();
+    } else if (tabName === "my-profile") {
+      this.loadUserProfileView();
     } else if (tabName === "teacher-dashboard") {
       this.analytics.renderTeacherDashboard("teacher-dashboard-container");
     } else if (tabName === "parent-view") {
@@ -914,7 +921,7 @@ class RootsAndRhythmApp {
     }
 
     try {
-      const currentTopicName = document.getElementById("topic-select")?.selectedOptions?.[0]?.text || "General";
+      const currentTopicName = document.getElementById("ai-subject-selector")?.value || document.getElementById("topic-select")?.selectedOptions?.[0]?.text || "General";
       const res = await fetch("/api/ai/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -976,6 +983,95 @@ class RootsAndRhythmApp {
     }
   }
 
+  async loadUserProfileView() {
+    try {
+      const res = await fetch("/api/auth/current-user");
+      const data = await res.json();
+      if (!data || !data.user) return;
+      const user = data.user;
+
+      // Update hero card
+      const heroAvatar = document.getElementById("profile-hero-avatar");
+      if (heroAvatar) heroAvatar.src = user.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.name}`;
+
+      const heroName = document.getElementById("profile-hero-name");
+      if (heroName) heroName.textContent = user.name;
+
+      const heroRoleBadge = document.getElementById("profile-hero-role-badge");
+      if (heroRoleBadge) heroRoleBadge.textContent = (user.role || "student").toUpperCase();
+
+      const heroUsername = document.getElementById("profile-hero-username");
+      if (heroUsername) heroUsername.textContent = `@${user.username || 'aarav'}`;
+
+      const heroEmail = document.getElementById("profile-hero-email");
+      if (heroEmail) heroEmail.textContent = user.email || 'aarav@rootsrhythm.edu';
+
+      const heroGrade = document.getElementById("profile-hero-grade");
+      if (heroGrade) heroGrade.textContent = user.grade_or_cohort || 'Grade 10-A';
+
+      // Update stats cards
+      const stats = user.stats || {};
+      const statStreak = document.getElementById("profile-stat-streak");
+      if (statStreak) statStreak.textContent = `${stats.current_streak || 1} Days`;
+
+      const statMastered = document.getElementById("profile-stat-mastered");
+      if (statMastered) statMastered.textContent = `${stats.mastered_nodes || 14} / ${stats.total_nodes || 22}`;
+
+      const statMasteryPct = document.getElementById("profile-stat-mastery-pct");
+      if (statMasteryPct) {
+        const pct = Math.round(((stats.mastered_nodes || 14) / (stats.total_nodes || 22)) * 100);
+        statMasteryPct.textContent = `${pct}% curriculum mastery`;
+      }
+
+      const statSessions = document.getElementById("profile-stat-sessions");
+      if (statSessions) statSessions.textContent = `${stats.completed_sessions || 0} Completed`;
+
+      const statHours = document.getElementById("profile-stat-hours");
+      if (statHours) {
+        const hours = ((stats.total_study_minutes || 0) / 60).toFixed(1);
+        statHours.textContent = `${hours} hrs logged`;
+      }
+
+      const statAccuracy = document.getElementById("profile-stat-accuracy");
+      if (statAccuracy) statAccuracy.textContent = `${Math.round(stats.avg_quiz_score || 85)}%`;
+
+      // Update Guardian
+      const guardian = user.guardian;
+      const guardianInitial = document.getElementById("profile-guardian-initial");
+      const guardianName = document.getElementById("profile-guardian-name");
+      const guardianEmail = document.getElementById("profile-guardian-email");
+      if (guardian) {
+        const gName = guardian.name || (guardian.linked_student ? guardian.linked_student.name : "Rajesh Sharma");
+        const gEmail = guardian.email || (guardian.linked_student ? guardian.linked_student.email : "rajesh.parent@rootsrhythm.edu");
+        if (guardianName) guardianName.textContent = gName;
+        if (guardianEmail) guardianEmail.textContent = gEmail;
+        if (guardianInitial) guardianInitial.textContent = gName.charAt(0).toUpperCase();
+      }
+
+      // Populate form fields
+      const inputName = document.getElementById("profile-input-name");
+      if (inputName) inputName.value = user.name || "";
+
+      const inputGrade = document.getElementById("profile-input-grade");
+      if (inputGrade) inputGrade.value = user.grade_or_cohort || "Grade 10-A";
+
+      const inputUsername = document.getElementById("profile-input-username");
+      if (inputUsername) inputUsername.value = user.username || "";
+
+      const inputEmail = document.getElementById("profile-input-email");
+      if (inputEmail) inputEmail.value = user.email || "";
+
+      const inputLang = document.getElementById("profile-input-lang");
+      if (inputLang) inputLang.value = user.language_preference || "en";
+
+      const inputAvatarSeed = document.getElementById("profile-input-avatar-seed");
+      if (inputAvatarSeed && !inputAvatarSeed.value) inputAvatarSeed.value = user.username || user.name || "";
+
+    } catch (e) {
+      console.error("Failed to load user profile:", e);
+    }
+  }
+
   setupEventListeners() {
     // Learning mode switcher (Objective 5)
     document.querySelectorAll(".learning-mode-btn").forEach(btn => {
@@ -1025,6 +1121,108 @@ class RootsAndRhythmApp {
     if (flagAIBtn) {
       flagAIBtn.addEventListener("click", () => {
         this.openFlagModal(this.currentPracticeQuestion ? this.currentPracticeQuestion.id : 1);
+      });
+    }
+
+    // Profile Edit Form Submission
+    const profileForm = document.getElementById("profile-edit-form");
+    if (profileForm) {
+      profileForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const saveBtn = document.getElementById("save-profile-btn");
+        const statusSpan = document.getElementById("profile-save-status");
+        const name = document.getElementById("profile-input-name")?.value;
+        const grade = document.getElementById("profile-input-grade")?.value;
+        const lang = document.getElementById("profile-input-lang")?.value;
+        const avatarSeed = document.getElementById("profile-input-avatar-seed")?.value;
+        const curPw = document.getElementById("profile-input-current-pw")?.value;
+        const newPw = document.getElementById("profile-input-new-pw")?.value;
+        const confPw = document.getElementById("profile-input-confirm-pw")?.value;
+
+        if (newPw && newPw !== confPw) {
+          this.showToast("New passwords do not match", "error");
+          return;
+        }
+
+        if (saveBtn) {
+          saveBtn.disabled = true;
+          saveBtn.innerHTML = `<span>Saving...</span>`;
+        }
+
+        try {
+          const res = await fetch("/api/auth/profile", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              grade_or_cohort: grade,
+              language_preference: lang,
+              avatar_seed: avatarSeed,
+              current_password: curPw || undefined,
+              new_password: newPw || undefined
+            })
+          });
+
+          const data = await res.json();
+          if (data.error) {
+            this.showToast(data.message || data.error, "error");
+            return;
+          }
+
+          this.showToast("Profile updated successfully! 🎉", "success");
+
+          // Clear password fields
+          if (document.getElementById("profile-input-current-pw")) document.getElementById("profile-input-current-pw").value = "";
+          if (document.getElementById("profile-input-new-pw")) document.getElementById("profile-input-new-pw").value = "";
+          if (document.getElementById("profile-input-confirm-pw")) document.getElementById("profile-input-confirm-pw").value = "";
+
+          // Update current user cache and live DOM
+          if (data.user) {
+            this.currentUser.name = data.user.name;
+            if (data.user.avatar_url) this.currentUser.avatar_url = data.user.avatar_url;
+
+            // Live DOM updates
+            document.querySelectorAll("#sidebar-user-name, #topbar-user-name, #profile-hero-name").forEach(el => {
+              el.textContent = data.user.name;
+            });
+            document.querySelectorAll("#sidebar-user-avatar, #topbar-user-avatar, #profile-hero-avatar").forEach(el => {
+              el.src = data.user.avatar_url;
+            });
+            const heroGrade = document.getElementById("profile-hero-grade");
+            if (heroGrade) heroGrade.textContent = data.user.grade_or_cohort || 'Grade 10-A';
+          }
+
+          if (lang && window.I18N && window.I18N.currentLanguage() !== lang) {
+            window.I18N.setLanguage(lang);
+          }
+
+          if (statusSpan) {
+            statusSpan.classList.remove("hidden");
+            setTimeout(() => statusSpan.classList.add("hidden"), 3000);
+          }
+        } catch (err) {
+          console.error(err);
+          this.showToast("Failed to update profile", "error");
+        } finally {
+          if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = `<span>💾 Save Profile Changes</span>`;
+          }
+        }
+      });
+    }
+
+    // Avatar Randomize Button
+    const randAvatarBtn = document.getElementById("profile-randomize-avatar-btn");
+    if (randAvatarBtn) {
+      randAvatarBtn.addEventListener("click", () => {
+        const seeds = ["Aarav", "Diya", "Kiran", "Meera", "Sparky", "Cosmo", "Felix", "Zenith", "Brio", "Nova"];
+        const randomSeed = seeds[Math.floor(Math.random() * seeds.length)] + Math.floor(Math.random() * 100);
+        const input = document.getElementById("profile-input-avatar-seed");
+        if (input) input.value = randomSeed;
+        const heroAvatar = document.getElementById("profile-hero-avatar");
+        if (heroAvatar) heroAvatar.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${randomSeed}`;
+        this.showToast(`Avatar preview set to: ${randomSeed}`);
       });
     }
 

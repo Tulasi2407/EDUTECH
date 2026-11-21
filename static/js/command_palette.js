@@ -62,10 +62,12 @@ class CommandPalette {
     this.items = [
       // Quick Navigation
       { title: "Go to Main Dashboard", category: "Navigation", icon: "📊", action: () => window.appInstance?.setActiveTab("main-dashboard") },
-      { title: "Open Root-Cause X-Ray", category: "Navigation", icon: "🚀", action: () => window.appInstance?.setActiveTab("gap-finder") },
-      { title: "Open Free-Hour Study Planner", category: "Navigation", icon: "📅", action: () => window.appInstance?.setActiveTab("study-planner") },
-      { title: "Open AI Assistant (Tutor)", category: "Navigation", icon: "💬", action: () => window.appInstance?.setActiveTab("ai-assistant") },
-      { title: "Open My Progress Analytics", category: "Navigation", icon: "📈", action: () => window.appInstance?.setActiveTab("analytics") },
+      { title: "Open My Subjects (10th State Board)", category: "Navigation", icon: "📚", action: () => window.appInstance?.setActiveTab("my-subjects") },
+      { title: "Open Free-Hour Study Planner", category: "Navigation", icon: "⏱️", action: () => window.appInstance?.setActiveTab("study-planner") },
+      { title: "Open Practice / Quiz Engine", category: "Navigation", icon: "🎯", action: () => window.appInstance?.setActiveTab("practice-quiz") },
+      { title: "Open AI Assistant (Tutor & Doubt Solver)", category: "Navigation", icon: "🤖", action: () => window.appInstance?.setActiveTab("ai-assistant") },
+      { title: "Open My Progress & Root-Cause X-Ray", category: "Navigation", icon: "📈", action: () => window.appInstance?.setActiveTab("my-progress") },
+      { title: "Open My Profile & Account Settings", category: "Navigation", icon: "👤", action: () => window.appInstance?.setActiveTab("my-profile") },
       
       // Innovative Zen Focus Chamber
       { title: "Enter Zen Rhythm Study Chamber (Pomodoro + Ambient)", category: "Focus Mode", icon: "🧘", action: () => window.zenChamber?.open() },
