@@ -175,13 +175,10 @@ def validate_registration_payload(data):
     if len(password) < 6:
         raise ValidationError("Password must be at least 6 characters", "password")
 
-    role = str(data.get("role", "student")).strip().lower()
-    if role not in {"student", "teacher", "parent", "admin"}:
-        role = "student"
-
+    role = "student"
     grade_or_cohort = sanitize_string(data.get("grade_or_cohort", ""), max_length=100)
     if not grade_or_cohort:
-        grade_or_cohort = "Grade 10-A" if role == "student" else ("Faculty Member" if role == "teacher" else "Guardian")
+        grade_or_cohort = "Grade 10-A"
 
     language_preference = str(data.get("language_preference", "en")).strip().lower()
     if language_preference not in {"en", "hi", "kn", "ta", "te"}:

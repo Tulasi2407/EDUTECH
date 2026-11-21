@@ -93,25 +93,16 @@ class RootsAndRhythmApp {
   }
 
   updateUserBadge() {
-    const badge = document.getElementById("current-user-badge");
     const nameEl = document.getElementById("current-user-name");
     const roleEl = document.getElementById("current-user-role");
     const avatarEl = document.getElementById("current-user-avatar");
 
     if (nameEl) nameEl.textContent = this.currentUser.name;
-    if (roleEl) roleEl.textContent = this.currentUser.role.toUpperCase();
-    if (avatarEl && this.currentUser.avatar_url) avatarEl.src = this.currentUser.avatar_url;
-
-    // Set role color
-    const roleColors = {
-      student: "bg-indigo-100 text-indigo-800 border-indigo-200",
-      teacher: "bg-emerald-100 text-emerald-800 border-emerald-200",
-      parent: "bg-teal-100 text-teal-800 border-teal-200",
-      admin: "bg-purple-100 text-purple-800 border-purple-200"
-    };
     if (roleEl) {
-      roleEl.className = `px-2 py-0.5 rounded-full text-[10px] font-bold border ${roleColors[this.currentUser.role] || 'bg-slate-100'}`;
+      roleEl.textContent = (this.currentUser.grade_or_cohort || "STUDENT").toUpperCase();
+      roleEl.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200";
     }
+    if (avatarEl && this.currentUser.avatar_url) avatarEl.src = this.currentUser.avatar_url;
   }
 
   populateRoleSwitcher() {
@@ -142,36 +133,15 @@ class RootsAndRhythmApp {
         this.currentUser = data.user;
         this.updateUserBadge();
         this.updateRoleView();
-        this.showToast(`Switched persona to ${data.user.name} (${data.user.role.toUpperCase()})`);
+        this.showToast(`Switched student to ${data.user.name}`);
       }
     } catch (e) {
-      this.showToast("Failed to switch role", "error");
+      this.showToast("Failed to switch student", "error");
     }
   }
 
   updateRoleView() {
-    const role = this.currentUser.role;
-    // Show/hide navigation tabs depending on role permissions
-    const studentTabs = document.querySelectorAll(".role-student-tab");
-    const teacherTabs = document.querySelectorAll(".role-teacher-tab");
-    const parentTabs = document.querySelectorAll(".role-parent-tab");
-    const adminTabs = document.querySelectorAll(".role-admin-tab");
-
-    studentTabs.forEach(el => el.classList.toggle("hidden", role !== "student" && role !== "admin"));
-    teacherTabs.forEach(el => el.classList.toggle("hidden", role !== "teacher" && role !== "admin"));
-    parentTabs.forEach(el => el.classList.toggle("hidden", role !== "parent" && role !== "admin"));
-    adminTabs.forEach(el => el.classList.toggle("hidden", role !== "admin"));
-
-    // Select suitable default tab
-    if (role === "teacher") {
-      this.setActiveTab("teacher-dashboard");
-    } else if (role === "parent") {
-      this.setActiveTab("parent-view");
-    } else if (role === "admin") {
-      this.setActiveTab("admin-panel");
-    } else {
-      this.setActiveTab("main-dashboard");
-    }
+    this.setActiveTab("main-dashboard");
   }
 
   setActiveTab(tabName) {

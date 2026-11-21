@@ -44,10 +44,10 @@
         <div class="relative z-10 space-y-4">
           <div class="flex flex-wrap items-center gap-2">
             <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-              ✓ Authenticated
+              ✓ Student Verified
             </span>
             <span class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 uppercase tracking-wider">
-              Role: {{ user.role or 'Student' }}
+              Student
             </span>
             {% if user.grade_or_cohort %}
               <span class="px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-slate-300 border border-white/10">

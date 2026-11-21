@@ -211,20 +211,17 @@
         <!-- Quick Demo Accounts One-Click Strip -->
         <div class="pt-2 text-center">
           <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
-            One-Click Demo Fill:
+            Student Quick Login:
           </span>
           <div class="flex items-center justify-center gap-1.5 flex-wrap">
-            <button type="button" class="demo-fill-chip px-2.5 py-1 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-700 text-[11px] font-bold transition" data-user="aarav">
-              Aarav (Student)
+            <button type="button" class="demo-fill-chip px-3 py-1 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-700 text-[11px] font-bold transition" data-user="aarav">
+              Aarav (Grade 10-A)
             </button>
-            <button type="button" class="demo-fill-chip px-2.5 py-1 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-700 text-[11px] font-bold transition" data-user="meera">
-              Meera (Teacher)
+            <button type="button" class="demo-fill-chip px-3 py-1 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-700 text-[11px] font-bold transition" data-user="diya">
+              Diya (Grade 10-A)
             </button>
-            <button type="button" class="demo-fill-chip px-2.5 py-1 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-700 text-[11px] font-bold transition" data-user="rajesh">
-              Rajesh (Parent)
-            </button>
-            <button type="button" class="demo-fill-chip px-2.5 py-1 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-700 text-[11px] font-bold transition" data-user="arvind">
-              Arvind (Admin)
+            <button type="button" class="demo-fill-chip px-3 py-1 rounded-full bg-slate-100 hover:bg-emerald-100 text-slate-700 text-[11px] font-bold transition" data-user="kiran">
+              Kiran (Grade 10-B)
             </button>
           </div>
         </div>
@@ -262,19 +259,17 @@
             </div>
           </div>
 
-          <!-- Username & Role -->
+          <!-- Hidden Student Role -->
+          <input type="hidden" id="reg-role" value="student">
+
+          <!-- Username & Grade -->
           <div class="grid grid-cols-2 gap-2">
             <div class="relative flex items-center">
               <span class="absolute left-3 text-slate-400 pointer-events-none text-xs font-bold">@</span>
               <input type="text" id="reg-username" required placeholder="Username" class="w-full text-xs font-semibold pl-7 pr-3 py-2.5 rounded-2xl border border-slate-200 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 transition">
             </div>
             <div>
-              <select id="reg-role" class="w-full text-xs font-semibold px-3 py-2.5 rounded-2xl border border-slate-200 outline-none focus:border-emerald-600 bg-white transition cursor-pointer">
-                <option value="student" selected>Student</option>
-                <option value="teacher">Teacher / Faculty</option>
-                <option value="parent">Parent</option>
-                <option value="admin">School Admin</option>
-              </select>
+              <input type="text" id="reg-cohort" placeholder="Grade (e.g. 10-A)" value="Grade 10-A" class="w-full text-xs font-semibold px-3.5 py-2.5 rounded-2xl border border-slate-200 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 transition">
             </div>
           </div>
 
@@ -284,15 +279,14 @@
               <span class="absolute left-3.5 text-slate-400 pointer-events-none">
                 <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
               </span>
-              <input type="email" id="reg-email" required placeholder="Email Address" class="w-full text-xs font-semibold pl-10 pr-3.5 py-2.5 rounded-2xl border border-slate-200 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 transition">
+              <input type="email" id="reg-email" required placeholder="Student Email Address" class="w-full text-xs font-semibold pl-10 pr-3.5 py-2.5 rounded-2xl border border-slate-200 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 transition">
             </div>
           </div>
 
-          <!-- Grade & Language Preference -->
-          <div class="grid grid-cols-2 gap-2">
-            <input type="text" id="reg-cohort" placeholder="Grade 10-A" value="Grade 10-A" class="w-full text-xs font-semibold px-3.5 py-2.5 rounded-2xl border border-slate-200 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 transition">
-            <select id="reg-lang" class="w-full text-xs font-semibold px-2.5 py-2.5 rounded-2xl border border-slate-200 outline-none focus:border-emerald-600 bg-white transition cursor-pointer">
-              <option value="en" selected>English</option>
+          <!-- Language Preference -->
+          <div>
+            <select id="reg-lang" class="w-full text-xs font-semibold px-3.5 py-2.5 rounded-2xl border border-slate-200 outline-none focus:border-emerald-600 bg-white transition cursor-pointer">
+              <option value="en" selected>Preferred Language: English</option>
               <option value="hi">हिंदी (Hindi)</option>
               <option value="kn">ಕನ್ನಡ (Kannada)</option>
               <option value="ta">தமிழ் (Tamil)</option>
