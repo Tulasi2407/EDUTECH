@@ -1,0 +1,5 @@
+# Roots & Rhythm - Minimal Dependencies
+# All other modules (sqlite3, json, os, datetime, urllib, re) are part of Python's standard library.
+Flask>=3.0.0
+Werkzeug>=3.0.0
+Jinja2>=3.0.0
