@@ -90,6 +90,46 @@ def parent_dashboard_page():
     user = get_current_user()
     return render_template("parent_dashboard.html", current_user=user)
 
+@app.route("/mysubjects")
+@app.route("/my-subjects")
+def my_subjects_page():
+    user = get_current_user()
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("SELECT id, name, code, icon, color, description FROM subjects ORDER BY id ASC")
+    subjects = [dict(s) for s in c.fetchall()]
+
+    for s in subjects:
+        c.execute("""
+            SELECT kn.id, kn.topic_name, kn.category, kn.tier, kn.estimated_minutes, kn.short_desc,
+                   COALESCE(sm.status, 'untested') as mastery_status,
+                   COALESCE(sm.mastery_score, 0) as mastery_score,
+                   COALESCE(sm.streak_count, 0) as streak_count
+            FROM knowledge_nodes kn
+            LEFT JOIN student_mastery sm ON sm.node_id = kn.id AND sm.student_id = ?
+            WHERE kn.subject_id = ?
+            ORDER BY kn.tier ASC, kn.id ASC
+        """, (user["id"], s["id"]))
+        s["topics"] = [dict(t) for t in c.fetchall()]
+        s["total_units"] = len(s["topics"])
+        s["mastered_units"] = sum(1 for t in s["topics"] if t["mastery_status"] == "mastered")
+        s["progress_pct"] = round((s["mastered_units"] / s["total_units"] * 100) if s["total_units"] > 0 else 0)
+
+    total_curriculum_nodes = sum(s["total_units"] for s in subjects)
+    total_mastered = sum(s["mastered_units"] for s in subjects)
+    overall_progress_pct = round((total_mastered / total_curriculum_nodes * 100) if total_curriculum_nodes > 0 else 0)
+
+    conn.close()
+
+    return render_template(
+        "mysubjects.html",
+        current_user=user,
+        subjects=subjects,
+        total_curriculum_nodes=total_curriculum_nodes,
+        total_mastered=total_mastered,
+        overall_progress_pct=overall_progress_pct
+    )
+
 @app.route("/login")
 def login_page():
     return render_template("login.html", active_tab="login")

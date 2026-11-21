@@ -508,5 +508,24 @@ class RootsAndRhythmTestCase(unittest.TestCase):
         err_res = self.client.post("/api/auth/profile", json={"name": ""})
         self.assertEqual(err_res.status_code, 400)
 
+    def test_24_mysubjects_page(self):
+        """Verify the dedicated /mysubjects and /my-subjects pages serve correctly with 10th state board curriculum."""
+        with self.client.session_transaction() as sess:
+            sess["user_id"] = 1
+
+        res = self.client.get("/mysubjects")
+        self.assertEqual(res.status_code, 200)
+        self.assertIn(b"My Subjects", res.data)
+        self.assertIn(b"Mathematics", res.data)
+        self.assertIn(b"Science", res.data)
+        self.assertIn(b"Social Science", res.data)
+        self.assertIn(b"Kannada", res.data)
+        self.assertIn(b"English", res.data)
+        self.assertIn(b"Hindi", res.data)
+
+        # Alias route check
+        res_alias = self.client.get("/my-subjects")
+        self.assertEqual(res_alias.status_code, 200)
+
 if __name__ == "__main__":
     unittest.main()
