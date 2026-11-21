@@ -293,20 +293,23 @@ def seed_database(conn):
     cursor.execute("INSERT INTO teacher_classroom_map (teacher_id, student_id, classroom_name) VALUES (4, 2, 'Grade 10-A Math')")
     cursor.execute("INSERT INTO teacher_classroom_map (teacher_id, student_id, classroom_name) VALUES (4, 3, 'Grade 10-B Math')")
 
-    # 3. Seed Subjects
+    # 3. Seed Subjects (Strictly 10th Stateboard High School Curriculum)
     subjects_data = [
-        (1, "Mathematics", "MATH", "calculator", "#3b82f6", "Core algebra, calculus foundations, and mathematical reasoning."),
-        (2, "Physics", "PHYS", "atom", "#8b5cf6", "Mechanics, kinematics, and energy conservation principles."),
-        (3, "Computer Science", "CS", "code", "#10b981", "Programming primitives, algorithmic thinking, and data structures.")
+        (1, "Mathematics", "MATH", "calculator", "#7c3aed", "10th State Board Core Mathematics: Algebra, Quadratic Equations, Trigonometry, and Arithmetic Progressions."),
+        (2, "Science", "SCI", "flask", "#0891b2", "10th State Board Integrated Science: Physics (Light, Electricity), Chemistry (Reactions), and Biology (Life Processes)."),
+        (3, "Social Science", "SOC", "globe", "#d97706", "10th State Board Social Science: History, Geography, Indian Constitution, and Rural Economics."),
+        (4, "Kannada", "KAN", "book-open", "#059669", "10th State Board Kannada: Vyakaran (ಸಂಧಿ-ಸಮಾಸ), Gadya & Padya (ಭಾಗ್ಯಶಿಲ್ಪಿಗಳು, ಸಂಕಲ್ಪ ಗೀತೆ), and Prabandha."),
+        (5, "English", "ENG", "feather", "#2563eb", "10th State Board English: Grammar (Tenses, Voice, Speech), Literature (A Hero, Quality of Mercy), and Writing."),
+        (6, "Hindi", "HIN", "sparkles", "#ea580c", "10th State Board Hindi: Vyakaran (कारक, संधि, समास), Gadya (कश्मीरी सेब), Padya, and Nibandh.")
     ]
     cursor.executemany("""
     INSERT INTO subjects (id, name, code, icon, color, description)
     VALUES (?, ?, ?, ?, ?, ?)
     """, subjects_data)
 
-    # 4. Seed Knowledge Nodes (Curriculum Graph)
+    # 4. Seed Knowledge Nodes (Curriculum Graph for 10th State Board)
     nodes_data = [
-        # MATHEMATICS (Subject 1)
+        # 1. MATHEMATICS (Subject 1)
         (1, 1, "Order of Operations & Arithmetic", "math-arithmetic", "Foundations", 1,
          "Fundamental rules of operations (BODMAS / PEMDAS) and parenthesis evaluation.",
          "### Order of Operations (BODMAS)\nAlways evaluate expressions in this strict hierarchy:\n1. **Brackets / Parentheses** (inner to outer)\n2. **Orders / Exponents / Roots**\n3. **Division & Multiplication** (left to right)\n4. **Addition & Subtraction** (left to right)\n\n*Common Pitfall:* Computing `2 + 3 * 4` as `20` instead of `14`.",
@@ -337,49 +340,96 @@ def seed_database(conn):
          "### Quadratic Equations\nStandard form: `ax^2 + bx + c = 0` (where `a != 0`).\n\nThe Quadratic Formula:\n$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$\n\nDiscriminant `D = b^2 - 4ac`:\n- `D > 0`: Two distinct real roots\n- `D = 0`: Exactly one repeated real root\n- `D < 0`: Two complex conjugate roots.",
          "x = (-b ± √(b² - 4ac)) / (2a) | D = b² - 4ac", 30),
 
-        (7, 1, "Graphing Parabolas & Vertex Form", "math-parabolas", "Functions", 3,
-         "Visualizing quadratic functions, finding vertex coordinates, and line of symmetry.",
-         "### Parabola Analysis\nVertex form: `y = a(x - h)^2 + k` where `(h, k)` is the vertex.\nAxis of symmetry: `x = -b / (2a)`. Vertex y-value: `f(-b / 2a)`.",
-         "Vertex: h = -b/(2a), k = f(h)", 25),
+        (7, 1, "Arithmetic Progressions (AP)", "math-arithmetic-progression", "Sequences", 2,
+         "General term a_n = a + (n-1)d and sum of n terms S_n = n/2[2a + (n-1)d].",
+         "### Arithmetic Progressions (10th State Board)\n- **n-th term**: `a_n = a + (n - 1)d`\n- **Sum of n terms**: `S_n = (n/2) * [2a + (n - 1)d]` or `S_n = (n/2) * [a + l]` where `l` is the last term.",
+         "a_n = a + (n-1)d | S_n = n/2(a + l)", 25),
 
-        # PHYSICS (Subject 2)
-        (8, 2, "Vectors & Components", "phys-vectors", "Mechanics", 1,
-         "Vector addition, resolution into orthogonal x and y components.",
-         "### Vectors\nA vector has magnitude and direction. Resolved components:\n`V_x = V * cos(θ)`\n`V_y = V * sin(θ)`\nMagnitude: `|V| = sqrt(V_x^2 + V_y^2)`.",
-         "Vx = V cos θ, Vy = V sin θ", 20),
+        # 2. SCIENCE (Subject 2: Physics, Chemistry, Biology)
+        (8, 2, "Light: Reflection & Spherical Mirrors", "sci-light-reflection", "Physics", 1,
+         "Laws of reflection, focal length f = R/2, and mirror formula 1/f = 1/v + 1/u.",
+         "### Light & Reflection (10th State Board)\n- **Mirror Formula**: `1/f = 1/v + 1/u`\n- **Magnification**: `m = -v/u = h'/h`\n- **Sign Convention**: Distances in the direction of incident light are positive; opposite are negative.",
+         "1/f = 1/v + 1/u | m = -v/u", 20),
 
-        (9, 2, "Newton's Laws of Motion", "phys-newtons-laws", "Mechanics", 2,
-         "Inertia, F = ma, and action-reaction pairs.",
-         "### Newton's Three Laws\n1. First Law: Law of Inertia\n2. Second Law: `ΣF = m * a`\n3. Third Law: Every action has an equal and opposite reaction (`F_AB = -F_BA`).",
-         "ΣF = m * a", 20),
+        (9, 2, "Electricity: Ohm's Law & Circuits", "sci-electricity-circuits", "Physics", 2,
+         "Potential difference V = IR, resistance in series (R_s = R1+R2) and parallel (1/R_p = 1/R1 + 1/R2).",
+         "### Electricity (10th State Board)\n- **Ohm's Law**: `V = I * R` at constant temperature.\n- **Series Resistance**: `R_s = R_1 + R_2 + R_3`\n- **Parallel Resistance**: `1/R_p = 1/R_1 + 1/R_2 + 1/R_3`\n- **Joule's Heating**: `H = I^2 * R * t`.",
+         "V = IR | R_s = ΣR_i | 1/R_p = Σ(1/R_i)", 25),
 
-        (10, 2, "Projectile Motion & Trajectory", "phys-projectile-motion", "Kinematics", 3,
-         "Analyzing independent horizontal and vertical motions under gravitational acceleration.",
-         "### Projectile Motion\nHorizontal velocity remains constant: `x(t) = v_0 * cos(θ) * t`.\nVertical position: `y(t) = v_0 * sin(θ) * t - 0.5 * g * t^2`.\nMaximum height `H = (v_0 * sin θ)^2 / (2g)`.",
-         "R = (v₀² sin 2θ) / g | H = (v₀ sin θ)² / (2g)", 30),
+        (10, 2, "Chemical Reactions & Equations", "sci-chemical-reactions", "Chemistry", 2,
+         "Balancing equations, combination, decomposition, displacement, and redox reactions.",
+         "### Chemical Reactions\n- **Law of Conservation of Mass**: Mass is neither created nor destroyed.\n- **Types**: Combination (`A + B -> AB`), Decomposition (`AB -> A + B`), Displacement (`A + BC -> AC + B`), Double Displacement, and Redox (Oxidation & Reduction).",
+         "Reactants -> Products | Oxidation: Gain of O / Loss of e-", 25),
 
-        # COMPUTER SCIENCE (Subject 3)
-        (11, 3, "Variables & Memory Frames", "cs-variables-memory", "Core Programming", 1,
-         "Understanding how primitive values and references reside in memory.",
-         "### Memory Frames\nVariables hold values or references. Scope determines accessibility. Stack memory allocates local execution frames, cleaned up automatically upon function return.",
-         "Scope: Local vs Global Frames", 15),
+        # 3. SOCIAL SCIENCE (Subject 3: History, Geography, Civics, Economics)
+        (11, 3, "1857 First War of Indian Independence", "soc-1857-revolt", "History", 1,
+         "Causes (political, economic, administrative, military), key leaders (Rani Laxmibai, Mangal Pandey), and outcomes.",
+         "### 1857 Revolt (10th State Board History)\n- **Immediate Cause**: Introduction of Enfield rifles greased with animal fat.\n- **Political Causes**: Doctrine of Lapse introduced by Lord Dalhousie.\n- **Outcome**: Queen Victoria's Proclamation (1858) ending British East India Company rule.",
+         "Doctrine of Lapse -> 1857 Revolt -> Crown Rule (1858)", 20),
 
-        (12, 3, "Function Call Stack & Recursion", "cs-recursion", "Algorithms", 2,
-         "Base cases, recursive branching, and stack overflow prevention.",
-         "### Recursion & Call Stack\nA recursive function calls itself until reaching a termination condition (**Base Case**).\nEach recursive call pushes a new frame onto the execution call stack. Missing base cases cause Stack Overflow.",
-         "T(n) = aT(n/b) + f(n)", 25),
+        (12, 3, "India: Physiography & Climate", "soc-india-physiography", "Geography", 2,
+         "Northern Mountains, Indo-Gangetic Plains, Peninsular Plateau, Coastal Plains, and South-West Monsoons.",
+         "### Indian Physiography (Geography)\n- **Major Divisions**: Himalayas, Great Northern Plains, Peninsular Plateau, Coastal Plains & Islands.\n- **Climate**: Tropical Monsoon climate governed by South-West and North-East retreating monsoons.",
+         "Himalayas | Northern Plains | Peninsular Plateau", 20),
 
-        (13, 3, "Binary Tree Traversal (DFS/BFS)", "cs-tree-traversal", "Data Structures", 3,
-         "Depth-First Search (In-order, Pre-order, Post-order) and Breadth-First Search.",
-         "### Tree Traversals\n- **In-order (LNR)**: Traverse left, visit root, traverse right (yields sorted output in BST).\n- **Pre-order (NLR)**: Visit root, then left, then right.\n- **Post-order (LRN)**: Left, right, root.\n- **BFS**: Level-order traversal using a FIFO queue.",
-         "Inorder: Left -> Node -> Right", 30)
+        (13, 3, "Indian Constitution & Fundamental Rights", "soc-constitution-rights", "Political Science", 2,
+         "Preamble, 6 Fundamental Rights (Articles 14-32), Fundamental Duties, and Directive Principles.",
+         "### Indian Constitution\n- **Preamble**: Sovereign, Socialist, Secular, Democratic, Republic.\n- **6 Fundamental Rights**: Right to Equality (Art 14-18), Freedom (Art 19-22), Against Exploitation (Art 23-24), Freedom of Religion (Art 25-28), Cultural & Educational (Art 29-30), Constitutional Remedies (Art 32 - Heart and Soul).",
+         "Articles 14-32: Fundamental Rights", 25),
+
+        # 4. KANNADA (Subject 4: 10th State Board Sahitya & Vyakaran)
+        (14, 4, "ಕನ್ನಡ ಸಂಧಿಗಳು ಮತ್ತು ಸಮಾಸಗಳು (Sandhi & Samasa)", "kan-sandhi-samasa", "ವ್ಯಾಕರಣ (Grammar)", 1,
+         "ಕನ್ನಡ ಸಂಧಿಗಳು (ಲೋಪ, ಆಗಮ, ಆದೇಶ) ಮತ್ತು ಸಂಸ್ಕೃತ ಸಂಧಿಗಳು; ತತ್ಪುರುಷ, ಕರ್ಮಧಾರಯ, ದ್ವಿಗು ಸಮಾಸಗಳು.",
+         "### ಕನ್ನಡ ವ್ಯಾಕರಣ (10th State Board)\n- **ಲೋಪ ಸಂಧಿ**: ಸ್ವರದ ಮುಂದೆ ಸ್ವರ ಬಂದು ಅರ್ಥ ಕೆಡದಿದ್ದರೆ ಪೂರ್ವಸ್ವರ ಲೋಪವಾಗುವುದು (ಮಾತಲ್ಲ = ಮಾತು + ಅಲ್ಲ).\n- **ಆಗಮ ಸಂಧಿ**: 'ಯ' ಕಾರ ಅಥವಾ 'ವ' ಕಾರ ಆಗಮವಾಗುವುದು (ಮನೆಯನ್ನು = ಮನೆ + ಅನ್ನು).\n- **ಆದೇಶ ಸಂಧಿ**: ಕ, ತ, ಪ ಗಳಿಗೆ ಗ, ದ, ಬ ಗಳು ಆದೇಶವಾಗುವುದು (ಕಣ್ದೆರೆ = ಕಣ್ + ತೆರೆ).\n- **ಸಮಾಸಗಳು**: ತತ್ಪುರುಷ (ಉತ್ತರಪದ ಪ್ರಧಾನ), ಕರ್ಮಧಾರಯ (ವಿಶೇಷಣ-ವಿಶೇಷ್ಯ), ದ್ವಿಗು (ಸಂಖ್ಯಾ ಪೂರ್ವಕ).",
+         "ಕ,ತ,ಪ -> ಗ,ದ,ಬ (ಆದೇಶ) | ಸಂಖ್ಯಾಪೂರ್ವೋ ದ್ವಿಗುಃ", 20),
+
+        (15, 4, "ಗದ್ಯ: ಭಾಗ್ಯಶಿಲ್ಪಿಗಳು (Sir M. Visvesvaraya)", "kan-bhagyashilpigalu", "ಗದ್ಯ ಭಾಗ (Prose)", 2,
+         "ಸರ್ ಎಂ. ವಿಶ್ವೇಶ್ವರಯ್ಯನವರ ಸಾಧನೆಗಳು, ಕೃಷ್ಣರಾಜ ಸಾಗರ ಅಣೆಕಟ್ಟು, ಮತ್ತು ನಾಡಿನ ಕೈಗಾರಿಕೀಕರಣದ ಕೊಡುಗೆಗಳು.",
+         "### ಭಾಗ್ಯಶಿಲ್ಪಿಗಳು (10th State Board)\n- **ಜನನ**: ಸೆಪ್ಟೆಂಬರ್ 15, 1861 ಮುದ್ದೇನಹಳ್ಳಿಯಲ್ಲಿ.\n- **ಸಾಧನೆಗಳು**: ಕೆ.ಆರ್.ಎಸ್ (KRS) ಡ್ಯಾಮ್, ಭದ್ರಾವತಿ ಕಬ್ಬಿಣ ಕಾರ್ಖಾನೆ, ಮೈಸೂರು ವಿಶ್ವವಿದ್ಯಾನಿಲಯ, ಸ್ಟೇಟ್ ಬ್ಯಾಂಕ್ ಆಫ್ ಮೈಸೂರು.\n- **ಧೈಯವಾಕ್ಯ**: 'ಕೈಗಾರಿಕೀಕರಣ ಇಲ್ಲವೇ ವಿನಾಶ' (Industrialize or Perish).",
+         "ಸೆಪ್ಟೆಂಬರ್ 15: ಇಂಜಿನಿಯರ್ಸ್ ದಿನಾಚರಣೆ | KRS ಡ್ಯಾಮ್", 25),
+
+        (16, 4, "ಪದ್ಯ: ಸಂಕಲ್ಪ ಗೀತೆ (GS Shivarudrappa)", "kan-sankalpa-geethe", "ಪದ್ಯ ಭಾಗ (Poetry)", 2,
+         "ಜಿ.ಎಸ್. ಶಿವರುದ್ರಪ್ಪನವರ ಆಶಯ ಗೀತೆ: ಸಮಾಜದಲ್ಲಿ ಪ್ರೀತಿ, ಬೆಳಕು ಮತ್ತು ಭರವಸೆಯ ಬೀಜ ಬಿತ್ತುವ ಸಂಕಲ್ಪ.",
+         "### ಸಂಕಲ್ಪ ಗೀತೆ\n- **ಕವಿ**: ರಾಷ್ಟ್ರಕವಿ ಡಾ. ಜಿ.ಎಸ್. ಶಿವರುದ್ರಪ್ಪ.\n- **ಮುಖ್ಯ ಸಂದೇಶ**: ಸುತ್ತಲು ಕವಿಯುವ ಕತ್ತಲೆಯೊಳು ಪ್ರೀತಿಯ ಹಣತೆಯ ಹಚ್ಚೋಣ; ಸವಾಲುಗಳನ್ನು ಧೈರ್ಯದಿಂದ ಎದುರಿಸುವ ಹೊಸ ಸಂಕಲ್ಪ ಮಾಡೋಣ.",
+         "ಪ್ರೀತಿಯ ಹಣತೆಯ ಹಚ್ಚೋಣ | ಧನಾತ್ಮಕ ಸಂಕಲ್ಪ", 20),
+
+        # 5. ENGLISH (Subject 5: 10th State Board Grammar & Literature)
+        (17, 5, "Active & Passive Voice and Tenses", "eng-voice-tenses", "Grammar", 1,
+         "Rules for converting transitive verbs between active and passive voice across present, past, and future tenses.",
+         "### Active & Passive Voice (10th State Board)\n- **Rule**: Object becomes Subject; use appropriate form of `be + V3` (Past Participle).\n- **Example**: Active: `The student solved the problem.` ==> Passive: `The problem was solved by the student.`\n- **Continuous**: `is/are/am + being + V3`.",
+         "Sub + be + V3 + by + Obj", 20),
+
+        (18, 5, "Direct & Indirect (Reported) Speech", "eng-reported-speech", "Grammar", 2,
+         "Backshifting tenses, reporting verbs (said, told, asked), pronoun shifts, and time/place adverbs.",
+         "### Reported Speech Rules\n- Present Simple becomes Past Simple (`writes` -> `wrote`).\n- Present Continuous becomes Past Continuous (`is writing` -> `was writing`).\n- `now` -> `then`, `today` -> `that day`, `tomorrow` -> `the next day`.",
+         "Said to -> Told | Tense backshift in indirect", 25),
+
+        (19, 5, "Prose: A Hero by R.K. Narayan", "eng-prose-a-hero", "Literature", 2,
+         "Swami's internal struggle, father's challenge to sleep alone in the office room, and accidental capture of the burglar.",
+         "### A Hero (R.K. Narayan)\n- **Characters**: Swami, his father, mother, and grandmother.\n- **Plot**: Father challenges Swami to show courage instead of strength by sleeping alone in the dark office room.\n- **Climax**: Swami bites a burglar in fright, inadvertently becoming a hero praised by the police.",
+         "Courage is everything, strength and age are not important.", 25),
+
+        # 6. HINDI (Subject 6: 10th State Board Vyakaran & Sahitya)
+        (20, 6, "हिंदी व्याकरण: कारक एवं संधि (Karak & Sandhi)", "hin-karak-sandhi", "व्याकरण (Grammar)", 1,
+         "कारक के 8 भेद (कर्ता, कर्म, करण, संप्रदान, अपादान, संबंध, अधिकरण, संबोधन) और स्वर संधि के नियम।",
+         "### हिंदी व्याकरण (10th State Board)\n- **कारक के 8 भेद**:\n  1. कर्ता ने, 2. कर्म को, 3. करण से/के द्वारा, 4. संप्रदान को/के लिए, 5. अपादान से (अलग होना), 6. संबंध का/के/की, 7. अधिकरण में/पर, 8. संबोधन हे/अरे।\n- **स्वर संधि**: दीर्घ, गुण, वृद्धि, यण और अयादि संधि।",
+         "कर्ता ने, कर्म को, करण से | 8 कारक भेद", 20),
+
+        (21, 6, "गद्य: कश्मीरी सेब (Kashmiri Seb - Premchand)", "hin-kashmiri-seb", "गद्य (Prose)", 2,
+         "मुंशी प्रेमचंद की प्रसिद्ध कहानी: बाजार में खरीदारी करते समय सतर्कता और बेईमानी से बचने का सबक।",
+         "### कश्मीरी सेब (प्रेमचंद)\n- **कहानीकार**: मुंशी प्रेमचंद।\n- **केंद्रीय भाव**: बाजार में दुकानदार द्वारा सड़े हुए सेब देना। ग्राहक को अपनी आँखों से देखकर ही सामान खरीदना चाहिए; आँख बंद करके भरोसा करना धोखा खाना है।",
+         "सतर्कता ही ग्राहक का सबसे बड़ा सुरक्षा कवच है।", 25),
+
+        (22, 6, "मुहावरे, लोकोक्तियाँ एवं वाक्य शुद्धि", "hin-muhavare-shuddhi", "व्याकरण (Grammar)", 2,
+         "दैनिक जीवन में प्रयुक्त मुहावरे (जैसे: नौ दो ग्यारह होना, अँगूठा दिखाना) और अशुद्ध वाक्यों का शुद्धिकरण।",
+         "### मुहावरे और वाक्य रचना\n- **नौ दो ग्यारह होना**: भाग जाना।\n- **दाँत खट्टे करना**: पराजित करना।\n- **आँखों का तारा**: बहुत प्यारा होना।\n- **वाक्य शुद्धि**: लिंग, वचन और कारक संबंधी अशुद्धियों को पहचान कर सही करना।",
+         "मुहावरे भाषा को सजीव और प्रभावशाली बनाते हैं।", 20)
     ]
     cursor.executemany("""
     INSERT INTO knowledge_nodes (id, subject_id, topic_name, slug, category, tier, short_desc, explanation_markdown, key_formulae, estimated_minutes)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, nodes_data)
-
-    # 5. Seed Prerequisites (Edges of the Root-Cause Graph)
+    # 5. Seed Prerequisites (Edges of the Root-Cause Graph across 10th State Board)
     prereqs = [
         # Math Prerequisites
         (4, 1, 1.0, "Balancing equations requires proper order of operations."),
@@ -388,25 +438,33 @@ def seed_database(conn):
         (5, 2, 1.0, "Factoring binomials relies heavily on sign multiplication rules."),
         (6, 4, 0.9, "Rearranging quadratic expressions requires linear equation manipulation."),
         (6, 5, 1.0, "Factoring is a primary method for finding quadratic roots; completing square builds on algebraic identities."),
-        (7, 6, 1.0, "Finding x-intercepts of a parabola is identical to finding roots of quadratic equations."),
+        (7, 4, 0.9, "Arithmetic progression formulas require linear equation substitution."),
         
-        # Physics Prerequisites
-        (9, 8, 1.0, "Net force requires resolving vectors into perpendicular components."),
-        (10, 8, 1.0, "Initial velocity must be resolved into horizontal and vertical components."),
-        (10, 9, 0.9, "Gravitational downward force governs vertical acceleration."),
+        # Science Prerequisites
+        (9, 8, 1.0, "Circuits and electrical energy build on basic energy conservation and ray optics."),
+        (10, 8, 0.9, "Chemical reactions require foundational atomic interactions."),
 
-        # CS Prerequisites
-        (12, 11, 1.0, "Recursive execution requires clear understanding of stack memory frames."),
-        (13, 12, 1.0, "Depth-First Search traversals are implemented recursively using call stacks.")
+        # Social Science Prerequisites
+        (13, 11, 0.9, "Indian constitutional rights emerged from the history of the freedom struggle."),
+
+        # Kannada Prerequisites
+        (15, 14, 1.0, "ಸಾಹಿತ್ಯ ಗದ್ಯ ವಿಶ್ಲೇಷಣೆಗೆ ಸಂಧಿ ಮತ್ತು ಸಮಾಸಗಳ ವ್ಯಾಕರಣ ಜ್ಞಾನ ಅಗತ್ಯ."),
+        (16, 14, 0.9, "ಪದ್ಯ ರಚನೆ ಮತ್ತು ಛಂದಸ್ಸಿಗೆ ವ್ಯಾಕರಣ ಮೂಲ ಜ್ಞಾನ ಅವಶ್ಯಕ."),
+
+        # English Prerequisites
+        (18, 17, 1.0, "Reported speech relies heavily on tense backshifting and passive voice rules."),
+        (19, 17, 0.9, "Reading comprehension requires clear mastery of sentence clauses."),
+
+        # Hindi Prerequisites
+        (21, 20, 1.0, "गद्य और वाक्य रचना में कारक के सही प्रयोग की आवश्यकता होती है।"),
+        (22, 20, 0.9, "मुहावरे और वाक्य शुद्धि के लिए कारक एवं वर्तनी का ज्ञान आवश्यक है।")
     ]
     cursor.executemany("""
     INSERT INTO prerequisites (node_id, prerequisite_node_id, dependency_weight, description)
     VALUES (?, ?, ?, ?)
     """, prereqs)
 
-    # 6. Seed Student Mastery Profiles
-    # Aarav Sharma (id=1): Struggles with Quadratic Equations!
-    # Root Cause: Weak in Factoring Polynomials (42%) and Sign Rules (48%), while Arithmetic is Mastered (92%).
+    # 6. Seed Student Mastery Profiles (Aarav Sharma id=1 across 10th State Board)
     now_iso = datetime.now().isoformat()
     d1 = (datetime.now() - timedelta(days=1)).isoformat()
     d2 = (datetime.now() - timedelta(days=2)).isoformat()
@@ -417,19 +475,34 @@ def seed_database(conn):
     d7 = (datetime.now() - timedelta(days=7)).isoformat()
 
     aarav_mastery = [
+        # Mathematics (Subject 1)
         (1, 1, "mastered", 92, d5, 4),
         (1, 2, "root_cause", 48, d2, 0),
         (1, 3, "mastered", 85, d6, 2),
         (1, 4, "shaky", 64, d3, 1),
         (1, 5, "root_cause", 42, d1, 0),
         (1, 6, "shaky", 51, d1, 0),
-        (1, 7, "not_started", 20, None, 0),
+        (1, 7, "mastered", 80, d4, 2),
+        # Science (Subject 2)
         (1, 8, "mastered", 88, d4, 3),
         (1, 9, "shaky", 60, d2, 1),
-        (1, 10, "not_started", 25, None, 0),
+        (1, 10, "mastered", 76, d3, 2),
+        # Social Science (Subject 3)
         (1, 11, "mastered", 95, d7, 5),
-        (1, 12, "shaky", 58, d3, 1),
-        (1, 13, "not_started", 30, None, 0)
+        (1, 12, "shaky", 68, d3, 1),
+        (1, 13, "mastered", 84, d5, 3),
+        # Kannada (Subject 4)
+        (1, 14, "mastered", 90, d6, 4),
+        (1, 15, "mastered", 85, d4, 3),
+        (1, 16, "shaky", 65, d2, 1),
+        # English (Subject 5)
+        (1, 17, "mastered", 86, d5, 3),
+        (1, 18, "shaky", 62, d1, 1),
+        (1, 19, "mastered", 92, d7, 5),
+        # Hindi (Subject 6)
+        (1, 20, "mastered", 82, d4, 2),
+        (1, 21, "mastered", 88, d6, 4),
+        (1, 22, "shaky", 58, d2, 1)
     ]
     cursor.executemany("""
     INSERT INTO student_mastery (student_id, node_id, status, mastery_score, last_tested_at, streak_count)
@@ -438,18 +511,22 @@ def seed_database(conn):
 
     # Diya Rao (id=2) and Kiran Kumar (id=3) mastery for teacher class analytics
     other_masteries = [
-        # Diya
+        # Diya (10th State Board)
         (2, 1, "mastered", 95, d3, 6),
         (2, 2, "mastered", 88, d3, 5),
         (2, 4, "mastered", 86, d2, 4),
         (2, 5, "shaky", 68, d1, 1),
         (2, 6, "shaky", 62, d1, 1),
-        # Kiran
+        (2, 14, "mastered", 96, d4, 5),
+        (2, 17, "mastered", 91, d3, 4),
+        # Kiran (10th State Board)
         (3, 1, "shaky", 65, d4, 1),
         (3, 2, "root_cause", 40, d2, 0),
         (3, 4, "root_cause", 45, d2, 0),
         (3, 5, "root_cause", 38, d1, 0),
-        (3, 6, "not_started", 15, None, 0)
+        (3, 6, "not_started", 15, None, 0),
+        (3, 14, "shaky", 60, d2, 1),
+        (3, 17, "shaky", 55, d1, 0)
     ]
     cursor.executemany("""
     INSERT INTO student_mastery (student_id, node_id, status, mastery_score, last_tested_at, streak_count)
@@ -534,16 +611,40 @@ def seed_database(conn):
          "Step 1: Add 7 to both sides: 3x = 14 + 7 = 21.\nStep 2: Divide both sides by 3: x = 21 / 3 = 7.",
          0, 0.99, "verified"),
 
-        # Node 8: Vectors & Components
-        (8, "beginner", "A force vector has magnitude 10 N directed at 60° to the horizontal. What is its horizontal component?",
-         json.dumps(["5 N", "8.66 N", "10 N", "2.5 N"]), 0,
-         "Step 1: Recall F_x = F * cos(θ).\nStep 2: cos(60°) = 0.5.\nStep 3: F_x = 10 * 0.5 = 5 N.",
-         0, 0.97, "verified"),
+        # Node 8: Light & Reflection
+        (8, "beginner", "What is the focal length of a spherical mirror with radius of curvature 20 cm?",
+         json.dumps(["10 cm", "40 cm", "5 cm", "20 cm"]), 0,
+         "Step 1: Formula connecting focal length f and radius of curvature R is f = R / 2.\nStep 2: Given R = 20 cm, f = 20 / 2 = 10 cm.\nConclusion: The focal length is 10 cm.",
+         0, 0.99, "verified"),
 
-        # Node 12: Recursion
-        (12, "beginner", "What is the critical component of any recursive function to prevent infinite execution?",
-         json.dumps(["A while loop", "A base case (termination condition)", "A global counter variable", "A try-except block"]), 1,
-         "Step 1: Recursive functions call themselves.\nStep 2: Without a condition that halts recursion, calls accumulate until the stack overflows.\nStep 3: The terminating condition is called the Base Case.",
+        # Node 9: Electricity & Ohm's Law
+        (9, "beginner", "According to Ohm's Law, what is the current when a potential difference of 12 V is applied across a 4 Ω resistor?",
+         json.dumps(["3 A", "48 A", "0.33 A", "8 A"]), 0,
+         "Step 1: State Ohm's law: V = I * R ==> I = V / R.\nStep 2: Substitute values: I = 12 V / 4 Ω = 3 A.\nConclusion: Current flowing is 3 Amperes.",
+         0, 0.99, "verified"),
+
+        # Node 11: 1857 Revolt
+        (11, "beginner", "Which policy introduced by Lord Dalhousie was a major political cause of the 1857 First War of Independence?",
+         json.dumps(["Subsidiary Alliance", "Doctrine of Lapse", "Permanent Settlement", "Rowlatt Act"]), 1,
+         "Step 1: Lord Dalhousie introduced the Doctrine of Lapse.\nStep 2: Under this policy, adopted sons of Indian rulers were not recognized as heirs, annexing Jhansi, Satara, and Nagpur.\nConclusion: Doctrine of Lapse.",
+         0, 0.98, "verified"),
+
+        # Node 14: Kannada Sandhi & Samasa
+        (14, "beginner", "'ಮಾತಲ್ಲ' ಪದವನ್ನು ಬಿಡಿಸಿ ಬರೆದಾಗ ಯಾವ ಸಂಧಿ ಉಂಟಾಗುತ್ತದೆ? (ಮಾತು + ಅಲ್ಲ)",
+         json.dumps(["ಲೋಪ ಸಂಧಿ", "ಆಗಮ ಸಂಧಿ", "ಆದೇಶ ಸಂಧಿ", "ಗುಣ ಸಂಧಿ"]), 0,
+         "ಹಂತ ೧: ಬಿಡಿಸಿ ಬರೆದಾಗ: ಮಾತು + ಅಲ್ಲ = ಮಾತಲ್ಲ.\nಹಂತ ೨: ಪೂರ್ವಪದದ ಅಂತ್ಯದಲ್ಲಿರುವ 'ಉ' ಸ್ವರವು ಪರಪದದ 'ಅ' ಸ್ವರದ ಮುಂದೆ ಲೋಪವಾಗಿದೆ.\nತೀರ್ಮಾನ: ಅರ್ಥ ಕೆಡದಂತೆ ಸ್ವರ ಲೋಪವಾಗಿರುವುದರಿಂದ ಇದು ಲೋಪ ಸಂಧಿ.",
+         0, 0.99, "verified"),
+
+        # Node 17: English Active & Passive Voice
+        (17, "beginner", "Identify the correct passive voice: 'Swami wrote a letter to his father.'",
+         json.dumps(["A letter was written by Swami to his father.", "A letter is written by Swami to his father.", "A letter had written by Swami.", "Swami was written by a letter."]), 0,
+         "Step 1: The sentence is in Simple Past (wrote).\nStep 2: Passive rule: Object ('A letter') + was + V3 ('written') + by Subject ('Swami').\nConclusion: 'A letter was written by Swami to his father.'",
+         0, 0.99, "verified"),
+
+        # Node 20: Hindi Karak
+        (20, "beginner", "'पेड़ से पत्ता गिरा' — इस वाक्य में 'से' किस कारक का चिह्न है?",
+         json.dumps(["करण कारक", "अपादान कारक", "कर्म कारक", "संबंध कारक"]), 1,
+         "चरण 1: 'पेड़ से' में पत्ता पेड़ से अलग हो रहा है।\nचरण 2: अलग होने के भाव में 'से' विभक्ति अपादान कारक की होती है।\nनिष्कर्ष: यह अपादान कारक है।",
          0, 0.99, "verified")
     ]
     cursor.executemany("""

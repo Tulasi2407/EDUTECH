@@ -43,6 +43,8 @@ body.dark-mode {
 
 body.dark-mode header,
 body.dark-mode nav,
+body.dark-mode aside,
+body.dark-mode #left-sidebar,
 body.dark-mode footer,
 body.dark-mode .tactile-card {
   background-color: #0f172a !important;

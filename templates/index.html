@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Roots & Rhythm - Smart, Inclusive & Personalized Education</title>
+  <title>Roots & Rhythm - 10th State Board Learning Portal</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -13,10 +13,20 @@
 
   <!-- Custom Styles -->
   <link rel="stylesheet" href="/static/css/app.css">
+  <style>
+    /* Custom Scrollbar for Sidebar */
+    .sidebar-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar-scroll::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- Parent View Indicator Banner -->
+  <!-- Parent View Indicator Banner (when parent previews student view) -->
   {% if current_user.role == 'parent' %}
   <aside aria-label="Parent Preview Notice" class="bg-gradient-to-r from-emerald-700 to-teal-800 text-white px-4 py-2 text-xs font-bold flex items-center justify-between shadow-xs sticky top-0 z-50">
     <div class="flex items-center gap-2">
@@ -28,378 +38,366 @@
   </aside>
   {% endif %}
 
-  <!-- ===============================
-       TOP NAVIGATION BAR
-  ================================ -->
-  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-4 py-3">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 hidden lg:hidden"></div>
+
+  <!-- ==============================================
+       OVERALL APPLICATION LAYOUT (LEFT SIDEBAR + MAIN)
+  =============================================== -->
+  <div class="flex-1 flex min-h-screen relative">
+    
+    <!-- ==============================================
+         LEFT-ALIGNED SIDEBAR NAVIGATION
+    =============================================== -->
+    <aside id="left-sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-64 sm:w-72 bg-white border-r border-slate-200/90 flex flex-col justify-between shrink-0 z-50 transition-transform duration-200 ease-in-out -translate-x-full lg:translate-x-0 shadow-xl lg:shadow-none">
       
-      <!-- Brand & Tagline -->
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-800 flex items-center justify-center text-white shadow-md shadow-indigo-200">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <!-- Top Brand Header -->
+      <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-800 flex items-center justify-center text-white shadow-md shadow-indigo-200 group-hover:scale-105 transition shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
             </svg>
           </div>
           <div>
-            <h1 class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-indigo-900 via-indigo-700 to-indigo-950 bg-clip-text text-transparent" data-i18n="brand_name">
-              Roots & Rhythm
-            </h1>
-            <p class="text-[11px] text-slate-500 font-medium hidden sm:block" data-i18n="brand_tagline">
-              Smart, Inclusive & Personalized Education
-            </p>
+            <h1 class="text-base font-black text-slate-900 tracking-tight leading-none">Roots & Rhythm</h1>
+            <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-wider mt-1">10th State Board</p>
           </div>
-        </div>
+        </a>
 
-        <!-- Mobile Language Selector Trigger -->
-        <div class="flex sm:hidden items-center gap-1">
-          <select id="mobile-lang-select" class="text-xs bg-slate-100 border border-slate-200 rounded-lg px-2 py-1" onchange="window.I18N.setLanguage(this.value)">
-            <option value="en">English</option>
-            <option value="hi">हिंदी</option>
-            <option value="kn">ಕನ್ನಡ</option>
-            <option value="ta">தமிழ்</option>
-            <option value="te">తెలుగు</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Controls: 5-Language Switcher, Role Switcher Demo, User Badge -->
-      <div class="flex items-center flex-wrap gap-2.5">
-        
-        <!-- 5-Language Switcher (Desktop / Tablet) -->
-        <div class="hidden sm:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80 text-xs font-semibold">
-          <button class="lang-btn px-2 py-1 rounded-lg bg-indigo-600 text-white font-bold" data-lang="en">English</button>
-          <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="hi">हिंदी</button>
-          <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="kn">ಕನ್ನಡ</button>
-          <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="ta">தமிழ்</button>
-          <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="te">తెలుగు</button>
-        </div>
-
-        <!-- Current Student Avatar & Badge -->
-        <div id="current-user-badge" class="flex items-center gap-2 bg-slate-50 border border-slate-200/90 pl-1.5 pr-2.5 py-1 rounded-full">
-          <img id="current-user-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=Aarav" alt="Avatar" class="w-6 h-6 rounded-full bg-slate-200 object-cover">
-          <span id="current-user-name" class="text-xs font-bold text-slate-800">Aarav Sharma</span>
-          <span id="current-user-role" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">STUDENT</span>
-          <a href="/login" class="text-[11px] text-slate-400 hover:text-emerald-700 font-semibold pl-1 border-l border-slate-200" title="Switch student account">Switch</a>
-        </div>
-
-        <!-- Command Palette Trigger Button (Ctrl+K) -->
-        <button id="cmd-palette-btn" class="tactile-btn px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/90 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs" title="Open Command Palette (Ctrl+K / ⌘K)">
-          <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <span class="hidden md:inline">Commands</span>
-          <kbd class="px-1.5 py-0.2 text-[9px] font-mono bg-white text-slate-500 rounded border border-slate-300">⌘K</kbd>
-        </button>
-
-        <!-- Zen Study Chamber Trigger -->
-        <button id="topbar-zen-btn" class="tactile-btn px-2.5 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm" title="Launch Zen Study Chamber">
-          <span>🧘 Zen Focus</span>
-        </button>
-
-        <!-- Sound Chime / Mute Toggle Button -->
-        <button id="audio-toggle-btn" class="tactile-btn p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/90 rounded-xl text-xs font-bold flex items-center justify-center shadow-xs" title="Toggle Sound Feedback">
-          <span id="audio-toggle-icon">🔔</span>
-        </button>
-
-        <!-- Dark Mode Toggle Button -->
-        <button id="dark-mode-toggle-btn" class="tactile-btn p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/90 rounded-xl text-xs font-bold flex items-center justify-center shadow-xs" title="Toggle Dark / Midnight Mode">
-          <span id="dark-mode-toggle-icon">🌙</span>
-        </button>
-
-        <!-- 10 Core Objectives Alignment Button -->
-        <button id="view-objectives-btn" class="tactile-btn px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300/80 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm">
-          <span>🎯 10 Objectives</span>
+        <!-- Mobile Close Button -->
+        <button id="close-sidebar-btn" class="lg:hidden text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition" title="Close navigation menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
       </div>
 
-    </div>
-  </header>
-
-  <!-- ===============================
-       ROLE-AWARE NAVIGATION & LEARNING MODES BAR
-  ================================ -->
-  <nav class="bg-white border-b border-slate-200/80 px-4 py-2 sticky top-[65px] z-30">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-      
-      <!-- Tabs List -->
-      <div class="flex items-center space-x-1 overflow-x-auto no-scrollbar">
-        <!-- 10 Core Features Main Dashboard Tab -->
-        <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-bold text-xs bg-indigo-600 text-white shadow-sm shrink-0 flex items-center gap-1.5" data-tab="main-dashboard">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-          <span data-i18n="nav_dashboard">Main Dashboard</span>
-        </button>
-
-        <!-- Student & Admin Tabs -->
-        <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5" data-tab="gap-finder">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-          <span data-i18n="nav_gap_finder">Root-Cause X-Ray</span>
-        </button>
-
-        <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5" data-tab="study-planner">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          <span data-i18n="nav_study_planner">Free-Hour Planner</span>
-        </button>
-
-        <!-- Dedicated AI Assistant Tab (Objective 3) -->
-        <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5" data-tab="ai-assistant">
-          <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-          <span data-i18n="nav_ai_assistant">AI Assistant (Tutor)</span>
-        </button>
-
-        <button class="nav-tab-btn role-student-tab px-3.5 py-1.5 rounded-xl font-semibold text-xs text-slate-600 hover:bg-slate-100 shrink-0 flex items-center gap-1.5" data-tab="analytics">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-          <span data-i18n="nav_analytics">My Progress</span>
-        </button>
-      </div>
-
-      <!-- Three Learning Modes Bar (Objective 5) -->
-      <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/90 text-[11px] font-bold self-start md:self-auto shrink-0">
-        <span class="text-slate-400 px-2 uppercase text-[9px] tracking-wider hidden sm:inline" data-i18n="learning_modes_title">Mode:</span>
-        <button class="learning-mode-btn px-2.5 py-1 rounded-lg text-slate-600 hover:bg-slate-200 transition" data-mode="step-by-step" title="Foundational pace, micro-doses, extra scaffolding">
-          🌱 <span data-i18n="mode_step_by_step">Step-by-Step</span>
-        </button>
-        <button class="learning-mode-btn px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-extrabold shadow-xs transition" data-mode="balanced" title="Standard 25m Pomodoro, guided concept application">
-          ⚖️ <span data-i18n="mode_balanced">Balanced</span>
-        </button>
-        <button class="learning-mode-btn px-2.5 py-1 rounded-lg text-slate-600 hover:bg-slate-200 transition" data-mode="fast-track" title="Rapid review, high-yield drill & shortcuts">
-          ⚡ <span data-i18n="mode_fast_track">Fast-Track</span>
-        </button>
-      </div>
-
-    </div>
-  </nav>
-
-  <!-- ===============================
-       MAIN CONTENT CONTAINER
-  ================================ -->
-  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
-
-    <!-- ==============================================
-         TAB 0: MAIN DASHBOARD (10 CORE FEATURES)
-    =============================================== -->
-    <div id="tab-main-dashboard" class="tab-content-panel space-y-6">
-      <div id="main-dashboard-container">
-        <!-- Rendered dynamically by dashboard.js -->
-      </div>
-    </div>
-
-    <!-- ==============================================
-         TAB 1: PREREQUISITE GAP FINDER (ROOT-CAUSE TRACER)
-    =============================================== -->
-    <div id="tab-gap-finder" class="tab-content-panel space-y-6 hidden">
-      
-      <!-- Control Bar: Subject Selector & Stumbled Topic Selector -->
-      <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
-            <span data-i18n="gap_finder_title">Prerequisite Gap Finder (Root-Cause Tracer)</span>
-          </h2>
-          <p class="text-xs text-slate-500 mt-0.5" data-i18n="gap_finder_subtitle">
-            Trace where you get stuck backward to foundational concepts before moving forward.
-          </p>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2.5">
-          <!-- Subject Dropdown -->
-          <div>
-            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1" data-i18n="select_subject">Select Subject</label>
-            <select id="subject-select" class="bg-slate-50 border border-slate-200 text-xs font-semibold rounded-xl px-3 py-2 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
-              <!-- Populated via JS -->
-            </select>
-          </div>
-
-          <!-- Topic Dropdown -->
-          <div>
-            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1" data-i18n="select_struggling_topic">Struggling Topic</label>
-            <select id="topic-select" class="bg-slate-50 border border-slate-200 text-xs font-semibold rounded-xl px-3 py-2 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
-              <!-- Populated via JS -->
-            </select>
-          </div>
-
-          <!-- Trace Button -->
-          <div class="self-end">
-            <button id="trace-gaps-btn" class="tactile-btn px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold text-xs rounded-xl shadow-sm flex items-center gap-1.5">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-              <span data-i18n="btn_trace_gaps">X-Ray Root Causes</span>
-            </button>
-          </div>
-
-          <!-- Quick Diagnostic Button -->
-          <div class="self-end">
-            <button id="quick-diagnostic-btn" class="tactile-btn px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl flex items-center gap-1.5" title="Take a 3-minute quiz to auto-diagnose weak links">
-              <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-              <span data-i18n="btn_quick_diagnostic">Quick 3-Min Diagnostic</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Main Visual Section: SVG Node Map & Prescribed Remediation Pathway -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- Interactive Root-Cause SVG Dependency Map (2 Columns) -->
-        <div class="lg:col-span-2 space-y-2">
-          <div class="flex items-center justify-between text-xs font-bold text-slate-700 px-1">
-            <span class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-              Interactive Dependency Graph & Root-Cause X-Ray
-            </span>
-            <span class="text-slate-400 font-normal text-[11px]" data-i18n="click_node_hint">Click any circle node below to inspect bite-sized guides</span>
-          </div>
-
-          <!-- Node Map Container -->
-          <div id="node-map-root"></div>
-        </div>
-
-        <!-- Prescribed Ordered Remediation Pathway (1 Column) -->
-        <div class="space-y-3">
-          <div class="tactile-card p-5 bg-white space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div>
-                <h3 class="text-sm font-bold text-slate-900" data-i18n="remediation_path_title">Recommended Remediation Pathway</h3>
-                <span id="remediation-count-badge" class="text-[11px] text-rose-600 font-semibold">2 gaps diagnosed</span>
-              </div>
-              <div class="text-right">
-                <span class="text-[10px] text-slate-400 block uppercase" data-i18n="recovery_time_label">Est. Total Recovery</span>
-                <span id="recovery-time-badge" class="text-xs font-extrabold text-indigo-600">45 mins</span>
-              </div>
-            </div>
-
-            <p class="text-xs text-slate-500 leading-relaxed">
-              To conquer your target topic effortlessly, fix these prerequisite root causes in the topological order below:
-            </p>
-
-            <!-- Ordered Pathway Cards -->
-            <div id="remediation-path-container" class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1">
-              <!-- Dynamically populated -->
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- ==============================================
-         TAB 2: FREE-HOUR STUDY PLANNER & REBALANCER
-    =============================================== -->
-    <div id="tab-study-planner" class="tab-content-panel space-y-6 hidden">
-      <div id="timeline-container">
-        <!-- Dynamically rendered by timeline.js -->
-      </div>
-    </div>
-
-    <!-- ==============================================
-         TAB: AI LEARNING ASSISTANT (OBJECTIVE 3)
-    =============================================== -->
-    <div id="tab-ai-assistant" class="tab-content-panel space-y-6 hidden">
-      <div class="tactile-card p-6 bg-white space-y-5">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-xs">
-              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-            </div>
-            <div>
-              <h2 class="text-lg font-bold text-slate-900" data-i18n="ai_assistant_title">AI Learning Assistant (Doubt Solver)</h2>
-              <p class="text-xs text-slate-500" data-i18n="ai_assistant_desc">Clear doubts and understand difficult concepts through simple, step-by-step explanations.</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span data-i18n="ai_confidence_badge">Curriculum-Verified AI Guardrail</span>
-            </span>
-          </div>
-        </div>
-
-        <!-- Quick Prompt Recommendation Chips -->
-        <div>
-          <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Tap a Common Doubt or Type Below:</label>
-          <div class="flex flex-wrap gap-2">
-            <button class="ai-prompt-chip px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 text-xs font-semibold border border-slate-200/80 transition" data-prompt="Why do two negative numbers multiply to a positive?">
-              🌱 Why do two negatives make a positive?
-            </button>
-            <button class="ai-prompt-chip px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 text-xs font-semibold border border-slate-200/80 transition" data-prompt="How do I solve quadratic equations step-by-step using the quadratic formula?">
-              📐 How to solve quadratic equations?
-            </button>
-            <button class="ai-prompt-chip px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 text-xs font-semibold border border-slate-200/80 transition" data-prompt="How does factoring polynomials work? What are standard identities?">
-              🔍 How does factoring polynomials work?
-            </button>
-            <button class="ai-prompt-chip px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 text-xs font-semibold border border-slate-200/80 transition" data-prompt="Give me a real-life analogy for parabolas and quadratic equations">
-              💡 Real-life analogy for parabolas
-            </button>
-          </div>
-        </div>
-
-        <!-- Question Input Form -->
-        <form id="ai-assistant-form" class="space-y-3">
-          <div class="relative">
-            <textarea id="ai-question-input" rows="3" required placeholder="Type your question or doubt here (e.g., Why do two negative numbers multiply to a positive?)..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs font-medium text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition leading-relaxed"></textarea>
-          </div>
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div class="flex items-center gap-2 text-xs text-slate-500">
-              <span>Active Pacing:</span>
-              <span id="ai-active-mode-label" class="font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">Balanced Mode</span>
-            </div>
-            <button type="submit" id="ai-submit-btn" class="tactile-btn px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold text-xs rounded-xl shadow-sm flex items-center justify-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-              <span data-i18n="btn_ask_ai">Get Step-by-Step Explanation</span>
-            </button>
-          </div>
-        </form>
-
-        <!-- AI Assistant Output Card -->
-        <div id="ai-response-card" class="hidden mt-4 p-5 rounded-2xl bg-indigo-50/40 border border-indigo-100 space-y-3">
-          <div class="flex items-center justify-between border-b border-indigo-100/70 pb-2.5">
-            <span class="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
-              Step-by-Step Educational Solution
-            </span>
-            <div class="flex items-center gap-2">
-              <span id="ai-confidence-score-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-emerald-700 border border-emerald-200">
-                98% Confidence (Curriculum Verified)
+      <!-- Student Profile Card in Sidebar -->
+      <div class="px-3 pt-3 pb-2">
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center gap-3">
+          <img id="sidebar-user-avatar" src="{{ current_user.avatar_url or 'https://api.dicebear.com/7.x/bottts/svg?seed=Aarav' }}" alt="Student" class="w-10 h-10 rounded-full bg-slate-200 border-2 border-indigo-200 object-cover shrink-0">
+          <div class="min-w-0 flex-1">
+            <p id="sidebar-user-name" class="text-xs font-black text-slate-900 truncate">{{ current_user.name }}</p>
+            <div class="flex items-center gap-1.5 mt-0.5">
+              <span class="inline-block px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                10th Stateboard
               </span>
-              <button id="flag-ai-response-btn" class="text-[11px] text-slate-400 hover:text-amber-600 font-semibold flex items-center gap-1">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
-                Report / Flag
-              </button>
+              <a href="/login" class="text-[10px] text-slate-400 hover:text-indigo-600 font-semibold" title="Switch account">Switch</a>
             </div>
           </div>
-          <div id="ai-response-body" class="text-xs text-slate-700 leading-relaxed font-normal prose prose-sm max-w-none">
-            <!-- Injected by app.js -->
+        </div>
+      </div>
+
+      <!-- ==============================================
+           THE 5 LEFT-ALIGNED DASHBOARD NAVIGATION ITEMS
+      =============================================== -->
+      <div class="px-3 py-2 flex-1 overflow-y-auto sidebar-scroll space-y-1.5">
+        <span class="block px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">
+          Navigation
+        </span>
+
+        <!-- 1. Dashboard -->
+        <button class="nav-tab-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left group bg-indigo-600 text-white shadow-sm" data-tab="main-dashboard">
+          <div class="flex items-center gap-3">
+            <span class="text-base group-hover:scale-110 transition shrink-0">📊</span>
+            <span>1. Dashboard</span>
+          </div>
+          <span class="w-2 h-2 rounded-full bg-white opacity-100 indicator-dot"></span>
+        </button>
+
+        <!-- 2. My Subjects (Kannada, English, Hindi, Mathematics, Social Science, Science) -->
+        <button class="nav-tab-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left group text-slate-600 hover:bg-slate-100" data-tab="my-subjects">
+          <div class="flex items-center gap-3">
+            <span class="text-base group-hover:scale-110 transition shrink-0">📚</span>
+            <span>2. My Subjects</span>
+          </div>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-indigo-100 text-indigo-700 border border-indigo-200">
+            6 Subjects
+          </span>
+        </button>
+
+        <!-- 3. Study planner -->
+        <button class="nav-tab-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left group text-slate-600 hover:bg-slate-100" data-tab="study-planner">
+          <div class="flex items-center gap-3">
+            <span class="text-base group-hover:scale-110 transition shrink-0">⏱️</span>
+            <span>3. Study Planner</span>
+          </div>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">
+            Free-Hour
+          </span>
+        </button>
+
+        <!-- 4. Practice/Quiz -->
+        <button class="nav-tab-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left group text-slate-600 hover:bg-slate-100" data-tab="practice-quiz">
+          <div class="flex items-center gap-3">
+            <span class="text-base group-hover:scale-110 transition shrink-0">🎯</span>
+            <span>4. Practice / Quiz</span>
+          </div>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-100 text-amber-800 border border-amber-200">
+            Interactive
+          </span>
+        </button>
+
+        <!-- 5. My progress -->
+        <button class="nav-tab-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left group text-slate-600 hover:bg-slate-100" data-tab="my-progress">
+          <div class="flex items-center gap-3">
+            <span class="text-base group-hover:scale-110 transition shrink-0">📈</span>
+            <span>5. My Progress</span>
+          </div>
+          <span class="text-[10px] text-slate-400 font-semibold">Analytics</span>
+        </button>
+      </div>
+
+      <!-- Left Sidebar Footer Controls -->
+      <div class="p-3 border-t border-slate-100 space-y-2 bg-slate-50/50">
+        <!-- Zen Focus Chamber Launcher -->
+        <button id="sidebar-zen-btn" class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-black shadow-xs transition">
+          <span>🧘 Zen Focus Chamber</span>
+        </button>
+
+        <div class="flex items-center justify-between pt-1">
+          <div class="flex items-center gap-1.5">
+            <!-- Dark Mode Toggle Button -->
+            <button id="sidebar-dark-mode-btn" class="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 text-xs font-bold shadow-2xs transition" title="Toggle Dark / Midnight Mode">
+              <span id="dark-mode-toggle-icon">🌙</span>
+            </button>
+            <!-- Audio Chimes Toggle Button -->
+            <button id="sidebar-audio-btn" class="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 text-xs font-bold shadow-2xs transition" title="Toggle Sound Feedback">
+              <span id="audio-toggle-icon">🔔</span>
+            </button>
+          </div>
+
+          <a href="/logout" class="px-3 py-1.5 rounded-xl border border-rose-200 bg-rose-50/80 hover:bg-rose-100 text-rose-700 text-xs font-bold transition">
+            Sign Out
+          </a>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ==============================================
+         RIGHT MAIN CONTENT VIEWPORT
+    =============================================== -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      
+      <!-- Top Sticky Action Header Bar -->
+      <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+        
+        <div class="flex items-center gap-3">
+          <!-- Mobile Hamburger Menu Button -->
+          <button id="open-sidebar-btn" class="lg:hidden p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition" title="Open navigation menu">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
+
+          <!-- Breadcrumb View Title -->
+          <div>
+            <h2 id="topbar-breadcrumb-title" class="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+              1. Dashboard (Overview & Habits)
+            </h2>
+            <p class="text-[10px] text-slate-400 font-semibold hidden sm:block">
+              Karnataka 10th High School State Board • Roots & Rhythm
+            </p>
           </div>
         </div>
 
-      </div>
+        <!-- Controls: Language Switcher, Pacing Modes, Command Palette -->
+        <div class="flex items-center gap-2">
+          
+          <!-- 5-Language Switcher (Desktop) -->
+          <div class="hidden md:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80 text-xs font-semibold">
+            <button class="lang-btn px-2 py-1 rounded-lg bg-indigo-600 text-white font-bold" data-lang="en">EN</button>
+            <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="kn">ಕನ್ನಡ</button>
+            <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="hi">हिंदी</button>
+            <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="ta">தமிழ்</button>
+            <button class="lang-btn px-2 py-1 rounded-lg text-slate-600 hover:bg-slate-200" data-lang="te">తెలుగు</button>
+          </div>
+
+          <!-- Learning Modes Bar -->
+          <div class="hidden sm:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/90 text-[11px] font-bold">
+            <button class="learning-mode-btn px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-extrabold shadow-xs transition" data-mode="balanced">
+              ⚖️ Balanced
+            </button>
+          </div>
+
+          <!-- Command Palette Trigger (Ctrl+K) -->
+          <button id="cmd-palette-btn" class="tactile-btn px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/90 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs" title="Open Command Palette (Ctrl+K)">
+            <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <span class="hidden md:inline">Commands</span>
+            <kbd class="px-1.5 py-0.2 text-[9px] font-mono bg-white text-slate-500 rounded border border-slate-300">⌘K</kbd>
+          </button>
+
+          <!-- 10 Core Objectives Alignment Button -->
+          <button id="view-objectives-btn" class="tactile-btn px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300/80 rounded-xl text-xs font-bold flex items-center gap-1 shadow-2xs">
+            <span>🎯 10 Objectives</span>
+          </button>
+        </div>
+
+      </header>
+
+      <!-- Main Content Container with the 5 Tabs -->
+      <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-6">
+
+        <!-- ==============================================
+             1. DASHBOARD PANE
+        =============================================== -->
+        <div id="tab-main-dashboard" class="tab-content-panel space-y-6">
+          <div id="main-dashboard-container">
+            <!-- Dynamically rendered by dashboard.js -->
+          </div>
+        </div>
+
+        <!-- ==============================================
+             2. MY SUBJECTS PANE (HIGH SCHOOL 10th STATEBOARD)
+        =============================================== -->
+        <div id="tab-my-subjects" class="tab-content-panel space-y-6 hidden">
+          
+          <!-- Subject Hub Header Banner -->
+          <div class="tactile-card p-6 bg-gradient-to-r from-emerald-900 via-teal-900 to-indigo-950 text-white rounded-3xl relative overflow-hidden shadow-sm">
+            <div class="relative z-10 space-y-2">
+              <div class="flex items-center gap-2">
+                <span class="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  Karnataka 10th High School State Board
+                </span>
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-slate-200 border border-white/10">
+                  6 Core Subjects
+                </span>
+              </div>
+              <h2 class="text-xl sm:text-2xl font-black tracking-tight text-white">
+                My Subjects & Curriculum Units
+              </h2>
+              <p class="text-xs sm:text-sm text-emerald-100/90 leading-relaxed max-w-2xl font-normal">
+                Master your 10th State Board syllabus topic-by-topic. View curriculum units across <strong>Kannada, English, Hindi, Mathematics, Science, and Social Science</strong> with direct practice quizzes and root-cause tracing.
+              </p>
+            </div>
+          </div>
+
+          <!-- Subject Cards Grid (Injected dynamically with 6 subjects) -->
+          <div id="my-subjects-cards-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <!-- Dynamically rendered by app.js -->
+          </div>
+
+        </div>
+
+        <!-- ==============================================
+             3. STUDY PLANNER PANE (FREE-HOUR RHYTHM)
+        =============================================== -->
+        <div id="tab-study-planner" class="tab-content-panel space-y-6 hidden">
+          <div id="timeline-container">
+            <!-- Dynamically rendered by timeline.js -->
+          </div>
+        </div>
+
+        <!-- ==============================================
+             4. PRACTICE / QUIZ PANE (INTERACTIVE ENGINE)
+        =============================================== -->
+        <div id="tab-practice-quiz" class="tab-content-panel space-y-6 hidden">
+          
+          <!-- Interactive Quiz Runner Container -->
+          <div id="practice-quiz-pane-content" class="space-y-6">
+            <!-- Dynamically populated by loadPracticeQuizPane() -->
+          </div>
+
+        </div>
+
+        <!-- ==============================================
+             5. MY PROGRESS & ROOT-CAUSE X-RAY PANE
+        =============================================== -->
+        <div id="tab-my-progress" class="tab-content-panel space-y-6 hidden">
+          
+          <!-- Analytics Container -->
+          <div id="student-analytics-container">
+            <!-- Dynamically rendered by analytics.js -->
+          </div>
+
+          <!-- Prerequisite Gap Finder Root-Cause X-Ray -->
+          <div class="space-y-4 pt-4 border-t border-slate-200">
+            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+                  <span>Prerequisite Gap Finder (Root-Cause Tracer)</span>
+                </h3>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  Trace where you get stuck backward to foundational concepts before moving forward.
+                </p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2.5">
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Select Subject</label>
+                  <select id="subject-select" class="bg-slate-50 border border-slate-200 text-xs font-semibold rounded-xl px-3 py-2 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <!-- Populated via JS -->
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Struggling Topic</label>
+                  <select id="topic-select" class="bg-slate-50 border border-slate-200 text-xs font-semibold rounded-xl px-3 py-2 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <!-- Populated via JS -->
+                  </select>
+                </div>
+
+                <div class="self-end">
+                  <button id="trace-gaps-btn" class="tactile-btn px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold text-xs rounded-xl shadow-sm flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span>X-Ray Root Causes</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- SVG Dependency Graph & Recommended Remediation -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div class="lg:col-span-2 space-y-2">
+                <div class="flex items-center justify-between text-xs font-bold text-slate-700 px-1">
+                  <span>Interactive Dependency Graph & Root-Cause X-Ray</span>
+                  <span class="text-slate-400 font-normal text-[11px]">Click any node to view bite-sized guides</span>
+                </div>
+                <div id="node-map-root"></div>
+              </div>
+
+              <div class="space-y-3">
+                <div class="tactile-card p-5 bg-white space-y-4">
+                  <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div>
+                      <h4 class="text-sm font-bold text-slate-900">Recommended Remediation Pathway</h4>
+                      <span id="remediation-count-badge" class="text-[11px] text-rose-600 font-semibold">2 gaps diagnosed</span>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-[10px] text-slate-400 block uppercase">Est. Total Recovery</span>
+                      <span id="recovery-time-badge" class="text-xs font-extrabold text-indigo-600">45 mins</span>
+                    </div>
+                  </div>
+                  <p class="text-xs text-slate-500 leading-relaxed">
+                    To conquer your target topic effortlessly, fix these prerequisite root causes in the topological order below:
+                  </p>
+                  <div id="remediation-path-container" class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+
+      <!-- Bottom Footer -->
+      <footer class="mt-auto border-t border-slate-200 bg-white py-4 px-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p>Roots & Rhythm • 10th High School State Board Learning Platform • Production Ready</p>
+          <div class="flex items-center gap-3 text-slate-400">
+            <span>Free-Hour Rhythm</span>
+            <span>•</span>
+            <span>Root-Cause Diagnostics</span>
+            <span>•</span>
+            <span>Kannada, English, Hindi, Math, Science & Social</span>
+          </div>
+        </div>
+      </footer>
+
     </div>
 
-    <!-- ==============================================
-         TAB 3: STUDENT PROGRESS & ANALYTICS
-    =============================================== -->
-    <div id="tab-analytics" class="tab-content-panel space-y-6 hidden">
-      <div id="student-analytics-container">
-        <!-- Dynamically rendered by analytics.js -->
-      </div>
-    </div>
-
-  </main>
-
-  <!-- ===============================
-       FOOTER
-  ================================ -->
-  <footer class="mt-auto border-t border-slate-200 bg-white py-4 px-4 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <p>Roots & Rhythm • Domain 2: Smart, Inclusive & Personalized Education • Production Ready</p>
-      <div class="flex items-center gap-3 text-slate-400">
-        <span>Strict RBAC</span>
-        <span>•</span>
-        <span>Safe AI Guardrails</span>
-        <span>•</span>
-        <span>Multilingual (5 Languages)</span>
-      </div>
-    </div>
-  </footer>
+  </div>
 
   <!-- ===============================
        SLIDE-OVER DRILL-DOWN DRAWER
@@ -490,24 +488,24 @@
 
       <h3 class="text-base font-bold text-slate-900 mb-1 flex items-center gap-2">
         <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
-        <span data-i18n="flag_modal_title">Review & Flag AI Answer</span>
+        <span>Review & Flag AI Answer</span>
       </h3>
-      <p class="text-xs text-slate-500 mb-4" data-i18n="flag_modal_desc">
+      <p class="text-xs text-slate-500 mb-4">
         Help faculty maintain educational safety and curriculum precision.
       </p>
 
       <form id="flag-form" class="space-y-3.5">
         <input type="hidden" id="flag-question-id">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="flag_reason_label">Reason for flag / suggestion:</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Reason for flag / suggestion:</label>
           <textarea id="flag-reason" rows="3" required placeholder="e.g. Step 2 explanation missed stating the negative multiplication rule clearly" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 outline-none focus:ring-2 focus:ring-amber-500"></textarea>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="flag_edit_label">Suggested correction (optional):</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Suggested correction (optional):</label>
           <textarea id="flag-edit" rows="2" placeholder="e.g. Update step 2 to: (-7) * (-8) = +56" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 outline-none focus:ring-2 focus:ring-amber-500"></textarea>
         </div>
         <div class="pt-2">
-          <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold text-xs shadow-sm transition" data-i18n="btn_send_flag">
+          <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold text-xs shadow-sm transition">
             Submit to Faculty Review
           </button>
         </div>
@@ -527,7 +525,7 @@
       <div class="border-b border-slate-100 pb-3 mb-4">
         <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600 block">Domain 2: Smart, Inclusive & Personalized Education</span>
         <h3 class="text-base font-bold text-slate-900">Roots & Rhythm • 10 Core Educational Objectives Alignment</h3>
-        <p class="text-xs text-slate-500 mt-0.5">How each objective is concretely fulfilled within the application architecture.</p>
+        <p class="text-xs text-slate-500 mt-0.5">How each objective is concretely fulfilled within the 10th State Board architecture.</p>
       </div>
 
       <div class="overflow-x-auto">
@@ -537,69 +535,58 @@
               <th class="pb-2.5">#</th>
               <th class="pb-2.5">Specific Objective</th>
               <th class="pb-2.5">Implementation Feature</th>
-              <th class="pb-2.5 text-right">Action</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 text-slate-700 font-medium">
             <tr class="hover:bg-slate-50">
               <td class="py-2.5 font-bold text-indigo-600">1</td>
-              <td class="py-2.5"><strong>Identify Learning Gaps:</strong> Identify struggling subjects & topics through diagnostic check.</td>
-              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">Gap Finder</span></td>
-              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="gap-finder">Go to Gap Finder →</button></td>
+              <td class="py-2.5"><strong>Identify Learning Gaps:</strong> Diagnostic check on struggling 10th board topics.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">My Progress & X-Ray</span></td>
             </tr>
             <tr class="hover:bg-slate-50">
               <td class="py-2.5 font-bold text-indigo-600">2</td>
               <td class="py-2.5"><strong>Find Root Causes:</strong> Foundational concepts to master before advancing.</td>
-              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">Root-Cause X-Ray</span></td>
-              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="gap-finder">View Node Map →</button></td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">Root-Cause Dependency Graph</span></td>
             </tr>
             <tr class="hover:bg-slate-50">
               <td class="py-2.5 font-bold text-indigo-600">3</td>
               <td class="py-2.5"><strong>AI Learning Assistance:</strong> Simple, step-by-step doubt clearing tutor.</td>
-              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">AI Assistant</span></td>
-              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="ai-assistant">Ask AI Tutor →</button></td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">Practice Step-by-Step Solutions</span></td>
             </tr>
             <tr class="hover:bg-slate-50">
               <td class="py-2.5 font-bold text-indigo-600">4</td>
               <td class="py-2.5"><strong>Multiple Languages:</strong> English, Hindi, Kannada, Tamil & Telugu.</td>
               <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Language Switcher</span></td>
-              <td class="py-2.5 text-right"><span class="text-slate-400 text-[11px]">Top Bar Switcher</span></td>
             </tr>
             <tr class="hover:bg-slate-50">
               <td class="py-2.5 font-bold text-indigo-600">5</td>
               <td class="py-2.5"><strong>Personalize Learning Pace:</strong> Step-by-Step, Balanced, and Fast-Track modes.</td>
-              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Three Learning Modes</span></td>
-              <td class="py-2.5 text-right"><span class="text-slate-400 text-[11px]">Active in Nav Bar</span></td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Adaptive Modes</span></td>
             </tr>
             <tr class="hover:bg-slate-50">
               <td class="py-2.5 font-bold text-indigo-600">6</td>
-              <td class="py-2.5"><strong>Personalized Practice:</strong> Topic-based weak-area practice questions.</td>
-              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Practice Section</span></td>
-              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="gap-finder">Start Practice →</button></td>
+              <td class="py-2.5"><strong>Personalized Practice:</strong> 10th State Board questions across all 6 subjects.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">4. Practice / Quiz</span></td>
             </tr>
             <tr class="hover:bg-slate-50">
               <td class="py-2.5 font-bold text-indigo-600">7</td>
               <td class="py-2.5"><strong>Personalized Study Schedules:</strong> Strictly within declared free hours.</td>
-              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-50 text-teal-700 border border-teal-200">Free-Hour Planner</span></td>
-              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="study-planner">Open Planner →</button></td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-50 text-teal-700 border border-teal-200">3. Study Planner</span></td>
             </tr>
             <tr class="hover:bg-slate-50">
               <td class="py-2.5 font-bold text-indigo-600">8</td>
               <td class="py-2.5"><strong>Track Learning Progress:</strong> Quiz scores, accuracy, streaks, mastery charts.</td>
-              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">Analytics Dashboard</span></td>
-              <td class="py-2.5 text-right"><button class="obj-jump-btn text-indigo-600 font-bold text-[11px] hover:underline" data-target="analytics">View Progress →</button></td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">5. My Progress</span></td>
             </tr>
             <tr class="hover:bg-slate-50">
               <td class="py-2.5 font-bold text-indigo-600">9</td>
-              <td class="py-2.5"><strong>Easy-to-Use Platform:</strong> Responsive UI for mobile, tablet, and desktop.</td>
-              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">Tactile Mobile UI</span></td>
-              <td class="py-2.5 text-right"><span class="text-slate-400 text-[11px]">All Screens</span></td>
+              <td class="py-2.5"><strong>Easy-to-Use Platform:</strong> Left-sidebar responsive dashboard layout.</td>
+              <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">Left-Aligned UI</span></td>
             </tr>
             <tr class="hover:bg-slate-50">
               <td class="py-2.5 font-bold text-indigo-600">10</td>
               <td class="py-2.5"><strong>Privacy & Responsible AI:</strong> RBAC data isolation, validation & answer reporting.</td>
               <td class="py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">Auth, RBAC & Flagging</span></td>
-              <td class="py-2.5 text-right"><span class="text-slate-400 text-[11px]">Server Verified</span></td>
             </tr>
           </tbody>
         </table>

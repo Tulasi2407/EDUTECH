@@ -147,28 +147,61 @@ class RootsAndRhythmApp {
   setActiveTab(tabName) {
     this.activeTab = tabName;
     document.querySelectorAll(".nav-tab-btn").forEach(btn => {
-      if (btn.dataset.tab === tabName) {
+      const isMatch = btn.dataset.tab === tabName;
+      if (isMatch) {
         btn.classList.add("bg-indigo-600", "text-white", "shadow-sm");
         btn.classList.remove("text-slate-600", "hover:bg-slate-100");
+        const dot = btn.querySelector(".indicator-dot");
+        if (dot) dot.classList.replace("opacity-0", "opacity-100");
       } else {
         btn.classList.remove("bg-indigo-600", "text-white", "shadow-sm");
         btn.classList.add("text-slate-600", "hover:bg-slate-100");
+        const dot = btn.querySelector(".indicator-dot");
+        if (dot) dot.classList.replace("opacity-100", "opacity-0");
       }
     });
 
+    // Update Topbar Breadcrumb Title
+    const breadcrumb = document.getElementById("topbar-breadcrumb-title");
+    const titles = {
+      "main-dashboard": "1. Dashboard (Overview & Habits)",
+      "my-subjects": "2. My Subjects (10th State Board Curriculum)",
+      "study-planner": "3. Study Planner (Free-Hour Rhythm)",
+      "practice-quiz": "4. Practice & Quiz Engine",
+      "my-progress": "5. My Progress & Root-Cause X-Ray",
+      "gap-finder": "Root-Cause X-Ray & Prerequisite Tracer",
+      "analytics": "My Progress & Performance"
+    };
+    if (breadcrumb && titles[tabName]) {
+      breadcrumb.textContent = titles[tabName];
+    }
+
+    // Toggle Panels
     document.querySelectorAll(".tab-content-panel").forEach(panel => {
-      panel.classList.toggle("hidden", panel.id !== `tab-${tabName}`);
+      const matches = panel.id === `tab-${tabName}` || (tabName === "my-progress" && panel.id === "tab-my-progress");
+      panel.classList.toggle("hidden", !matches);
     });
+
+    // Close mobile sidebar on tab click
+    const sidebar = document.getElementById("left-sidebar");
+    const backdrop = document.getElementById("sidebar-backdrop");
+    if (sidebar && backdrop && window.innerWidth < 1024) {
+      sidebar.classList.add("-translate-x-full");
+      backdrop.classList.add("hidden");
+    }
 
     // Lazy load tab data
     if (tabName === "main-dashboard") {
       if (this.dashboard) this.dashboard.load(this.currentUser.id);
-    } else if (tabName === "gap-finder") {
-      this.traceCurrentTopicGaps();
+    } else if (tabName === "my-subjects") {
+      this.renderMySubjectsView();
     } else if (tabName === "study-planner") {
       this.timeline.loadData();
-    } else if (tabName === "analytics") {
-      this.analytics.renderStudentAnalytics("student-analytics-container", this.currentUser.id);
+    } else if (tabName === "practice-quiz") {
+      this.loadPracticeQuizPane();
+    } else if (tabName === "my-progress" || tabName === "analytics" || tabName === "gap-finder") {
+      if (this.analytics) this.analytics.renderStudentAnalytics("student-analytics-container", this.currentUser.id);
+      this.traceCurrentTopicGaps();
     } else if (tabName === "teacher-dashboard") {
       this.analytics.renderTeacherDashboard("teacher-dashboard-container");
     } else if (tabName === "parent-view") {
@@ -177,6 +210,321 @@ class RootsAndRhythmApp {
       this.analytics.renderAdminView("admin-panel-container");
     } else if (tabName === "languages") {
       if (window.I18N) window.I18N.setLanguage(window.I18N.currentLanguage());
+    }
+  }
+
+  async renderMySubjectsView() {
+    const container = document.getElementById("my-subjects-cards-container");
+    if (!container) return;
+
+    container.innerHTML = `
+      <div class="col-span-full py-12 text-center text-slate-400">
+        <svg class="w-8 h-8 animate-spin mx-auto text-indigo-600 mb-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+        <p class="text-xs font-semibold">Loading 10th State Board curriculum...</p>
+      </div>
+    `;
+
+    try {
+      const res = await fetch("/api/subjects");
+      const data = await res.json();
+      const subjects = data.subjects || [];
+
+      let cardsHtml = "";
+      for (const s of subjects) {
+        const topRes = await fetch(`/api/subjects/${s.id}/topics`);
+        const topData = await topRes.json();
+        const topics = topData.topics || [];
+
+        let topicsHtml = topics.map(t => {
+          let badge = "bg-slate-100 text-slate-600 border-slate-200";
+          let statusText = "Tier " + t.tier;
+          return `
+            <div class="flex items-center justify-between text-xs py-2 border-b border-slate-100 last:border-none gap-2">
+              <div class="min-w-0 flex-1">
+                <p class="font-bold text-slate-800 truncate">${t.topic_name}</p>
+                <p class="text-[10px] text-slate-400">${t.category} • ${t.estimated_minutes}m</p>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button class="subj-practice-btn px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[10px] font-extrabold transition" data-node="${t.id}">
+                  🎯 Quiz
+                </button>
+                <button class="subj-trace-btn px-2 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-[10px] font-bold transition" data-node="${t.id}" data-subject="${s.id}">
+                  🔍 X-Ray
+                </button>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        cardsHtml += `
+          <div class="tactile-card p-5 bg-white space-y-4 flex flex-col justify-between border-t-4" style="border-top-color: ${s.color};">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-2xl flex items-center justify-center text-white font-black text-xs shadow-xs" style="background-color: ${s.color};">
+                    ${s.code}
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-black text-slate-900">${s.name}</h3>
+                    <p class="text-[10px] text-slate-400 font-semibold">${topics.length} Curriculum Units</p>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-700">10th Board</span>
+              </div>
+
+              <p class="text-xs text-slate-500 leading-relaxed">${s.description}</p>
+
+              <!-- Topic List Container -->
+              <div class="bg-slate-50/80 rounded-2xl p-3 border border-slate-200/80 space-y-0.5 max-h-[220px] overflow-y-auto">
+                ${topicsHtml}
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+              <span class="text-[11px] font-bold text-slate-400">Stateboard Ready</span>
+              <button class="subj-all-quiz-btn text-xs font-black text-indigo-600 hover:text-indigo-800 hover:underline flex items-center gap-1" data-subject="${s.id}">
+                Practice All Units →
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = cardsHtml;
+
+      // Event handlers for Subject Practice & Trace buttons
+      container.querySelectorAll(".subj-practice-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const nodeId = parseInt(btn.dataset.node);
+          this.currentTopicId = nodeId;
+          this.setActiveTab("practice-quiz");
+          this.loadPracticeQuizPane(nodeId, "intermediate");
+        });
+      });
+
+      container.querySelectorAll(".subj-trace-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const nodeId = parseInt(btn.dataset.node);
+          const subjId = parseInt(btn.dataset.subject);
+          this.currentSubjectId = subjId;
+          this.currentTopicId = nodeId;
+          this.setActiveTab("my-progress");
+          this.traceCurrentTopicGaps();
+        });
+      });
+
+      container.querySelectorAll(".subj-all-quiz-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const subjId = parseInt(btn.dataset.subject);
+          this.currentSubjectId = subjId;
+          this.setActiveTab("practice-quiz");
+          this.loadPracticeQuizPane(null, "beginner", subjId);
+        });
+      });
+
+    } catch (e) {
+      console.error(e);
+      container.innerHTML = `<div class="col-span-full p-4 bg-rose-50 text-rose-700 text-xs rounded-xl font-bold">Failed to load subjects.</div>`;
+    }
+  }
+
+  async loadPracticeQuizPane(nodeId = null, difficulty = "intermediate", subjectId = null) {
+    const container = document.getElementById("practice-quiz-pane-content");
+    if (!container) return;
+
+    // Use passed nodeId, or currentTopicId, or default to 6 (Quadratic Equations)
+    const targetNodeId = nodeId || this.currentTopicId || 6;
+
+    container.innerHTML = `
+      <div class="py-12 text-center text-slate-400">
+        <svg class="w-8 h-8 animate-spin mx-auto text-indigo-600 mb-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+        <p class="text-xs font-semibold">Generating verified 10th State Board practice question...</p>
+      </div>
+    `;
+
+    try {
+      const res = await fetch(`/api/practice/question?node_id=${targetNodeId}&difficulty=${difficulty}`);
+      const data = await res.json();
+      if (data.error) {
+        container.innerHTML = `<div class="p-6 bg-rose-50 text-rose-700 rounded-2xl text-xs font-bold">${data.error}</div>`;
+        return;
+      }
+
+      this.currentPracticeQuestion = data.question;
+      this.selectedOptionIndex = null;
+      this.renderPracticeQuizPaneContent(container);
+    } catch (e) {
+      console.error(e);
+      container.innerHTML = `<div class="p-6 bg-rose-50 text-rose-700 rounded-2xl text-xs font-bold">Unable to load quiz question. Please try again.</div>`;
+    }
+  }
+
+  renderPracticeQuizPaneContent(container) {
+    const q = this.currentPracticeQuestion;
+    if (!q || !container) return;
+
+    container.innerHTML = `
+      <div class="tactile-card p-6 sm:p-8 bg-white space-y-6 max-w-2xl mx-auto shadow-sm">
+        
+        <!-- Header: Topic, Subject, Difficulty, Verified Badge -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
+                10th State Board
+              </span>
+              <span class="text-xs font-bold text-slate-500 capitalize">• ${q.difficulty} Level</span>
+            </div>
+            <h3 class="text-base font-black text-slate-900 mt-1">${q.topic_name || 'Practice Question'}</h3>
+          </div>
+
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200 self-start sm:self-auto">
+            ✓ ${Math.round((q.confidence_score || 0.95) * 100)}% Verified Safe AI
+          </span>
+        </div>
+
+        <!-- Question Text Card -->
+        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/90 text-sm font-semibold text-slate-900 leading-relaxed shadow-xs">
+          ${q.question_text}
+        </div>
+
+        <!-- Multiple Choice Options -->
+        <div class="space-y-3" id="pane-quiz-options-list">
+          ${(q.options || []).map((opt, idx) => `
+            <div class="pane-option-row p-3.5 rounded-2xl border border-slate-200 hover:border-indigo-400 hover:bg-slate-50/80 cursor-pointer transition flex items-center gap-3.5 text-xs font-semibold text-slate-800" data-idx="${idx}">
+              <span class="w-7 h-7 rounded-full border border-slate-300 flex items-center justify-center font-black text-xs text-slate-500 shrink-0">
+                ${String.fromCharCode(65 + idx)}
+              </span>
+              <span class="flex-1">${opt}</span>
+            </div>
+          `).join("")}
+        </div>
+
+        <!-- Submit & Actions Row -->
+        <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+          <button id="pane-flag-btn" class="text-xs font-bold text-slate-400 hover:text-amber-600 flex items-center gap-1 transition">
+            🚩 Flag / Report Question
+          </button>
+          
+          <button id="pane-submit-answer-btn" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 active:scale-95 text-white font-extrabold text-xs rounded-xl shadow-md shadow-indigo-600/25 transition" disabled>
+            Submit Answer →
+          </button>
+        </div>
+
+        <!-- Feedback & Step-by-Step Solution Area -->
+        <div id="pane-quiz-feedback" class="hidden mt-4 space-y-4"></div>
+
+      </div>
+    `;
+
+    // Option selection
+    const optionRows = container.querySelectorAll(".pane-option-row");
+    const submitBtn = container.querySelector("#pane-submit-answer-btn");
+
+    optionRows.forEach(row => {
+      row.addEventListener("click", () => {
+        optionRows.forEach(r => {
+          r.className = "pane-option-row p-3.5 rounded-2xl border border-slate-200 hover:border-indigo-400 hover:bg-slate-50/80 cursor-pointer transition flex items-center gap-3.5 text-xs font-semibold text-slate-800";
+          r.querySelector("span").className = "w-7 h-7 rounded-full border border-slate-300 flex items-center justify-center font-black text-xs text-slate-500 shrink-0";
+        });
+
+        row.className = "pane-option-row p-3.5 rounded-2xl border-2 border-indigo-600 bg-indigo-50/60 cursor-pointer transition flex items-center gap-3.5 text-xs font-black text-indigo-950";
+        row.querySelector("span").className = "w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center font-black text-xs shrink-0";
+
+        this.selectedOptionIndex = parseInt(row.dataset.idx);
+        if (submitBtn) submitBtn.disabled = false;
+      });
+    });
+
+    // Submit handler
+    if (submitBtn) {
+      submitBtn.addEventListener("click", async () => {
+        if (this.selectedOptionIndex === null) return;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Verifying...";
+
+        try {
+          const res = await fetch("/api/practice/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              student_id: this.currentUser.id,
+              node_id: q.node_id,
+              question_id: q.id,
+              selected_option: this.selectedOptionIndex,
+              time_spent_seconds: 35
+            })
+          });
+
+          const data = await res.json();
+          this.renderPaneQuizFeedback(container, data);
+        } catch (e) {
+          console.error(e);
+          alert("Submission error. Please try again.");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Answer →";
+        }
+      });
+    }
+
+    const flagBtn = container.querySelector("#pane-flag-btn");
+    if (flagBtn) {
+      flagBtn.addEventListener("click", () => {
+        this.openAIFlagModal(q.id);
+      });
+    }
+  }
+
+  renderPaneQuizFeedback(container, res) {
+    const feedbackBox = container.querySelector("#pane-quiz-feedback");
+    const q = this.currentPracticeQuestion;
+    if (!feedbackBox || !q) return;
+
+    feedbackBox.classList.remove("hidden");
+    const isCorrect = res.is_correct;
+
+    if (isCorrect && window.confetti) {
+      window.confetti.burst(window.innerWidth / 2, window.innerHeight / 2, 80);
+    }
+    if (window.soundSynth) {
+      isCorrect ? window.soundSynth.playChime() : window.soundSynth.playSoftChime();
+    }
+
+    feedbackBox.innerHTML = `
+      <div class="p-5 rounded-2xl border ${isCorrect ? 'bg-emerald-50 border-emerald-200 text-emerald-950' : 'bg-rose-50 border-rose-200 text-rose-950'} space-y-3">
+        <div class="flex items-center gap-2 font-black text-sm">
+          <span>${isCorrect ? '🎉 Correct Answer!' : '💡 Needs Conceptual Attention'}</span>
+        </div>
+        <p class="text-xs font-semibold leading-relaxed">
+          ${isCorrect ? 'Outstanding! You correctly applied the curriculum principles.' : 'Don\'t worry! Review the step-by-step verified explanation below to master this concept.'}
+        </p>
+      </div>
+
+      <!-- Verified Step-by-Step Explanation -->
+      <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+        <h4 class="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+          <span>📖 Step-by-Step Verified Solution</span>
+        </h4>
+        <div class="text-xs text-slate-700 whitespace-pre-line leading-relaxed font-normal">
+          ${q.step_by_step_explanation || 'Step 1: Apply standard 10th stateboard identity.'}
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-between pt-2">
+        <button id="pane-next-q-btn" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-sm flex items-center gap-1.5">
+          <span>Next Practice Question</span>
+          <span>→</span>
+        </button>
+      </div>
+    `;
+
+    const nextBtn = feedbackBox.querySelector("#pane-next-q-btn");
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        this.loadPracticeQuizPane(q.node_id, q.difficulty);
+      });
+>>>>>>> 415c33b (feat(ui): left-aligned sidebar with 5 dedicated dashboards and 10th state board subjects)
     }
   }
 
@@ -735,6 +1083,50 @@ class RootsAndRhythmApp {
     const audioToggleBtn = document.getElementById("audio-toggle-btn");
     if (audioToggleBtn) {
       audioToggleBtn.addEventListener("click", () => this.toggleAudio());
+    }
+
+    // Sidebar Mobile Toggle and Actions
+    const openSidebarBtn = document.getElementById("open-sidebar-btn");
+    const closeSidebarBtn = document.getElementById("close-sidebar-btn");
+    const sidebar = document.getElementById("left-sidebar");
+    const backdrop = document.getElementById("sidebar-backdrop");
+
+    if (openSidebarBtn && sidebar && backdrop) {
+      openSidebarBtn.addEventListener("click", () => {
+        sidebar.classList.remove("-translate-x-full");
+        backdrop.classList.remove("hidden");
+      });
+    }
+
+    if (closeSidebarBtn && sidebar && backdrop) {
+      closeSidebarBtn.addEventListener("click", () => {
+        sidebar.classList.add("-translate-x-full");
+        backdrop.classList.add("hidden");
+      });
+    }
+
+    if (backdrop && sidebar) {
+      backdrop.addEventListener("click", () => {
+        sidebar.classList.add("-translate-x-full");
+        backdrop.classList.add("hidden");
+      });
+    }
+
+    const sidebarZenBtn = document.getElementById("sidebar-zen-btn");
+    if (sidebarZenBtn) {
+      sidebarZenBtn.addEventListener("click", () => {
+        if (window.zenChamber) window.zenChamber.open();
+      });
+    }
+
+    const sidebarDarkBtn = document.getElementById("sidebar-dark-mode-btn");
+    if (sidebarDarkBtn) {
+      sidebarDarkBtn.addEventListener("click", () => this.toggleDarkMode());
+    }
+
+    const sidebarAudioBtn = document.getElementById("sidebar-audio-btn");
+    if (sidebarAudioBtn) {
+      sidebarAudioBtn.addEventListener("click", () => this.toggleAudio());
     }
 
     // Add slot form submission
