@@ -42,7 +42,24 @@ def validate_free_hour_slot_payload(data):
     if "day_of_week" not in data:
         raise ValidationError("Missing required field: day_of_week", "day_of_week")
     try:
-        day_of_week = int(data["day_of_week"])
+        raw_day = data["day_of_week"]
+        if isinstance(raw_day, str):
+            day_map = {
+                "monday": 0, "mon": 0,
+                "tuesday": 1, "tue": 1,
+                "wednesday": 2, "wed": 2,
+                "thursday": 3, "thu": 3,
+                "friday": 4, "fri": 4,
+                "saturday": 5, "sat": 5,
+                "sunday": 6, "sun": 6,
+                "today": datetime.now().weekday()
+            }
+            if raw_day.strip().lower() in day_map:
+                day_of_week = day_map[raw_day.strip().lower()]
+            else:
+                day_of_week = int(raw_day)
+        else:
+            day_of_week = int(raw_day)
     except (ValueError, TypeError):
         raise ValidationError("day_of_week must be an integer between 0 (Monday) and 6 (Sunday)", "day_of_week")
     if day_of_week < 0 or day_of_week > 6:
@@ -68,7 +85,8 @@ def validate_free_hour_slot_payload(data):
         raise ValidationError("A study slot must be at least 15 minutes in length", "end_time")
 
     # 3. label
-    label = sanitize_string(data.get("label", "Free Study Window"), max_length=100)
+    raw_label = data.get("label") or data.get("slot_label") or "Free Study Window"
+    label = sanitize_string(raw_label, max_length=100)
     if not label:
         label = "Free Study Window"
 

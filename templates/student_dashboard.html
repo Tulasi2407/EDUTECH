@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>EDUTECH – Karnataka SSLC Smart Learning Platform | Student Dashboard</title>
-  
+
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@400;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@400;600;700;800&family=Fira+Code:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
   <!-- Font Awesome 6.5.1 CDN -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
+
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -64,57 +69,69 @@
     body {
       font-family: 'Plus Jakarta Sans', 'Noto Sans Kannada', system-ui, -apple-system, sans-serif;
     }
+
     .sidebar-scroll::-webkit-scrollbar {
       width: 4px;
     }
+
     .sidebar-scroll::-webkit-scrollbar-thumb {
       background: #cbd5e1;
       border-radius: 4px;
     }
+
     .dashboard-card {
       background: #ffffff;
       border: 1px solid rgba(226, 232, 240, 0.85);
       border-radius: 1.25rem;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     .dashboard-card:hover {
       box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
       transform: translateY(-2px);
     }
+
     .nav-item-active {
       background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
       color: #ffffff !important;
       box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35);
     }
+
     .nav-item-active i {
       color: #ffffff !important;
     }
+
     .glass-header {
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(12px);
     }
+
     html {
       scroll-behavior: smooth;
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-indigo-600 selection:text-white">
+
+<body
+  class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-indigo-600 selection:text-white">
 
   <!-- Mobile Sidebar Backdrop Overlay -->
   <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 hidden lg:hidden"></div>
 
   <!-- Overall Application Layout (Left Sidebar + Main Content) -->
   <div class="flex-1 flex min-h-screen relative">
-    
+
     <!-- ==============================================
          1. LEFT SIDEBAR NAVIGATION (FIXED & RESPONSIVE)
     =============================================== -->
-    <aside id="left-sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-64 sm:w-72 bg-white border-r border-slate-200/90 flex flex-col justify-between shrink-0 z-50 transition-transform duration-200 ease-in-out -translate-x-full lg:translate-x-0 shadow-xl lg:shadow-none">
-      
+    <aside id="left-sidebar"
+      class="fixed lg:sticky top-0 left-0 h-screen w-64 sm:w-72 bg-white border-r border-slate-200/90 flex flex-col justify-between shrink-0 z-50 transition-transform duration-200 ease-in-out -translate-x-full lg:translate-x-0 shadow-xl lg:shadow-none">
+
       <!-- Top Brand Header -->
       <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
         <a href="#sec-dashboard" class="flex items-center gap-3 group">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-indigo-800 flex items-center justify-center text-white shadow-md shadow-indigo-300/40 group-hover:scale-105 transition shrink-0">
+          <div
+            class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-indigo-800 flex items-center justify-center text-white shadow-md shadow-indigo-300/40 group-hover:scale-105 transition shrink-0">
             <i class="fa-solid fa-graduation-cap text-lg"></i>
           </div>
           <div>
@@ -122,37 +139,49 @@
               <span>EDUTECH</span>
               <span class="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-pulse"></span>
             </h1>
-            <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-wider mt-1">Karnataka SSLC Platform</p>
+            <p class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-wider mt-1">Karnataka SSLC Platform
+            </p>
           </div>
         </a>
 
         <!-- Mobile Close Button -->
-        <button id="close-sidebar-btn" class="lg:hidden text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition" title="Close navigation menu">
+        <button id="close-sidebar-btn"
+          class="lg:hidden text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition"
+          title="Close navigation menu">
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
 
       <!-- Student Profile Card in Sidebar -->
       <div class="px-3 pt-3 pb-2">
-        <a href="#sec-profile" class="p-3 rounded-2xl bg-gradient-to-br from-indigo-50/70 via-purple-50/40 to-slate-50 border border-indigo-100 flex items-center gap-3 cursor-pointer hover:border-indigo-300 transition group block" title="Click to view & edit My Profile">
+        <a href="#sec-profile"
+          class="p-3 rounded-2xl bg-gradient-to-br from-indigo-50/70 via-purple-50/40 to-slate-50 border border-indigo-100 flex items-center gap-3 cursor-pointer hover:border-indigo-300 transition group block"
+          title="Click to view & edit My Profile">
           <div class="relative shrink-0">
-            <img id="sidebar-student-avatar" src="{{ current_user.avatar_url or 'https://api.dicebear.com/7.x/bottts/svg?seed=Aarav' }}" alt="Student" class="w-11 h-11 rounded-full bg-white border-2 border-indigo-400 object-cover shadow-sm group-hover:scale-105 transition">
-            <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white" title="Active Student"></span>
+            <img id="sidebar-student-avatar"
+              src="{{ current_user.avatar_url or 'https://api.dicebear.com/7.x/bottts/svg?seed=Aarav' }}" alt="Student"
+              class="w-11 h-11 rounded-full bg-white border-2 border-indigo-400 object-cover shadow-sm group-hover:scale-105 transition">
+            <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white"
+              title="Active Student"></span>
           </div>
           <div class="min-w-0 flex-1">
-            <p id="sidebar-student-name" class="text-xs font-black text-slate-900 truncate group-hover:text-indigo-600 transition">
+            <p id="sidebar-student-name"
+              class="text-xs font-black text-slate-900 truncate group-hover:text-indigo-600 transition">
               {{ current_user.name or 'Aarav Sharma' }}
             </p>
             <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
-              <span class="inline-block px-2 py-0.5 rounded-md text-[9px] font-extrabold bg-indigo-600 text-white shadow-2xs">
+              <span
+                class="inline-block px-2 py-0.5 rounded-md text-[9px] font-extrabold bg-indigo-600 text-white shadow-2xs">
                 Class 10
               </span>
-              <span class="inline-block px-1.5 py-0.5 rounded-md text-[9px] font-bold bg-purple-100 text-purple-800 border border-purple-200">
+              <span
+                class="inline-block px-1.5 py-0.5 rounded-md text-[9px] font-bold bg-purple-100 text-purple-800 border border-purple-200">
                 KSEEB
               </span>
             </div>
           </div>
-          <i class="fa-solid fa-chevron-right text-[10px] text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition"></i>
+          <i
+            class="fa-solid fa-chevron-right text-[10px] text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition"></i>
         </a>
       </div>
 
@@ -163,7 +192,8 @@
         </span>
 
         <!-- 1. Dashboard -->
-        <a href="#sec-dashboard" class="nav-link-btn nav-item-active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left group">
+        <a href="#sec-dashboard"
+          class="nav-link-btn nav-item-active w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left group">
           <div class="flex items-center gap-3">
             <i class="fa-solid fa-house-chimney text-sm w-4 text-center"></i>
             <span>1. Dashboard</span>
@@ -172,52 +202,63 @@
         </a>
 
         <!-- 2. My Subjects -->
-        <a href="#sec-subjects" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
+        <a href="#sec-subjects"
+          class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
           <div class="flex items-center gap-3">
-            <i class="fa-solid fa-book-open-reader text-sm w-4 text-center text-indigo-500 group-hover:scale-110 transition"></i>
+            <i
+              class="fa-solid fa-book-open-reader text-sm w-4 text-center text-indigo-500 group-hover:scale-110 transition"></i>
             <span>2. My Subjects</span>
           </div>
           <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-indigo-100 text-indigo-700">6</span>
         </a>
 
         <!-- 3. Study Materials -->
-        <a href="#sec-materials" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
+        <a href="#sec-materials"
+          class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
           <div class="flex items-center gap-3">
-            <i class="fa-solid fa-file-lines text-sm w-4 text-center text-purple-500 group-hover:scale-110 transition"></i>
+            <i
+              class="fa-solid fa-file-lines text-sm w-4 text-center text-purple-500 group-hover:scale-110 transition"></i>
             <span>3. Study Materials</span>
           </div>
           <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-100 text-purple-700">PDFs</span>
         </a>
 
         <!-- 4. Previous Year Question Papers -->
-        <a href="#sec-pyqp" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
+        <a href="#sec-pyqp"
+          class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
           <div class="flex items-center gap-3">
-            <i class="fa-solid fa-newspaper text-sm w-4 text-center text-amber-500 group-hover:scale-110 transition"></i>
+            <i
+              class="fa-solid fa-newspaper text-sm w-4 text-center text-amber-500 group-hover:scale-110 transition"></i>
             <span>4. Question Papers</span>
           </div>
           <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-amber-100 text-amber-800">2020-26</span>
         </a>
 
         <!-- 5. Teaching Videos -->
-        <a href="#sec-videos" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
+        <a href="#sec-videos"
+          class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
           <div class="flex items-center gap-3">
-            <i class="fa-solid fa-circle-play text-sm w-4 text-center text-rose-500 group-hover:scale-110 transition"></i>
+            <i
+              class="fa-solid fa-circle-play text-sm w-4 text-center text-rose-500 group-hover:scale-110 transition"></i>
             <span>5. Teaching Videos</span>
           </div>
           <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-100 text-rose-700">HD</span>
         </a>
 
         <!-- 6. Study Planner -->
-        <a href="#sec-planner" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
+        <a href="#sec-planner"
+          class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
           <div class="flex items-center gap-3">
-            <i class="fa-solid fa-calendar-days text-sm w-4 text-center text-emerald-500 group-hover:scale-110 transition"></i>
+            <i
+              class="fa-solid fa-calendar-days text-sm w-4 text-center text-emerald-500 group-hover:scale-110 transition"></i>
             <span>6. Study Planner</span>
           </div>
           <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700">Today</span>
         </a>
 
         <!-- 7. Practice / Quiz -->
-        <a href="#sec-quiz" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
+        <a href="#sec-quiz"
+          class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
           <div class="flex items-center gap-3">
             <i class="fa-solid fa-bullseye text-sm w-4 text-center text-cyan-500 group-hover:scale-110 transition"></i>
             <span>7. Practice / Quiz</span>
@@ -226,7 +267,8 @@
         </a>
 
         <!-- AI Tutor Assistant -->
-        <a href="#sec-ai" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
+        <a href="#sec-ai"
+          class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
           <div class="flex items-center gap-3">
             <i class="fa-solid fa-robot text-sm w-4 text-center text-purple-600 group-hover:scale-110 transition"></i>
             <span>AI Tutor Assistant</span>
@@ -235,16 +277,19 @@
         </a>
 
         <!-- 8. My Progress -->
-        <a href="#sec-progress" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
+        <a href="#sec-progress"
+          class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
           <div class="flex items-center gap-3">
-            <i class="fa-solid fa-chart-line text-sm w-4 text-center text-blue-500 group-hover:scale-110 transition"></i>
+            <i
+              class="fa-solid fa-chart-line text-sm w-4 text-center text-blue-500 group-hover:scale-110 transition"></i>
             <span>8. My Progress</span>
           </div>
           <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-100 text-blue-700">Analytics</span>
         </a>
 
         <!-- 9. My Achievements -->
-        <a href="#sec-achievements" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
+        <a href="#sec-achievements"
+          class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
           <div class="flex items-center gap-3">
             <i class="fa-solid fa-trophy text-sm w-4 text-center text-amber-500 group-hover:scale-110 transition"></i>
             <span>9. Achievements</span>
@@ -253,16 +298,19 @@
         </a>
 
         <!-- 10. My Profile -->
-        <a href="#sec-profile" class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
+        <a href="#sec-profile"
+          class="nav-link-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-slate-600 hover:bg-slate-100 group">
           <div class="flex items-center gap-3">
-            <i class="fa-solid fa-user-gear text-sm w-4 text-center text-indigo-500 group-hover:scale-110 transition"></i>
+            <i
+              class="fa-solid fa-user-gear text-sm w-4 text-center text-indigo-500 group-hover:scale-110 transition"></i>
             <span>10. My Profile</span>
           </div>
           <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-100 text-slate-600">Settings</span>
         </a>
 
         <!-- 11. Logout -->
-        <a href="/logout" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-rose-600 hover:bg-rose-50 group">
+        <a href="/logout"
+          class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-left text-rose-600 hover:bg-rose-50 group">
           <div class="flex items-center gap-3">
             <i class="fa-solid fa-right-from-bracket text-sm w-4 text-center text-rose-500"></i>
             <span>11. Logout</span>
@@ -275,14 +323,17 @@
       <div class="p-3 border-t border-slate-100 space-y-2 bg-slate-50/60">
         <div class="flex items-center justify-between text-xs">
           <span class="text-[11px] font-bold text-slate-500">Theme Pacing:</span>
-          <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-100 text-indigo-700">Balanced (25m)</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-100 text-indigo-700">Balanced
+            (25m)</span>
         </div>
         <div class="flex items-center justify-between pt-1">
-          <a href="/parent" class="text-xs font-bold text-slate-500 hover:text-emerald-700 transition flex items-center gap-1">
+          <a href="/parent"
+            class="text-xs font-bold text-slate-500 hover:text-emerald-700 transition flex items-center gap-1">
             <i class="fa-solid fa-user-group text-slate-400"></i>
             <span>Parent Portal</span>
           </a>
-          <a href="/mysubjects" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition flex items-center gap-1">
+          <a href="/mysubjects"
+            class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition flex items-center gap-1">
             <span>Subjects Hub</span>
             <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
           </a>
@@ -295,15 +346,18 @@
          RIGHT MAIN CONTENT VIEWPORT
     =============================================== -->
     <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
-      
+
       <!-- ==============================================
            2. TOP HEADER
       =============================================== -->
-      <header class="sticky top-0 z-40 glass-header border-b border-slate-200/80 px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
-        
+      <header
+        class="sticky top-0 z-40 glass-header border-b border-slate-200/80 px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+
         <div class="flex items-center gap-3">
           <!-- Mobile Drawer Toggle Button -->
-          <button id="open-sidebar-btn" class="lg:hidden p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition" title="Open navigation menu">
+          <button id="open-sidebar-btn"
+            class="lg:hidden p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition"
+            title="Open navigation menu">
             <i class="fa-solid fa-bars text-base"></i>
           </button>
 
@@ -314,29 +368,36 @@
               <span class="text-base">👋</span>
             </h2>
             <p class="text-[10px] sm:text-xs text-slate-500 font-medium hidden sm:block">
-              Today's Summary: <span class="font-bold text-indigo-600">3 tasks planned</span> • <span class="font-bold text-emerald-600">1 quiz completed</span> • <span class="font-bold text-purple-600">4-day streak 🔥</span>
+              Today's Summary: <span class="font-bold text-indigo-600">3 tasks planned</span> • <span
+                class="font-bold text-emerald-600">1 quiz completed</span> • <span
+                class="font-bold text-purple-600">4-day streak 🔥</span>
             </p>
           </div>
         </div>
 
         <!-- Right Side Header Controls -->
         <div class="flex items-center gap-2 sm:gap-3">
-          
+
           <!-- Search Learning Materials Input -->
           <div class="relative hidden md:block">
-            <input type="text" id="global-dashboard-search" placeholder="Search chapters, formulas, PDFs..." class="bg-slate-100/90 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white w-48 lg:w-72 transition">
+            <input type="text" id="global-dashboard-search" placeholder="Search chapters, formulas, PDFs..."
+              class="bg-slate-100/90 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white w-48 lg:w-72 transition">
             <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-2.5 top-2.5 text-xs"></i>
           </div>
 
           <!-- Notification Bell Icon -->
           <div class="relative">
-            <button id="notification-btn" class="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition shadow-2xs relative" title="View Notifications">
+            <button id="notification-btn"
+              class="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition shadow-2xs relative"
+              title="View Notifications">
               <i class="fa-regular fa-bell text-sm"></i>
-              <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center">3</span>
+              <span
+                class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center">3</span>
             </button>
-            
+
             <!-- Notifications Popup -->
-            <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 p-4 space-y-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+            <div id="notifications-dropdown"
+              class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 p-4 space-y-3 z-50 animate-in fade-in zoom-in-95 duration-150">
               <div class="flex items-center justify-between border-b border-slate-100 pb-2">
                 <span class="text-xs font-bold text-slate-900">Notifications</span>
                 <span class="text-[10px] font-semibold text-indigo-600">3 New</span>
@@ -344,7 +405,8 @@
               <div class="space-y-2 text-xs">
                 <div class="p-2.5 rounded-xl bg-indigo-50/70 border border-indigo-100">
                   <p class="font-bold text-indigo-950">🎯 SSLC Math Model Paper Ready</p>
-                  <p class="text-[10px] text-slate-500 mt-0.5">2026 Board Examination blueprint and practice paper uploaded.</p>
+                  <p class="text-[10px] text-slate-500 mt-0.5">2026 Board Examination blueprint and practice paper
+                    uploaded.</p>
                 </div>
                 <div class="p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-100">
                   <p class="font-bold text-emerald-950">🔥 4-Day Learning Streak Active</p>
@@ -352,7 +414,8 @@
                 </div>
                 <div class="p-2.5 rounded-xl bg-purple-50/70 border border-purple-100">
                   <p class="font-bold text-purple-950">📖 Kannada Sandhi Notes Added</p>
-                  <p class="text-[10px] text-slate-500 mt-0.5">Revision notes for ಲೋಪ and ಆಗಮ ಸಂಧಿ are now accessible.</p>
+                  <p class="text-[10px] text-slate-500 mt-0.5">Revision notes for ಲೋಪ and ಆಗಮ ಸಂಧಿ are now accessible.
+                  </p>
                 </div>
               </div>
             </div>
@@ -360,32 +423,41 @@
 
           <!-- Student Profile Avatar & Dropdown -->
           <div class="relative">
-            <button id="profile-dropdown-btn" class="flex items-center gap-2 p-1 px-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition shadow-2xs group">
-              <img id="top-header-avatar" src="{{ current_user.avatar_url or 'https://api.dicebear.com/7.x/bottts/svg?seed=Aarav' }}" alt="Profile" class="w-7 h-7 rounded-full object-cover border border-indigo-200">
-              <span class="text-xs font-bold text-slate-700 max-w-[90px] sm:max-w-[120px] truncate hidden sm:inline">{{ current_user.name or 'Aarav Sharma' }}</span>
+            <button id="profile-dropdown-btn"
+              class="flex items-center gap-2 p-1 px-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition shadow-2xs group">
+              <img id="top-header-avatar"
+                src="{{ current_user.avatar_url or 'https://api.dicebear.com/7.x/bottts/svg?seed=Aarav' }}"
+                alt="Profile" class="w-7 h-7 rounded-full object-cover border border-indigo-200">
+              <span class="text-xs font-bold text-slate-700 max-w-[90px] sm:max-w-[120px] truncate hidden sm:inline">{{
+                current_user.name or 'Aarav Sharma' }}</span>
               <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:text-indigo-600 transition"></i>
             </button>
 
             <!-- Profile Menu Dropdown -->
-            <div id="profile-dropdown-menu" class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 space-y-1 z-50">
+            <div id="profile-dropdown-menu"
+              class="hidden absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 space-y-1 z-50">
               <div class="px-3 py-2 border-b border-slate-100">
                 <p class="text-xs font-bold text-slate-900 truncate">{{ current_user.name or 'Aarav Sharma' }}</p>
                 <p class="text-[10px] text-indigo-600 font-semibold">Karnataka SSLC • Class 10</p>
               </div>
-              <a href="#sec-profile" class="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 transition">
+              <a href="#sec-profile"
+                class="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 transition">
                 <i class="fa-solid fa-user-pen text-indigo-500 w-4"></i>
                 <span>Edit Profile</span>
               </a>
-              <a href="#sec-progress" class="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 transition">
+              <a href="#sec-progress"
+                class="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 transition">
                 <i class="fa-solid fa-chart-pie text-purple-500 w-4"></i>
                 <span>My Progress</span>
               </a>
-              <a href="#sec-achievements" class="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 transition">
+              <a href="#sec-achievements"
+                class="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 rounded-xl hover:bg-slate-100 transition">
                 <i class="fa-solid fa-award text-amber-500 w-4"></i>
                 <span>Achievements</span>
               </a>
               <div class="border-t border-slate-100 my-1"></div>
-              <a href="/logout" class="flex items-center gap-2 px-3 py-2 text-xs font-bold text-rose-600 rounded-xl hover:bg-rose-50 transition">
+              <a href="/logout"
+                class="flex items-center gap-2 px-3 py-2 text-xs font-bold text-rose-600 rounded-xl hover:bg-rose-50 transition">
                 <i class="fa-solid fa-right-from-bracket text-rose-500 w-4"></i>
                 <span>Sign Out</span>
               </a>
@@ -397,7 +469,8 @@
       </header>
 
       <!-- Motivational Banner (Specified in Top Header Requirements) -->
-      <div class="bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-950 text-white px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3 text-xs shadow-inner">
+      <div
+        class="bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-950 text-white px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3 text-xs shadow-inner">
         <div class="flex items-center gap-2.5 overflow-hidden">
           <span class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center shrink-0">
             <i class="fa-solid fa-lightbulb text-amber-300 text-xs"></i>
@@ -408,7 +481,8 @@
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <span class="hidden md:inline text-[11px] text-indigo-200">Karnataka SSLC 2026 Countdown:</span>
-          <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-sm">
+          <span
+            class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-sm">
             🎯 60 Days Left
           </span>
         </div>
@@ -421,14 +495,16 @@
              3. DASHBOARD OVERVIEW CARDS (SECTION: #sec-dashboard)
         =============================================== -->
         <section id="sec-dashboard" class="space-y-4">
-          
+
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
                 <span>Dashboard Overview</span>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-700">Class 10 Live</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 text-indigo-700">Class 10
+                  Live</span>
               </h2>
-              <p class="text-xs text-slate-500">Real-time snapshot of your Karnataka SSLC preparation and learning velocity.</p>
+              <p class="text-xs text-slate-500">Real-time snapshot of your Karnataka SSLC preparation and learning
+                velocity.</p>
             </div>
             <div class="flex items-center gap-2 text-xs">
               <span class="text-slate-400 font-semibold">Active Syllabus:</span>
@@ -438,12 +514,13 @@
 
           <!-- 6 Summary Cards -->
           <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3.5 sm:gap-4">
-            
+
             <!-- 1. Total Subjects (Blue) -->
             <div class="dashboard-card p-4 sm:p-5 flex flex-col justify-between border-l-4 border-l-blue-500">
               <div class="flex items-center justify-between">
                 <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Subjects</span>
-                <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm shadow-2xs">
+                <div
+                  class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm shadow-2xs">
                   <i class="fa-solid fa-book"></i>
                 </div>
               </div>
@@ -457,7 +534,8 @@
             <div class="dashboard-card p-4 sm:p-5 flex flex-col justify-between border-l-4 border-l-purple-500">
               <div class="flex items-center justify-between">
                 <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Chapters</span>
-                <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-sm shadow-2xs">
+                <div
+                  class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-sm shadow-2xs">
                   <i class="fa-solid fa-list-check"></i>
                 </div>
               </div>
@@ -471,7 +549,8 @@
             <div class="dashboard-card p-4 sm:p-5 flex flex-col justify-between border-l-4 border-l-amber-500">
               <div class="flex items-center justify-between">
                 <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Question Papers</span>
-                <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm shadow-2xs">
+                <div
+                  class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm shadow-2xs">
                   <i class="fa-solid fa-file-invoice"></i>
                 </div>
               </div>
@@ -485,7 +564,8 @@
             <div class="dashboard-card p-4 sm:p-5 flex flex-col justify-between border-l-4 border-l-rose-500">
               <div class="flex items-center justify-between">
                 <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Teaching Videos</span>
-                <div class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-sm shadow-2xs">
+                <div
+                  class="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-sm shadow-2xs">
                   <i class="fa-solid fa-play"></i>
                 </div>
               </div>
@@ -499,12 +579,14 @@
             <div class="dashboard-card p-4 sm:p-5 flex flex-col justify-between border-l-4 border-l-emerald-500">
               <div class="flex items-center justify-between">
                 <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Quizzes Done</span>
-                <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm shadow-2xs">
+                <div
+                  class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm shadow-2xs">
                   <i class="fa-solid fa-circle-check"></i>
                 </div>
               </div>
               <div class="mt-3">
-                <p id="overview-quizzes-count" class="text-2xl font-black text-slate-900 tracking-tight">{{ quizzes_completed or 6 }}</p>
+                <p id="overview-quizzes-count" class="text-2xl font-black text-slate-900 tracking-tight">{{
+                  quizzes_completed or 6 }}</p>
                 <p class="text-[11px] text-emerald-600 font-semibold mt-0.5">Interactive Drills</p>
               </div>
             </div>
@@ -513,12 +595,14 @@
             <div class="dashboard-card p-4 sm:p-5 flex flex-col justify-between border-l-4 border-l-cyan-500">
               <div class="flex items-center justify-between">
                 <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Avg Quiz Score</span>
-                <div class="w-8 h-8 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-sm shadow-2xs">
+                <div
+                  class="w-8 h-8 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-sm shadow-2xs">
                   <i class="fa-solid fa-star"></i>
                 </div>
               </div>
               <div class="mt-3">
-                <p id="overview-avg-score" class="text-2xl font-black text-slate-900 tracking-tight">{{ avg_quiz_score or 85 }}%</p>
+                <p id="overview-avg-score" class="text-2xl font-black text-slate-900 tracking-tight">{{ avg_quiz_score
+                  or 85 }}%</p>
                 <p class="text-[11px] text-cyan-700 font-semibold mt-0.5">Ready for Distinction</p>
               </div>
             </div>
@@ -531,16 +615,18 @@
              4. MY SUBJECTS SECTION (SECTION: #sec-subjects)
         =============================================== -->
         <section id="sec-subjects" class="space-y-4 pt-4 border-t border-slate-200/80">
-          
+
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-book-open-reader text-indigo-600"></i>
                 <span>My Subjects (Karnataka SSLC 10th Board)</span>
               </h2>
-              <p class="text-xs text-slate-500">All six official examination subjects aligned to the KSEEB board pattern.</p>
+              <p class="text-xs text-slate-500">All six official examination subjects aligned to the KSEEB board
+                pattern.</p>
             </div>
-            <a href="/mysubjects" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition flex items-center gap-1">
+            <a href="/mysubjects"
+              class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition flex items-center gap-1">
               <span>View Full Syllabus Matrix</span>
               <i class="fa-solid fa-arrow-right text-[10px]"></i>
             </a>
@@ -548,12 +634,13 @@
 
           <!-- 6 Subject Cards Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            
+
             <!-- 1. Mathematics -->
             <div class="dashboard-card p-5 space-y-4 border-t-4 border-t-purple-600">
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-11 h-11 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-lg font-bold">
+                  <div
+                    class="w-11 h-11 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-lg font-bold">
                     <i class="fa-solid fa-calculator"></i>
                   </div>
                   <div>
@@ -561,7 +648,8 @@
                     <p class="text-[11px] text-purple-700 font-bold">MATH • 100 Marks (80+20)</p>
                   </div>
                 </div>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-purple-50 text-purple-700 border border-purple-200">
+                <span
+                  class="px-2 py-0.5 rounded-full text-[10px] font-black bg-purple-50 text-purple-700 border border-purple-200">
                   4 Chapters
                 </span>
               </div>
@@ -578,11 +666,14 @@
                 </div>
               </div>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <button class="view-subject-modal-btn text-xs font-bold text-purple-700 hover:text-purple-900 transition flex items-center gap-1" data-subject="Mathematics">
+                <button
+                  class="view-subject-modal-btn text-xs font-bold text-purple-700 hover:text-purple-900 transition flex items-center gap-1"
+                  data-subject="Mathematics">
                   <span>View Subject</span>
                   <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </button>
-                <a href="#sec-quiz" class="px-3 py-1 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold transition">
+                <a href="#sec-quiz"
+                  class="px-3 py-1 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold transition">
                   Practice Drill
                 </a>
               </div>
@@ -592,7 +683,8 @@
             <div class="dashboard-card p-5 space-y-4 border-t-4 border-t-cyan-600">
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-11 h-11 rounded-2xl bg-cyan-100 text-cyan-700 flex items-center justify-center text-lg font-bold">
+                  <div
+                    class="w-11 h-11 rounded-2xl bg-cyan-100 text-cyan-700 flex items-center justify-center text-lg font-bold">
                     <i class="fa-solid fa-flask-vial"></i>
                   </div>
                   <div>
@@ -600,7 +692,8 @@
                     <p class="text-[11px] text-cyan-700 font-bold">SCI • Physics, Chem, Bio</p>
                   </div>
                 </div>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-cyan-50 text-cyan-700 border border-cyan-200">
+                <span
+                  class="px-2 py-0.5 rounded-full text-[10px] font-black bg-cyan-50 text-cyan-700 border border-cyan-200">
                   4 Chapters
                 </span>
               </div>
@@ -617,11 +710,14 @@
                 </div>
               </div>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <button class="view-subject-modal-btn text-xs font-bold text-cyan-700 hover:text-cyan-900 transition flex items-center gap-1" data-subject="Science">
+                <button
+                  class="view-subject-modal-btn text-xs font-bold text-cyan-700 hover:text-cyan-900 transition flex items-center gap-1"
+                  data-subject="Science">
                   <span>View Subject</span>
                   <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </button>
-                <a href="#sec-quiz" class="px-3 py-1 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-700 text-xs font-bold transition">
+                <a href="#sec-quiz"
+                  class="px-3 py-1 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-700 text-xs font-bold transition">
                   Practice Drill
                 </a>
               </div>
@@ -631,7 +727,8 @@
             <div class="dashboard-card p-5 space-y-4 border-t-4 border-t-amber-600">
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-lg font-bold">
+                  <div
+                    class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-lg font-bold">
                     <i class="fa-solid fa-earth-asia"></i>
                   </div>
                   <div>
@@ -639,7 +736,8 @@
                     <p class="text-[11px] text-amber-800 font-bold">SOC • History, Civics & Geo</p>
                   </div>
                 </div>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-50 text-amber-800 border border-amber-200">
+                <span
+                  class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-50 text-amber-800 border border-amber-200">
                   3 Chapters
                 </span>
               </div>
@@ -656,11 +754,14 @@
                 </div>
               </div>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <button class="view-subject-modal-btn text-xs font-bold text-amber-800 hover:text-amber-950 transition flex items-center gap-1" data-subject="Social Science">
+                <button
+                  class="view-subject-modal-btn text-xs font-bold text-amber-800 hover:text-amber-950 transition flex items-center gap-1"
+                  data-subject="Social Science">
                   <span>View Subject</span>
                   <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </button>
-                <a href="#sec-quiz" class="px-3 py-1 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold transition">
+                <a href="#sec-quiz"
+                  class="px-3 py-1 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold transition">
                   Practice Drill
                 </a>
               </div>
@@ -670,7 +771,8 @@
             <div class="dashboard-card p-5 space-y-4 border-t-4 border-t-blue-600">
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-11 h-11 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg font-bold">
+                  <div
+                    class="w-11 h-11 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center text-lg font-bold">
                     <i class="fa-solid fa-font"></i>
                   </div>
                   <div>
@@ -678,7 +780,8 @@
                     <p class="text-[11px] text-blue-700 font-bold">ENG • Second Language</p>
                   </div>
                 </div>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-50 text-blue-700 border border-blue-200">
+                <span
+                  class="px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-50 text-blue-700 border border-blue-200">
                   3 Chapters
                 </span>
               </div>
@@ -695,11 +798,14 @@
                 </div>
               </div>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <button class="view-subject-modal-btn text-xs font-bold text-blue-700 hover:text-blue-900 transition flex items-center gap-1" data-subject="English">
+                <button
+                  class="view-subject-modal-btn text-xs font-bold text-blue-700 hover:text-blue-900 transition flex items-center gap-1"
+                  data-subject="English">
                   <span>View Subject</span>
                   <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </button>
-                <a href="#sec-quiz" class="px-3 py-1 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition">
+                <a href="#sec-quiz"
+                  class="px-3 py-1 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition">
                   Practice Drill
                 </a>
               </div>
@@ -709,7 +815,8 @@
             <div class="dashboard-card p-5 space-y-4 border-t-4 border-t-emerald-600">
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg font-bold">
+                  <div
+                    class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg font-bold">
                     <i class="fa-solid fa-feather"></i>
                   </div>
                   <div>
@@ -717,7 +824,8 @@
                     <p class="text-[11px] text-emerald-800 font-bold">KAN • ಪ್ರಥಮ ಭಾಷೆ (100)</p>
                   </div>
                 </div>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-50 text-emerald-800 border border-emerald-200">
+                <span
+                  class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-50 text-emerald-800 border border-emerald-200">
                   4 Chapters
                 </span>
               </div>
@@ -734,11 +842,14 @@
                 </div>
               </div>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <button class="view-subject-modal-btn text-xs font-bold text-emerald-800 hover:text-emerald-950 transition flex items-center gap-1" data-subject="Kannada">
+                <button
+                  class="view-subject-modal-btn text-xs font-bold text-emerald-800 hover:text-emerald-950 transition flex items-center gap-1"
+                  data-subject="Kannada">
                   <span>View Subject</span>
                   <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </button>
-                <a href="#sec-quiz" class="px-3 py-1 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition">
+                <a href="#sec-quiz"
+                  class="px-3 py-1 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition">
                   Practice Drill
                 </a>
               </div>
@@ -748,7 +859,8 @@
             <div class="dashboard-card p-5 space-y-4 border-t-4 border-t-orange-600">
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-11 h-11 rounded-2xl bg-orange-100 text-orange-800 flex items-center justify-center text-lg font-bold">
+                  <div
+                    class="w-11 h-11 rounded-2xl bg-orange-100 text-orange-800 flex items-center justify-center text-lg font-bold">
                     <i class="fa-solid fa-pen-nib"></i>
                   </div>
                   <div>
@@ -756,7 +868,8 @@
                     <p class="text-[11px] text-orange-800 font-bold">HIN • तृतीय भाषा</p>
                   </div>
                 </div>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-orange-50 text-orange-800 border border-orange-200">
+                <span
+                  class="px-2 py-0.5 rounded-full text-[10px] font-black bg-orange-50 text-orange-800 border border-orange-200">
                   4 Chapters
                 </span>
               </div>
@@ -773,11 +886,14 @@
                 </div>
               </div>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <button class="view-subject-modal-btn text-xs font-bold text-orange-800 hover:text-orange-950 transition flex items-center gap-1" data-subject="Hindi">
+                <button
+                  class="view-subject-modal-btn text-xs font-bold text-orange-800 hover:text-orange-950 transition flex items-center gap-1"
+                  data-subject="Hindi">
                   <span>View Subject</span>
                   <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </button>
-                <a href="#sec-quiz" class="px-3 py-1 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-800 text-xs font-bold transition">
+                <a href="#sec-quiz"
+                  class="px-3 py-1 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-800 text-xs font-bold transition">
                   Practice Drill
                 </a>
               </div>
@@ -791,51 +907,65 @@
              5. STUDY MATERIALS SECTION (SECTION: #sec-materials)
         =============================================== -->
         <section id="sec-materials" class="space-y-4 pt-4 border-t border-slate-200/80">
-          
+
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-file-pdf text-purple-600"></i>
                 <span>Study Materials & Chapter Notes</span>
               </h2>
-              <p class="text-xs text-slate-500">Downloadable revision notes, formula cheat-sheets, and 4-mark guaranteed questions.</p>
+              <p class="text-xs text-slate-500">Downloadable revision notes, formula cheat-sheets, and 4-mark guaranteed
+                questions.</p>
             </div>
-            
+
             <!-- Filter Pills -->
             <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="materials-filter-bar">
-              <button class="mat-filter-btn px-3 py-1 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-2xs" data-filter="all">All</button>
-              <button class="mat-filter-btn px-3 py-1 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100" data-filter="Mathematics">Math</button>
-              <button class="mat-filter-btn px-3 py-1 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100" data-filter="Science">Science</button>
-              <button class="mat-filter-btn px-3 py-1 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100" data-filter="Social Science">Social</button>
-              <button class="mat-filter-btn px-3 py-1 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100" data-filter="Languages">Languages</button>
+              <button class="mat-filter-btn px-3 py-1 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-2xs"
+                data-filter="all">All</button>
+              <button class="mat-filter-btn px-3 py-1 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                data-filter="Mathematics">Math</button>
+              <button class="mat-filter-btn px-3 py-1 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                data-filter="Science">Science</button>
+              <button class="mat-filter-btn px-3 py-1 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                data-filter="Social Science">Social</button>
+              <button class="mat-filter-btn px-3 py-1 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+                data-filter="Languages">Languages</button>
             </div>
           </div>
 
           <!-- Materials Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="materials-grid">
-            
+
             <!-- Material 1 -->
             <div class="dashboard-card p-4 space-y-3 material-item" data-subject="Mathematics">
               <div class="flex items-start justify-between gap-2">
                 <div class="flex items-center gap-2.5">
-                  <span class="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-sm font-bold">
+                  <span
+                    class="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-sm font-bold">
                     <i class="fa-solid fa-square-root-variable"></i>
                   </span>
                   <div>
                     <span class="text-[10px] font-bold text-purple-700 uppercase">Mathematics • Formula Sheet</span>
-                    <h4 class="text-xs font-extrabold text-slate-900 line-clamp-1">Quadratic Equations & AP Formulas</h4>
+                    <h4 class="text-xs font-extrabold text-slate-900 line-clamp-1">Quadratic Equations & AP Formulas
+                    </h4>
                   </div>
                 </div>
                 <span class="px-2 py-0.5 rounded text-[9px] font-black bg-purple-50 text-purple-700">PDF</span>
               </div>
-              <p class="text-xs text-slate-500">Standard form, Discriminant rules, AP nth-term and sum formulas with solved proofs.</p>
+              <p class="text-xs text-slate-500">Standard form, Discriminant rules, AP nth-term and sum formulas with
+                solved proofs.</p>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-file text-slate-300 mr-1"></i>2.4 MB • 6 Pages</span>
+                <span class="text-[10px] text-slate-400 font-semibold"><i
+                    class="fa-solid fa-file text-slate-300 mr-1"></i>2.4 MB • 6 Pages</span>
                 <div class="flex items-center gap-1.5">
-                  <button class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition" data-title="Quadratic Equations & AP Formula Sheet">
+                  <button
+                    class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+                    data-title="Quadratic Equations & AP Formula Sheet">
                     <i class="fa-regular fa-eye mr-1"></i>View
                   </button>
-                  <button class="download-doc-btn px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition shadow-2xs" data-title="Quadratic Equations & AP Formula Sheet">
+                  <button
+                    class="download-doc-btn px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition shadow-2xs"
+                    data-title="Quadratic Equations & AP Formula Sheet">
                     <i class="fa-solid fa-download mr-1"></i>Download
                   </button>
                 </div>
@@ -846,24 +976,32 @@
             <div class="dashboard-card p-4 space-y-3 material-item" data-subject="Science">
               <div class="flex items-start justify-between gap-2">
                 <div class="flex items-center gap-2.5">
-                  <span class="w-8 h-8 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center text-sm font-bold">
+                  <span
+                    class="w-8 h-8 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center text-sm font-bold">
                     <i class="fa-solid fa-bolt"></i>
                   </span>
                   <div>
                     <span class="text-[10px] font-bold text-cyan-700 uppercase">Science • Revision Notes</span>
-                    <h4 class="text-xs font-extrabold text-slate-900 line-clamp-1">Electricity: Circuits & Ray Diagrams</h4>
+                    <h4 class="text-xs font-extrabold text-slate-900 line-clamp-1">Electricity: Circuits & Ray Diagrams
+                    </h4>
                   </div>
                 </div>
                 <span class="px-2 py-0.5 rounded text-[9px] font-black bg-cyan-50 text-cyan-700">PDF</span>
               </div>
-              <p class="text-xs text-slate-500">Ohm's Law derivations, Series vs Parallel circuits, and ray diagram steps for concave mirrors.</p>
+              <p class="text-xs text-slate-500">Ohm's Law derivations, Series vs Parallel circuits, and ray diagram
+                steps for concave mirrors.</p>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-file text-slate-300 mr-1"></i>3.1 MB • 10 Pages</span>
+                <span class="text-[10px] text-slate-400 font-semibold"><i
+                    class="fa-solid fa-file text-slate-300 mr-1"></i>3.1 MB • 10 Pages</span>
                 <div class="flex items-center gap-1.5">
-                  <button class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition" data-title="Electricity & Ray Diagrams Revision Notes">
+                  <button
+                    class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+                    data-title="Electricity & Ray Diagrams Revision Notes">
                     <i class="fa-regular fa-eye mr-1"></i>View
                   </button>
-                  <button class="download-doc-btn px-2.5 py-1 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold transition shadow-2xs" data-title="Electricity & Ray Diagrams Revision Notes">
+                  <button
+                    class="download-doc-btn px-2.5 py-1 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold transition shadow-2xs"
+                    data-title="Electricity & Ray Diagrams Revision Notes">
                     <i class="fa-solid fa-download mr-1"></i>Download
                   </button>
                 </div>
@@ -874,7 +1012,8 @@
             <div class="dashboard-card p-4 space-y-3 material-item" data-subject="Social Science">
               <div class="flex items-start justify-between gap-2">
                 <div class="flex items-center gap-2.5">
-                  <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-sm font-bold">
+                  <span
+                    class="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-sm font-bold">
                     <i class="fa-solid fa-landmark"></i>
                   </span>
                   <div>
@@ -884,14 +1023,20 @@
                 </div>
                 <span class="px-2 py-0.5 rounded text-[9px] font-black bg-amber-50 text-amber-800">PDF</span>
               </div>
-              <p class="text-xs text-slate-500">Political, economic and immediate causes of 1857 Revolt with key battle leaders and map questions.</p>
+              <p class="text-xs text-slate-500">Political, economic and immediate causes of 1857 Revolt with key battle
+                leaders and map questions.</p>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-file text-slate-300 mr-1"></i>1.8 MB • 5 Pages</span>
+                <span class="text-[10px] text-slate-400 font-semibold"><i
+                    class="fa-solid fa-file text-slate-300 mr-1"></i>1.8 MB • 5 Pages</span>
                 <div class="flex items-center gap-1.5">
-                  <button class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition" data-title="1857 Revolt Timeline & Causes Mind Map">
+                  <button
+                    class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+                    data-title="1857 Revolt Timeline & Causes Mind Map">
                     <i class="fa-regular fa-eye mr-1"></i>View
                   </button>
-                  <button class="download-doc-btn px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition shadow-2xs" data-title="1857 Revolt Timeline & Causes Mind Map">
+                  <button
+                    class="download-doc-btn px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition shadow-2xs"
+                    data-title="1857 Revolt Timeline & Causes Mind Map">
                     <i class="fa-solid fa-download mr-1"></i>Download
                   </button>
                 </div>
@@ -902,7 +1047,8 @@
             <div class="dashboard-card p-4 space-y-3 material-item" data-subject="Languages">
               <div class="flex items-start justify-between gap-2">
                 <div class="flex items-center gap-2.5">
-                  <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-sm font-bold">
+                  <span
+                    class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-sm font-bold">
                     <i class="fa-solid fa-feather-pointed"></i>
                   </span>
                   <div>
@@ -912,14 +1058,20 @@
                 </div>
                 <span class="px-2 py-0.5 rounded text-[9px] font-black bg-emerald-50 text-emerald-800">PDF</span>
               </div>
-              <p class="text-xs text-slate-500">ಲೋಪ, ಆಗಮ, ಆದೇಶ ಸಂಧಿಗಳ ನಿಯಮಗಳು, ಉದಾಹರಣೆಗಳು ಮತ್ತು ಹಿಂದಿನ ಪರೀಕ್ಷೆಯ ಪ್ರಶ್ನೋತ್ತರಗಳು.</p>
+              <p class="text-xs text-slate-500">ಲೋಪ, ಆಗಮ, ಆದೇಶ ಸಂಧಿಗಳ ನಿಯಮಗಳು, ಉದಾಹರಣೆಗಳು ಮತ್ತು ಹಿಂದಿನ ಪರೀಕ್ಷೆಯ
+                ಪ್ರಶ್ನೋತ್ತರಗಳು.</p>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-file text-slate-300 mr-1"></i>2.1 MB • 8 Pages</span>
+                <span class="text-[10px] text-slate-400 font-semibold"><i
+                    class="fa-solid fa-file text-slate-300 mr-1"></i>2.1 MB • 8 Pages</span>
                 <div class="flex items-center gap-1.5">
-                  <button class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition" data-title="ಕನ್ನಡ ಸಂಧಿಗಳು ಹಾಗೂ ಸಮಾಸಗಳ ವ್ಯಾಕರಣ ಕೈಪಿಡಿ">
+                  <button
+                    class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+                    data-title="ಕನ್ನಡ ಸಂಧಿಗಳು ಹಾಗೂ ಸಮಾಸಗಳ ವ್ಯಾಕರಣ ಕೈಪಿಡಿ">
                     <i class="fa-regular fa-eye mr-1"></i>View
                   </button>
-                  <button class="download-doc-btn px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-2xs" data-title="ಕನ್ನಡ ಸಂಧಿಗಳು ಹಾಗೂ ಸಮಾಸಗಳ ವ್ಯಾಕರಣ ಕೈಪಿಡಿ">
+                  <button
+                    class="download-doc-btn px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-2xs"
+                    data-title="ಕನ್ನಡ ಸಂಧಿಗಳು ಹಾಗೂ ಸಮಾಸಗಳ ವ್ಯಾಕರಣ ಕೈಪಿಡಿ">
                     <i class="fa-solid fa-download mr-1"></i>Download
                   </button>
                 </div>
@@ -930,24 +1082,32 @@
             <div class="dashboard-card p-4 space-y-3 material-item" data-subject="Languages">
               <div class="flex items-start justify-between gap-2">
                 <div class="flex items-center gap-2.5">
-                  <span class="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-sm font-bold">
+                  <span
+                    class="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-sm font-bold">
                     <i class="fa-solid fa-spell-check"></i>
                   </span>
                   <div>
                     <span class="text-[10px] font-bold text-blue-700 uppercase">English • Grammar Rules</span>
-                    <h4 class="text-xs font-extrabold text-slate-900 line-clamp-1">Active-Passive Voice & Reported Speech</h4>
+                    <h4 class="text-xs font-extrabold text-slate-900 line-clamp-1">Active-Passive Voice & Reported
+                      Speech</h4>
                   </div>
                 </div>
                 <span class="px-2 py-0.5 rounded text-[9px] font-black bg-blue-50 text-blue-700">PDF</span>
               </div>
-              <p class="text-xs text-slate-500">Clear sentence transformation tables, tense agreement rules and 50 solved Karnataka SSLC drill questions.</p>
+              <p class="text-xs text-slate-500">Clear sentence transformation tables, tense agreement rules and 50
+                solved Karnataka SSLC drill questions.</p>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-file text-slate-300 mr-1"></i>1.9 MB • 7 Pages</span>
+                <span class="text-[10px] text-slate-400 font-semibold"><i
+                    class="fa-solid fa-file text-slate-300 mr-1"></i>1.9 MB • 7 Pages</span>
                 <div class="flex items-center gap-1.5">
-                  <button class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition" data-title="Active-Passive Voice & Reported Speech Guide">
+                  <button
+                    class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+                    data-title="Active-Passive Voice & Reported Speech Guide">
                     <i class="fa-regular fa-eye mr-1"></i>View
                   </button>
-                  <button class="download-doc-btn px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shadow-2xs" data-title="Active-Passive Voice & Reported Speech Guide">
+                  <button
+                    class="download-doc-btn px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shadow-2xs"
+                    data-title="Active-Passive Voice & Reported Speech Guide">
                     <i class="fa-solid fa-download mr-1"></i>Download
                   </button>
                 </div>
@@ -958,7 +1118,8 @@
             <div class="dashboard-card p-4 space-y-3 material-item" data-subject="Languages">
               <div class="flex items-start justify-between gap-2">
                 <div class="flex items-center gap-2.5">
-                  <span class="w-8 h-8 rounded-xl bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-bold">
+                  <span
+                    class="w-8 h-8 rounded-xl bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-bold">
                     <i class="fa-solid fa-book-bookmark"></i>
                   </span>
                   <div>
@@ -968,14 +1129,20 @@
                 </div>
                 <span class="px-2 py-0.5 rounded text-[9px] font-black bg-orange-50 text-orange-800">PDF</span>
               </div>
-              <p class="text-xs text-slate-500">कश्मीरी सेब पाठ का सारांश, चरित्र-चित्रण और कारक विभक्ति के महत्वपूर्ण 2-अंक प्रश्न।</p>
+              <p class="text-xs text-slate-500">कश्मीरी सेब पाठ का सारांश, चरित्र-चित्रण और कारक विभक्ति के महत्वपूर्ण
+                2-अंक प्रश्न।</p>
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-file text-slate-300 mr-1"></i>2.0 MB • 6 Pages</span>
+                <span class="text-[10px] text-slate-400 font-semibold"><i
+                    class="fa-solid fa-file text-slate-300 mr-1"></i>2.0 MB • 6 Pages</span>
                 <div class="flex items-center gap-1.5">
-                  <button class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition" data-title="कश्मीरी सेब एवं कारक-संधि अभ्यास नोट्स">
+                  <button
+                    class="preview-doc-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition"
+                    data-title="कश्मीरी सेब एवं कारक-संधि अभ्यास नोट्स">
                     <i class="fa-regular fa-eye mr-1"></i>View
                   </button>
-                  <button class="download-doc-btn px-2.5 py-1 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold transition shadow-2xs" data-title="कश्मीरी सेब एवं कारक-संधि अभ्यास नोट्स">
+                  <button
+                    class="download-doc-btn px-2.5 py-1 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold transition shadow-2xs"
+                    data-title="कश्मीरी सेब एवं कारक-संधि अभ्यास नोट्स">
                     <i class="fa-solid fa-download mr-1"></i>Download
                   </button>
                 </div>
@@ -990,19 +1157,21 @@
              6. PREVIOUS YEAR QUESTION PAPERS (SECTION: #sec-pyqp)
         =============================================== -->
         <section id="sec-pyqp" class="space-y-4 pt-4 border-t border-slate-200/80">
-          
+
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-newspaper text-amber-600"></i>
                 <span>Karnataka SSLC Previous Year Question Papers</span>
               </h2>
-              <p class="text-xs text-slate-500">Authentic KSEEB Board examination papers with official answer keys from 2020 to 2026.</p>
+              <p class="text-xs text-slate-500">Authentic KSEEB Board examination papers with official answer keys from
+                2020 to 2026.</p>
             </div>
-            
+
             <!-- Filters: Year & Medium -->
             <div class="flex flex-wrap items-center gap-2 text-xs">
-              <select id="pyqp-year-filter" class="bg-white border border-slate-200 rounded-xl px-3 py-1.5 font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 shadow-2xs">
+              <select id="pyqp-year-filter"
+                class="bg-white border border-slate-200 rounded-xl px-3 py-1.5 font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 shadow-2xs">
                 <option value="all">All Years (2020-2026)</option>
                 <option value="2026">2026 (Model)</option>
                 <option value="2025">2025 (Annual)</option>
@@ -1013,7 +1182,8 @@
                 <option value="2020">2020 (Annual)</option>
               </select>
 
-              <select id="pyqp-medium-filter" class="bg-white border border-slate-200 rounded-xl px-3 py-1.5 font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 shadow-2xs">
+              <select id="pyqp-medium-filter"
+                class="bg-white border border-slate-200 rounded-xl px-3 py-1.5 font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 shadow-2xs">
                 <option value="all">All Mediums</option>
                 <option value="English">English Medium</option>
                 <option value="Kannada">Kannada Medium</option>
@@ -1025,7 +1195,8 @@
           <div class="dashboard-card overflow-hidden">
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                <thead
+                  class="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
                   <tr>
                     <th class="py-3 px-4">Year & Exam</th>
                     <th class="py-3 px-4">Subject</th>
@@ -1037,11 +1208,13 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100" id="pyqp-table-body">
-                  
+
                   <!-- Row 1: 2026 Model Math -->
-                  <tr class="hover:bg-indigo-50/30 transition pyqp-row" data-year="2026" data-medium="English" data-subject="Mathematics">
+                  <tr class="hover:bg-indigo-50/30 transition pyqp-row" data-year="2026" data-medium="English"
+                    data-subject="Mathematics">
                     <td class="py-3.5 px-4 font-extrabold text-slate-900">
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-100 text-indigo-700 mr-1.5">2026</span>
+                      <span
+                        class="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-100 text-indigo-700 mr-1.5">2026</span>
                       Model Board Exam
                     </td>
                     <td class="py-3.5 px-4 font-bold text-slate-800">Mathematics (81E)</td>
@@ -1058,15 +1231,21 @@
                       </span>
                     </td>
                     <td class="py-3.5 px-4 text-right space-x-1">
-                      <button class="view-pyqp-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold" data-paper="2026 Mathematics Model Question Paper">View</button>
-                      <button class="download-doc-btn px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold" data-title="2026 Mathematics Model Paper">Download</button>
+                      <button
+                        class="view-pyqp-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+                        data-paper="2026 Mathematics Model Question Paper">View</button>
+                      <button
+                        class="download-doc-btn px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold"
+                        data-title="2026 Mathematics Model Paper">Download</button>
                     </td>
                   </tr>
 
                   <!-- Row 2: 2025 Annual Science -->
-                  <tr class="hover:bg-indigo-50/30 transition pyqp-row" data-year="2025" data-medium="English" data-subject="Science">
+                  <tr class="hover:bg-indigo-50/30 transition pyqp-row" data-year="2025" data-medium="English"
+                    data-subject="Science">
                     <td class="py-3.5 px-4 font-extrabold text-slate-900">
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-purple-100 text-purple-700 mr-1.5">2025</span>
+                      <span
+                        class="px-2 py-0.5 rounded-full text-[10px] font-black bg-purple-100 text-purple-700 mr-1.5">2025</span>
                       Annual Board Exam
                     </td>
                     <td class="py-3.5 px-4 font-bold text-slate-800">Science (83E)</td>
@@ -1083,15 +1262,21 @@
                       </span>
                     </td>
                     <td class="py-3.5 px-4 text-right space-x-1">
-                      <button class="view-pyqp-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold" data-paper="2025 Science Annual Board Question Paper">View</button>
-                      <button class="download-doc-btn px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold" data-title="2025 Science Annual Board Paper">Download</button>
+                      <button
+                        class="view-pyqp-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+                        data-paper="2025 Science Annual Board Question Paper">View</button>
+                      <button
+                        class="download-doc-btn px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold"
+                        data-title="2025 Science Annual Board Paper">Download</button>
                     </td>
                   </tr>
 
                   <!-- Row 3: 2024 Kannada First Language -->
-                  <tr class="hover:bg-indigo-50/30 transition pyqp-row" data-year="2024" data-medium="Kannada" data-subject="Kannada">
+                  <tr class="hover:bg-indigo-50/30 transition pyqp-row" data-year="2024" data-medium="Kannada"
+                    data-subject="Kannada">
                     <td class="py-3.5 px-4 font-extrabold text-slate-900">
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 mr-1.5">2024</span>
+                      <span
+                        class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 mr-1.5">2024</span>
                       Annual Examination
                     </td>
                     <td class="py-3.5 px-4 font-bold text-slate-800">Kannada (01K - 1st Lang)</td>
@@ -1108,15 +1293,21 @@
                       </span>
                     </td>
                     <td class="py-3.5 px-4 text-right space-x-1">
-                      <button class="view-pyqp-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold" data-paper="2024 Kannada First Language Paper">View</button>
-                      <button class="download-doc-btn px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold" data-title="2024 Kannada 1st Lang Paper">Download</button>
+                      <button
+                        class="view-pyqp-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+                        data-paper="2024 Kannada First Language Paper">View</button>
+                      <button
+                        class="download-doc-btn px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold"
+                        data-title="2024 Kannada 1st Lang Paper">Download</button>
                     </td>
                   </tr>
 
                   <!-- Row 4: 2023 Social Science -->
-                  <tr class="hover:bg-indigo-50/30 transition pyqp-row" data-year="2023" data-medium="English" data-subject="Social Science">
+                  <tr class="hover:bg-indigo-50/30 transition pyqp-row" data-year="2023" data-medium="English"
+                    data-subject="Social Science">
                     <td class="py-3.5 px-4 font-extrabold text-slate-900">
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-800 mr-1.5">2023</span>
+                      <span
+                        class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-800 mr-1.5">2023</span>
                       Annual Examination
                     </td>
                     <td class="py-3.5 px-4 font-bold text-slate-800">Social Science (85E)</td>
@@ -1133,15 +1324,21 @@
                       </span>
                     </td>
                     <td class="py-3.5 px-4 text-right space-x-1">
-                      <button class="view-pyqp-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold" data-paper="2023 Social Science Board Paper">View</button>
-                      <button class="download-doc-btn px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold" data-title="2023 Social Science Board Paper">Download</button>
+                      <button
+                        class="view-pyqp-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+                        data-paper="2023 Social Science Board Paper">View</button>
+                      <button
+                        class="download-doc-btn px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold"
+                        data-title="2023 Social Science Board Paper">Download</button>
                     </td>
                   </tr>
 
                   <!-- Row 5: 2022 English Second Language -->
-                  <tr class="hover:bg-indigo-50/30 transition pyqp-row" data-year="2022" data-medium="English" data-subject="English">
+                  <tr class="hover:bg-indigo-50/30 transition pyqp-row" data-year="2022" data-medium="English"
+                    data-subject="English">
                     <td class="py-3.5 px-4 font-extrabold text-slate-900">
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-700 mr-1.5">2022</span>
+                      <span
+                        class="px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-700 mr-1.5">2022</span>
                       Annual Examination
                     </td>
                     <td class="py-3.5 px-4 font-bold text-slate-800">English (31E - 2nd Lang)</td>
@@ -1158,8 +1355,12 @@
                       </span>
                     </td>
                     <td class="py-3.5 px-4 text-right space-x-1">
-                      <button class="view-pyqp-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold" data-paper="2022 English Second Language Paper">View</button>
-                      <button class="download-doc-btn px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold" data-title="2022 English 2nd Lang Paper">Download</button>
+                      <button
+                        class="view-pyqp-btn px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+                        data-paper="2022 English Second Language Paper">View</button>
+                      <button
+                        class="download-doc-btn px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold"
+                        data-title="2022 English 2nd Lang Paper">Download</button>
                     </td>
                   </tr>
 
@@ -1174,14 +1375,15 @@
              7. TEACHING VIDEOS SECTION (SECTION: #sec-videos)
         =============================================== -->
         <section id="sec-videos" class="space-y-4 pt-4 border-t border-slate-200/80">
-          
+
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-circle-play text-rose-600"></i>
                 <span>Chapter-Wise Teaching Videos</span>
               </h2>
-              <p class="text-xs text-slate-500">Concept-clearing lecture videos in English and Kannada by expert Karnataka high-school faculty.</p>
+              <p class="text-xs text-slate-500">Concept-clearing lecture videos in English and Kannada by expert
+                Karnataka high-school faculty.</p>
             </div>
             <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
@@ -1191,35 +1393,41 @@
 
           <!-- Videos Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            
+
             <!-- Video 1: Math Quadratic Equations -->
             <div class="dashboard-card overflow-hidden flex flex-col justify-between">
-              <div class="relative bg-slate-900 aspect-video flex items-center justify-center group cursor-pointer watch-video-trigger"
-                   data-title="Quadratic Equations: Complete Step-by-Step Mastery"
-                   data-subject="Mathematics"
-                   data-duration="32 Mins"
-                   data-embed="https://www.youtube-nocookie.com/embed/videoseries?list=PLr_HbhK6d_wO4h_n07J3v4b5G8bX_yL_K">
+              <div
+                class="relative bg-slate-900 aspect-video flex items-center justify-center group cursor-pointer watch-video-trigger"
+                data-title="Quadratic Equations: Complete Step-by-Step Mastery" data-subject="Mathematics"
+                data-duration="32 Mins"
+                data-embed="https://www.youtube-nocookie.com/embed/videoseries?list=PLr_HbhK6d_wO4h_n07J3v4b5G8bX_yL_K">
                 <!-- Video Thumbnail Simulation -->
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                <div class="w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-purple-500 transition z-10">
+                <div
+                  class="w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-purple-500 transition z-10">
                   <i class="fa-solid fa-play ml-0.5 text-sm"></i>
                 </div>
-                <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono font-bold z-10">32:15</span>
-                <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-purple-600 text-white text-[9px] font-black uppercase z-10">Math</span>
+                <span
+                  class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono font-bold z-10">32:15</span>
+                <span
+                  class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-purple-600 text-white text-[9px] font-black uppercase z-10">Math</span>
               </div>
               <div class="p-4 space-y-2">
                 <div class="flex items-center justify-between text-[10px] font-bold text-slate-400">
                   <span>Chapter 6 • Algebra</span>
                   <span class="text-emerald-600 font-extrabold"><i class="fa-solid fa-check mr-1"></i>Completed</span>
                 </div>
-                <h4 class="text-xs font-black text-slate-900 line-clamp-1">Quadratic Equations: Formula & Discriminant Method</h4>
-                <p class="text-xs text-slate-500 line-clamp-2">How to identify roots, compute b² - 4ac, and apply the quadratic formula flawlessly in board exams.</p>
+                <h4 class="text-xs font-black text-slate-900 line-clamp-1">Quadratic Equations: Formula & Discriminant
+                  Method</h4>
+                <p class="text-xs text-slate-500 line-clamp-2">How to identify roots, compute b² - 4ac, and apply the
+                  quadratic formula flawlessly in board exams.</p>
                 <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                  <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-eye mr-1"></i>14.2k views</span>
-                  <button class="watch-video-trigger px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold transition"
-                          data-title="Quadratic Equations: Complete Step-by-Step Mastery"
-                          data-subject="Mathematics"
-                          data-duration="32 Mins">
+                  <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-eye mr-1"></i>14.2k
+                    views</span>
+                  <button
+                    class="watch-video-trigger px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold transition"
+                    data-title="Quadratic Equations: Complete Step-by-Step Mastery" data-subject="Mathematics"
+                    data-duration="32 Mins">
                     Watch Now
                   </button>
                 </div>
@@ -1228,31 +1436,38 @@
 
             <!-- Video 2: Science Electricity -->
             <div class="dashboard-card overflow-hidden flex flex-col justify-between">
-              <div class="relative bg-slate-900 aspect-video flex items-center justify-center group cursor-pointer watch-video-trigger"
-                   data-title="Electricity: Ohm's Law and Circuit Calculations"
-                   data-subject="Science (Physics)"
-                   data-duration="28 Mins"
-                   data-embed="https://www.youtube-nocookie.com/embed/videoseries?list=PLr_HbhK6d_wO4h_n07J3v4b5G8bX_yL_K">
+              <div
+                class="relative bg-slate-900 aspect-video flex items-center justify-center group cursor-pointer watch-video-trigger"
+                data-title="Electricity: Ohm's Law and Circuit Calculations" data-subject="Science (Physics)"
+                data-duration="28 Mins"
+                data-embed="https://www.youtube-nocookie.com/embed/videoseries?list=PLr_HbhK6d_wO4h_n07J3v4b5G8bX_yL_K">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                <div class="w-12 h-12 rounded-full bg-cyan-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-cyan-500 transition z-10">
+                <div
+                  class="w-12 h-12 rounded-full bg-cyan-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-cyan-500 transition z-10">
                   <i class="fa-solid fa-play ml-0.5 text-sm"></i>
                 </div>
-                <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono font-bold z-10">28:40</span>
-                <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-cyan-600 text-white text-[9px] font-black uppercase z-10">Science</span>
+                <span
+                  class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono font-bold z-10">28:40</span>
+                <span
+                  class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-cyan-600 text-white text-[9px] font-black uppercase z-10">Science</span>
               </div>
               <div class="p-4 space-y-2">
                 <div class="flex items-center justify-between text-[10px] font-bold text-slate-400">
                   <span>Chapter 9 • Physics</span>
-                  <span class="text-indigo-600 font-extrabold"><i class="fa-solid fa-spinner animate-spin mr-1"></i>In Progress</span>
+                  <span class="text-indigo-600 font-extrabold"><i class="fa-solid fa-spinner animate-spin mr-1"></i>In
+                    Progress</span>
                 </div>
-                <h4 class="text-xs font-black text-slate-900 line-clamp-1">Electricity: Ohm's Law & Circuit Calculations</h4>
-                <p class="text-xs text-slate-500 line-clamp-2">Complete resistance calculations in series and parallel combinations with interactive simulation.</p>
+                <h4 class="text-xs font-black text-slate-900 line-clamp-1">Electricity: Ohm's Law & Circuit Calculations
+                </h4>
+                <p class="text-xs text-slate-500 line-clamp-2">Complete resistance calculations in series and parallel
+                  combinations with interactive simulation.</p>
                 <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                  <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-eye mr-1"></i>18.9k views</span>
-                  <button class="watch-video-trigger px-3 py-1.5 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-700 text-xs font-bold transition"
-                          data-title="Electricity: Ohm's Law and Circuit Calculations"
-                          data-subject="Science (Physics)"
-                          data-duration="28 Mins">
+                  <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-eye mr-1"></i>18.9k
+                    views</span>
+                  <button
+                    class="watch-video-trigger px-3 py-1.5 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-700 text-xs font-bold transition"
+                    data-title="Electricity: Ohm's Law and Circuit Calculations" data-subject="Science (Physics)"
+                    data-duration="28 Mins">
                     Watch Now
                   </button>
                 </div>
@@ -1261,17 +1476,19 @@
 
             <!-- Video 3: Kannada Vyakaran -->
             <div class="dashboard-card overflow-hidden flex flex-col justify-between">
-              <div class="relative bg-slate-900 aspect-video flex items-center justify-center group cursor-pointer watch-video-trigger"
-                   data-title="ಕನ್ನಡ ವ್ಯಾಕರಣ: ಲೋಪ, ಆಗಮ ಮತ್ತು ಆದೇಶ ಸಂಧಿಗಳು"
-                   data-subject="Kannada"
-                   data-duration="25 Mins"
-                   data-embed="https://www.youtube-nocookie.com/embed/videoseries?list=PLr_HbhK6d_wO4h_n07J3v4b5G8bX_yL_K">
+              <div
+                class="relative bg-slate-900 aspect-video flex items-center justify-center group cursor-pointer watch-video-trigger"
+                data-title="ಕನ್ನಡ ವ್ಯಾಕರಣ: ಲೋಪ, ಆಗಮ ಮತ್ತು ಆದೇಶ ಸಂಧಿಗಳು" data-subject="Kannada" data-duration="25 Mins"
+                data-embed="https://www.youtube-nocookie.com/embed/videoseries?list=PLr_HbhK6d_wO4h_n07J3v4b5G8bX_yL_K">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                <div class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-emerald-500 transition z-10">
+                <div
+                  class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-emerald-500 transition z-10">
                   <i class="fa-solid fa-play ml-0.5 text-sm"></i>
                 </div>
-                <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono font-bold z-10">25:10</span>
-                <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[9px] font-black uppercase z-10">Kannada</span>
+                <span
+                  class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono font-bold z-10">25:10</span>
+                <span
+                  class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[9px] font-black uppercase z-10">Kannada</span>
               </div>
               <div class="p-4 space-y-2">
                 <div class="flex items-center justify-between text-[10px] font-bold text-slate-400">
@@ -1279,13 +1496,15 @@
                   <span class="text-emerald-700 font-extrabold"><i class="fa-solid fa-check mr-1"></i>Completed</span>
                 </div>
                 <h4 class="text-xs font-black text-slate-900 line-clamp-1">ಕನ್ನಡ ಸಂಧಿಗಳು: ಲೋಪ, ಆಗಮ, ಆದೇಶ ಸಂಧಿ</h4>
-                <p class="text-xs text-slate-500 line-clamp-2">ಸ್ವರಸಂಧಿ ಮತ್ತು ವ್ಯಂಜನಸಂಧಿಗಳ ವ್ಯತ್ಯಾಸ ಮತ್ತು 10ನೇ ತರಗತಿ ಪರೀಕ್ಷೆಯ ಪ್ರಮುಖ ಪ್ರಶ್ನೆಗಳು.</p>
+                <p class="text-xs text-slate-500 line-clamp-2">ಸ್ವರಸಂಧಿ ಮತ್ತು ವ್ಯಂಜನಸಂಧಿಗಳ ವ್ಯತ್ಯಾಸ ಮತ್ತು 10ನೇ ತರಗತಿ
+                  ಪರೀಕ್ಷೆಯ ಪ್ರಮುಖ ಪ್ರಶ್ನೆಗಳು.</p>
                 <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                  <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-eye mr-1"></i>9.6k views</span>
-                  <button class="watch-video-trigger px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition"
-                          data-title="ಕನ್ನಡ ವ್ಯಾಕರಣ: ಲೋಪ, ಆಗಮ ಮತ್ತು ಆದೇಶ ಸಂಧಿಗಳು"
-                          data-subject="Kannada"
-                          data-duration="25 Mins">
+                  <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-eye mr-1"></i>9.6k
+                    views</span>
+                  <button
+                    class="watch-video-trigger px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition"
+                    data-title="ಕನ್ನಡ ವ್ಯಾಕರಣ: ಲೋಪ, ಆಗಮ ಮತ್ತು ಆದೇಶ ಸಂಧಿಗಳು" data-subject="Kannada"
+                    data-duration="25 Mins">
                     Watch Now
                   </button>
                 </div>
@@ -1300,22 +1519,26 @@
              8. STUDY PLANNER SECTION (SECTION: #sec-planner)
         =============================================== -->
         <section id="sec-planner" class="space-y-4 pt-4 border-t border-slate-200/80">
-          
+
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-calendar-check text-emerald-600"></i>
                 <span>Personal Study Planner & Daily Rhythm</span>
               </h2>
-              <p class="text-xs text-slate-500">Structured study hours designed to master topics without exam burnout.</p>
+              <p class="text-xs text-slate-500">Structured study hours designed to master topics without exam burnout.
+              </p>
             </div>
-            
+
             <div class="flex items-center gap-2 flex-wrap">
-              <button id="auto-schedule-btn" class="px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 active:scale-95 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm" title="Auto-schedule micro-study sessions strictly in free hours">
+              <button id="auto-schedule-btn"
+                class="px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 active:scale-95 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                title="Auto-schedule micro-study sessions strictly in free hours">
                 <i class="fa-solid fa-wand-magic-sparkles"></i>
                 <span>Auto-Schedule Free Hours</span>
               </button>
-              <button id="add-study-task-btn" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+              <button id="add-study-task-btn"
+                class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
                 <i class="fa-solid fa-plus"></i>
                 <span>Add Study Task</span>
               </button>
@@ -1324,19 +1547,21 @@
 
           <!-- Planner Grid: Today's Tasks + Daily Goal Tracker -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
+
             <!-- Timetable & Task List (2 Cols) -->
             <div class="lg:col-span-2 dashboard-card p-5 space-y-4">
               <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div class="flex items-center gap-2">
                   <span class="text-xs font-extrabold text-slate-900">Today's Schedule & Routine</span>
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-50 text-indigo-700">Free-Hour Aligned</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-50 text-indigo-700">Free-Hour
+                    Aligned</span>
                 </div>
                 <span id="task-completion-counter" class="text-xs font-bold text-slate-500">
                   {% if scheduled_sessions %}
-                    {{ scheduled_sessions|selectattr('status', 'equalto', 'completed')|list|length }} of {{ scheduled_sessions|length }} Completed
+                  {{ scheduled_sessions|selectattr('status', 'equalto', 'completed')|list|length }} of {{
+                  scheduled_sessions|length }} Completed
                   {% else %}
-                    1 of 4 Completed
+                  1 of 4 Completed
                   {% endif %}
                 </span>
               </div>
@@ -1344,42 +1569,55 @@
               <!-- Task Rows -->
               <div class="space-y-2.5" id="planner-tasks-list">
                 {% if scheduled_sessions %}
-                  {% for sess in scheduled_sessions %}
-                    <div class="p-3.5 rounded-2xl {% if sess.status == 'completed' %}bg-slate-50 border border-slate-200/80{% else %}bg-white border border-indigo-100 shadow-2xs{% endif %} flex items-center justify-between gap-3 task-row" data-session-id="{{ sess.id }}">
-                      <div class="flex items-center gap-3">
-                        <button class="task-checkbox-btn w-6 h-6 rounded-lg {% if sess.status == 'completed' %}bg-emerald-500 text-white{% else %}border-2 border-indigo-400 hover:bg-indigo-50 text-indigo-600{% endif %} flex items-center justify-center text-xs transition" data-session-id="{{ sess.id }}" data-completed="{{ 'true' if sess.status == 'completed' else 'false' }}">
-                          {% if sess.status == 'completed' %}
-                            <i class="fa-solid fa-check"></i>
-                          {% endif %}
-                        </button>
-                        <div>
-                          <h4 class="text-xs font-black text-slate-900 {% if sess.status == 'completed' %}line-through text-slate-400{% endif %}">
-                            {{ sess.subject_name }}: {{ sess.topic_name }}
-                          </h4>
-                          <p class="text-[11px] text-slate-500">
-                            {{ sess.start_time }} - {{ sess.end_time }} • {{ sess.duration_minutes }} Mins • {{ sess.slot_label or 'Free-Hour Study Window' }}
-                          </p>
-                        </div>
-                      </div>
-                      <span class="px-2.5 py-1 rounded-full text-[10px] font-bold {% if sess.status == 'completed' %}bg-emerald-100 text-emerald-800{% else %}bg-indigo-50 text-indigo-700 border border-indigo-200{% endif %} shrink-0">
-                        {{ 'Done' if sess.status == 'completed' else 'Scheduled' }}
-                      </span>
+                {% for sess in scheduled_sessions %}
+                <div
+                  class="p-3.5 rounded-2xl {% if sess.status == 'completed' %}bg-slate-50 border border-slate-200/80{% else %}bg-white border border-indigo-100 shadow-2xs{% endif %} flex items-center justify-between gap-3 task-row"
+                  data-session-id="{{ sess.id }}">
+                  <div class="flex items-center gap-3">
+                    <button
+                      class="task-checkbox-btn w-6 h-6 rounded-lg {% if sess.status == 'completed' %}bg-emerald-500 text-white{% else %}border-2 border-indigo-400 hover:bg-indigo-50 text-indigo-600{% endif %} flex items-center justify-center text-xs transition"
+                      data-session-id="{{ sess.id }}"
+                      data-completed="{{ 'true' if sess.status == 'completed' else 'false' }}">
+                      {% if sess.status == 'completed' %}
+                      <i class="fa-solid fa-check"></i>
+                      {% endif %}
+                    </button>
+                    <div>
+                      <h4
+                        class="text-xs font-black text-slate-900 {% if sess.status == 'completed' %}line-through text-slate-400{% endif %}">
+                        {{ sess.subject_name }}: {{ sess.topic_name }}
+                      </h4>
+                      <p class="text-[11px] text-slate-500">
+                        {{ sess.start_time }} - {{ sess.end_time }} • {{ sess.duration_minutes }} Mins • {{
+                        sess.slot_label or 'Free-Hour Study Window' }}
+                      </p>
                     </div>
-                  {% endfor %}
-                {% else %}
-                  <!-- Fallback Task 1: Completed -->
-                  <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3 task-row">
-                    <div class="flex items-center gap-3">
-                      <button class="task-checkbox-btn w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs transition" data-completed="true">
-                        <i class="fa-solid fa-check"></i>
-                      </button>
-                      <div>
-                        <h4 class="text-xs font-black text-slate-900 line-through text-slate-400">Mathematics: Arithmetic Progressions nth-term Formula</h4>
-                        <p class="text-[11px] text-slate-400">07:00 AM - 08:00 AM • 60 Mins • Completed</p>
-                      </div>
-                    </div>
-                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 shrink-0">Done</span>
                   </div>
+                  <span
+                    class="px-2.5 py-1 rounded-full text-[10px] font-bold {% if sess.status == 'completed' %}bg-emerald-100 text-emerald-800{% else %}bg-indigo-50 text-indigo-700 border border-indigo-200{% endif %} shrink-0">
+                    {{ 'Done' if sess.status == 'completed' else 'Scheduled' }}
+                  </span>
+                </div>
+                {% endfor %}
+                {% else %}
+                <!-- Fallback Task 1: Completed -->
+                <div
+                  class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3 task-row">
+                  <div class="flex items-center gap-3">
+                    <button
+                      class="task-checkbox-btn w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs transition"
+                      data-completed="true">
+                      <i class="fa-solid fa-check"></i>
+                    </button>
+                    <div>
+                      <h4 class="text-xs font-black text-slate-900 line-through text-slate-400">Mathematics: Arithmetic
+                        Progressions nth-term Formula</h4>
+                      <p class="text-[11px] text-slate-400">07:00 AM - 08:00 AM • 60 Mins • Completed</p>
+                    </div>
+                  </div>
+                  <span
+                    class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 shrink-0">Done</span>
+                </div>
                 {% endif %}
               </div>
             </div>
@@ -1398,8 +1636,11 @@
               <div class="text-center py-4 space-y-2">
                 <div class="relative w-32 h-32 mx-auto flex items-center justify-center">
                   <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                    <path class="text-slate-100" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    <path class="text-indigo-600" stroke-width="3.5" stroke-dasharray="60, 100" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="text-slate-100" stroke-width="3.5" stroke="currentColor" fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="text-indigo-600" stroke-width="3.5" stroke-dasharray="60, 100" stroke-linecap="round"
+                      stroke="currentColor" fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                   </svg>
                   <div class="absolute flex flex-col items-center">
                     <span class="text-2xl font-black text-slate-900">60%</span>
@@ -1428,25 +1669,27 @@
              9. PRACTICE / QUIZ SECTION (SECTION: #sec-quiz)
         =============================================== -->
         <section id="sec-quiz" class="space-y-4 pt-4 border-t border-slate-200/80">
-          
+
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-bullseye text-cyan-600"></i>
                 <span>Practice / Quiz Engine (Karnataka SSLC)</span>
               </h2>
-              <p class="text-xs text-slate-500">Calibrated MCQs with countdown timer, step-by-step solutions, and instant feedback.</p>
+              <p class="text-xs text-slate-500">Calibrated MCQs with countdown timer, step-by-step solutions, and
+                instant feedback.</p>
             </div>
           </div>
 
           <!-- Quiz Configuration Box -->
           <div class="dashboard-card p-5 space-y-4" id="quiz-setup-panel">
             <h3 class="text-xs font-black uppercase tracking-wider text-slate-400">Configure Practice Drill</h3>
-            
+
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Select Subject</label>
-                <select id="interactive-quiz-subject" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                <select id="interactive-quiz-subject"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
                   <option value="Mathematics">Mathematics</option>
                   <option value="Science">Science</option>
                   <option value="Social Science">Social Science</option>
@@ -1458,7 +1701,8 @@
 
               <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Select Chapter</label>
-                <select id="interactive-quiz-chapter" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                <select id="interactive-quiz-chapter"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
                   <option value="Quadratic Equations">Quadratic Equations</option>
                   <option value="Arithmetic Progressions">Arithmetic Progressions</option>
                   <option value="Ohm's Law & Electricity">Ohm's Law & Electricity</option>
@@ -1470,7 +1714,8 @@
 
               <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Difficulty Level</label>
-                <select id="interactive-quiz-difficulty" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                <select id="interactive-quiz-difficulty"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
                   <option value="intermediate">Medium (Board Exam Standard)</option>
                   <option value="beginner">Easy (Foundations & Scaffolding)</option>
                   <option value="advanced">Hard (High-Order Thinking HOTS)</option>
@@ -1479,7 +1724,8 @@
 
               <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Number of Questions</label>
-                <select id="interactive-quiz-count" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                <select id="interactive-quiz-count"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
                   <option value="5">5 Questions (10 Mins)</option>
                   <option value="10">10 Questions (20 Mins)</option>
                   <option value="15">15 Questions (30 Mins)</option>
@@ -1488,8 +1734,10 @@
             </div>
 
             <div class="pt-2 flex items-center justify-between">
-              <span class="text-xs text-slate-500 font-semibold"><i class="fa-solid fa-clock mr-1 text-slate-400"></i>15-Minute Countdown Timer included</span>
-              <button id="start-interactive-quiz-btn" class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 active:from-indigo-800 active:to-purple-800 text-white rounded-xl text-xs font-black shadow-md shadow-indigo-300/30 flex items-center gap-2 transition">
+              <span class="text-xs text-slate-500 font-semibold"><i
+                  class="fa-solid fa-clock mr-1 text-slate-400"></i>15-Minute Countdown Timer included</span>
+              <button id="start-interactive-quiz-btn"
+                class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 active:from-indigo-800 active:to-purple-800 text-white rounded-xl text-xs font-black shadow-md shadow-indigo-300/30 flex items-center gap-2 transition">
                 <i class="fa-solid fa-play"></i>
                 <span>Start Practice Quiz Now</span>
               </button>
@@ -1498,15 +1746,17 @@
 
           <!-- Active Quiz Runner Container (Initially Hidden until Start Quiz clicked) -->
           <div id="active-quiz-runner" class="hidden dashboard-card p-6 space-y-5">
-            
+
             <!-- Runner Top Bar -->
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
               <div class="space-y-0.5">
-                <span id="runner-chapter-tag" class="text-[10px] font-black uppercase text-indigo-600">Mathematics • Quadratic Equations</span>
+                <span id="runner-chapter-tag" class="text-[10px] font-black uppercase text-indigo-600">Mathematics •
+                  Quadratic Equations</span>
                 <h3 id="runner-question-count-badge" class="text-sm font-extrabold text-slate-900">Question 1 of 5</h3>
               </div>
               <div class="flex items-center gap-2">
-                <div class="px-3 py-1 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 text-xs font-mono font-bold flex items-center gap-1.5">
+                <div
+                  class="px-3 py-1 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 text-xs font-mono font-bold flex items-center gap-1.5">
                   <i class="fa-regular fa-clock text-indigo-600"></i>
                   <span id="runner-timer-display">14:59</span>
                 </div>
@@ -1515,41 +1765,59 @@
 
             <!-- Question Progress Bar -->
             <div class="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
-              <div id="runner-progress-bar" class="h-full bg-indigo-600 transition-all duration-300" style="width: 20%;"></div>
+              <div id="runner-progress-bar" class="h-full bg-indigo-600 transition-all duration-300"
+                style="width: 20%;"></div>
             </div>
 
             <!-- Question Box -->
-            <div class="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 text-sm font-bold text-slate-900 leading-relaxed" id="runner-question-text">
+            <div
+              class="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 text-sm font-bold text-slate-900 leading-relaxed"
+              id="runner-question-text">
               What is the nature of the roots of the quadratic equation 2x² - 4x + 3 = 0?
             </div>
 
             <!-- 4 Options -->
             <div class="space-y-2.5" id="runner-options-list">
-              <button class="runner-option-btn w-full text-left p-3.5 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 text-xs font-semibold text-slate-800 transition flex items-center gap-3" data-idx="0">
-                <span class="w-6 h-6 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-700">A</span>
+              <button
+                class="runner-option-btn w-full text-left p-3.5 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 text-xs font-semibold text-slate-800 transition flex items-center gap-3"
+                data-idx="0">
+                <span
+                  class="w-6 h-6 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-700">A</span>
                 <span>Real and Equal</span>
               </button>
-              <button class="runner-option-btn w-full text-left p-3.5 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 text-xs font-semibold text-slate-800 transition flex items-center gap-3" data-idx="1">
-                <span class="w-6 h-6 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-700">B</span>
+              <button
+                class="runner-option-btn w-full text-left p-3.5 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 text-xs font-semibold text-slate-800 transition flex items-center gap-3"
+                data-idx="1">
+                <span
+                  class="w-6 h-6 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-700">B</span>
                 <span>Real and Distinct</span>
               </button>
-              <button class="runner-option-btn w-full text-left p-3.5 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 text-xs font-semibold text-slate-800 transition flex items-center gap-3" data-idx="2">
-                <span class="w-6 h-6 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-700">C</span>
+              <button
+                class="runner-option-btn w-full text-left p-3.5 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 text-xs font-semibold text-slate-800 transition flex items-center gap-3"
+                data-idx="2">
+                <span
+                  class="w-6 h-6 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-700">C</span>
                 <span>No Real Roots (Complex / Imaginary)</span>
               </button>
-              <button class="runner-option-btn w-full text-left p-3.5 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 text-xs font-semibold text-slate-800 transition flex items-center gap-3" data-idx="3">
-                <span class="w-6 h-6 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-700">D</span>
+              <button
+                class="runner-option-btn w-full text-left p-3.5 rounded-xl border border-slate-200 hover:bg-indigo-50 hover:border-indigo-300 text-xs font-semibold text-slate-800 transition flex items-center gap-3"
+                data-idx="3">
+                <span
+                  class="w-6 h-6 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-xs text-slate-700">D</span>
                 <span>Cannot be determined</span>
               </button>
             </div>
 
             <!-- Navigation Buttons -->
             <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-              <button id="runner-prev-btn" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5" disabled>
+              <button id="runner-prev-btn"
+                class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs font-bold transition flex items-center gap-1.5"
+                disabled>
                 <i class="fa-solid fa-arrow-left"></i>
                 <span>Previous</span>
               </button>
-              <button id="runner-next-btn" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+              <button id="runner-next-btn"
+                class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
                 <span>Next Question</span>
                 <i class="fa-solid fa-arrow-right"></i>
               </button>
@@ -1596,16 +1864,19 @@
                 <span>Key Explanations & Solutions:</span>
               </h4>
               <div class="space-y-1.5 text-slate-600 leading-relaxed text-[11px]" id="res-explanations-list">
-                <p><strong>Q1 Solution:</strong> Discriminant D = b² - 4ac = (-4)² - 4(2)(3) = 16 - 24 = -8. Since D &lt; 0, the equation has <em>No Real Roots</em>.</p>
+                <p><strong>Q1 Solution:</strong> Discriminant D = b² - 4ac = (-4)² - 4(2)(3) = 16 - 24 = -8. Since D
+                  &lt; 0, the equation has <em>No Real Roots</em>.</p>
               </div>
             </div>
 
             <div class="flex items-center justify-center gap-3 pt-2">
-              <button id="retry-quiz-btn" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition flex items-center gap-2 shadow-2xs">
+              <button id="retry-quiz-btn"
+                class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition flex items-center gap-2 shadow-2xs">
                 <i class="fa-solid fa-rotate-right"></i>
                 <span>Retry Quiz</span>
               </button>
-              <button id="close-results-btn" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-bold transition">
+              <button id="close-results-btn"
+                class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-bold transition">
                 Back to Dashboard
               </button>
             </div>
@@ -1622,11 +1893,14 @@
               <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-robot text-purple-600"></i>
                 <span>AI Tutor & 24/7 Doubt Solver</span>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800">5 Languages Supported</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800">5 Languages
+                  Supported</span>
               </h2>
-              <p class="text-xs text-slate-500">Ask any SSLC doubt in English, Kannada, Hindi, Tamil, or Telugu across 3 learning paces.</p>
+              <p class="text-xs text-slate-500">Ask any SSLC doubt in English, Kannada, Hindi, Tamil, or Telugu across 3
+                learning paces.</p>
             </div>
-            <div class="flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 font-bold">
+            <div
+              class="flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 font-bold">
               <i class="fa-solid fa-shield-halved"></i>
               <span>Safe Educational Guardrails Active</span>
             </div>
@@ -1637,7 +1911,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Select Topic / Context</label>
-                <select id="ai-topic-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500">
+                <select id="ai-topic-select"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500">
                   <option value="Quadratic Equations">Mathematics: Quadratic Equations</option>
                   <option value="Arithmetic Progressions">Mathematics: Arithmetic Progressions</option>
                   <option value="Light Reflection and Mirrors">Science: Light Reflection & Mirrors</option>
@@ -1651,7 +1926,8 @@
 
               <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Response Language</label>
-                <select id="ai-lang-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500">
+                <select id="ai-lang-select"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500">
                   <option value="en">English (Default)</option>
                   <option value="kn">ಕನ್ನಡ (Kannada Medium)</option>
                   <option value="hi">हिन्दी (Hindi)</option>
@@ -1662,7 +1938,8 @@
 
               <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Learning Pace Mode</label>
-                <select id="ai-pace-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500">
+                <select id="ai-pace-select"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500">
                   <option value="step-by-step">🐢 Step-by-Step (Foundational Walkthrough)</option>
                   <option value="balanced">⚖️ Balanced (Concept & Exam Solutions)</option>
                   <option value="fast-track">⚡ Fast-Track (Quick Formulas & Summary)</option>
@@ -1674,34 +1951,45 @@
             <div class="space-y-2">
               <label class="block text-[11px] font-bold text-slate-600">Type Your Question or Conceptual Doubt</label>
               <div class="relative">
-                <textarea id="ai-doubt-input" rows="3" placeholder="e.g. Explain how to find the focal length of a concave mirror using the mirror formula with an example..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition resize-none"></textarea>
+                <textarea id="ai-doubt-input" rows="3"
+                  placeholder="e.g. Explain how to find the focal length of a concave mirror using the mirror formula with an example..."
+                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition resize-none"></textarea>
               </div>
             </div>
 
             <!-- Quick Doubt Inspiration Pills -->
             <div class="flex items-center gap-2 flex-wrap text-xs">
               <span class="text-[10px] font-bold text-slate-400">Quick Prompts:</span>
-              <button type="button" class="ai-quick-prompt px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 text-[11px] font-semibold transition" data-text="Explain the difference between concave and convex mirrors with formulas">
+              <button type="button"
+                class="ai-quick-prompt px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 text-[11px] font-semibold transition"
+                data-text="Explain the difference between concave and convex mirrors with formulas">
                 💡 Concave vs Convex Mirrors
               </button>
-              <button type="button" class="ai-quick-prompt px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-semibold transition" data-text="How do I find roots using the quadratic formula -b ± √(b²-4ac)/2a?">
+              <button type="button"
+                class="ai-quick-prompt px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-semibold transition"
+                data-text="How do I find roots using the quadratic formula -b ± √(b²-4ac)/2a?">
                 📐 Quadratic Formula Step-by-Step
               </button>
-              <button type="button" class="ai-quick-prompt px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-semibold transition" data-text="ಕನ್ನಡದಲ್ಲಿ ಲೋಪ ಸಂಧಿ ಎಂದರೇನು? ಸೂತ್ರ ಹಾಗೂ ಉದಾಹರಣೆ ನೀಡಿ">
+              <button type="button"
+                class="ai-quick-prompt px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-semibold transition"
+                data-text="ಕನ್ನಡದಲ್ಲಿ ಲೋಪ ಸಂಧಿ ಎಂದರೇನು? ಸೂತ್ರ ಹಾಗೂ ಉದಾಹರಣೆ ನೀಡಿ">
                 📝 ಕನ್ನಡ ಲೋಪ ಸಂಧಿ ನಿಯಮ
               </button>
             </div>
 
             <div class="pt-2 flex items-center justify-between">
-              <span class="text-[11px] text-slate-500 font-medium">Powered by EduTech Safe Pedagogy Engine & Prerequisite Guardrails</span>
-              <button id="ask-ai-submit-btn" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 active:scale-98 text-white rounded-xl text-xs font-black shadow-md shadow-purple-300/30 flex items-center gap-2 transition">
+              <span class="text-[11px] text-slate-500 font-medium">Powered by EduTech Safe Pedagogy Engine &
+                Prerequisite Guardrails</span>
+              <button id="ask-ai-submit-btn"
+                class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 active:scale-98 text-white rounded-xl text-xs font-black shadow-md shadow-purple-300/30 flex items-center gap-2 transition">
                 <i class="fa-solid fa-paper-plane"></i>
                 <span>Ask AI Tutor</span>
               </button>
             </div>
 
             <!-- AI Response Container (Initially Hidden) -->
-            <div id="ai-response-container" class="hidden p-5 rounded-2xl bg-gradient-to-br from-purple-50/60 via-indigo-50/40 to-slate-50 border border-purple-100 space-y-3">
+            <div id="ai-response-container"
+              class="hidden p-5 rounded-2xl bg-gradient-to-br from-purple-50/60 via-indigo-50/40 to-slate-50 border border-purple-100 space-y-3">
               <div class="flex items-center justify-between border-b border-purple-100/80 pb-2">
                 <div class="flex items-center gap-2">
                   <div class="w-6 h-6 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs">
@@ -1710,9 +1998,12 @@
                   <span class="text-xs font-black text-purple-950">AI Pedagogical Explanation</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span id="ai-badge-lang" class="px-2 py-0.5 rounded text-[9px] font-black bg-purple-100 text-purple-800 uppercase">EN</span>
-                  <span id="ai-badge-mode" class="px-2 py-0.5 rounded text-[9px] font-black bg-indigo-100 text-indigo-800 uppercase">Balanced</span>
-                  <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800"><i class="fa-solid fa-check mr-0.5"></i>Verified</span>
+                  <span id="ai-badge-lang"
+                    class="px-2 py-0.5 rounded text-[9px] font-black bg-purple-100 text-purple-800 uppercase">EN</span>
+                  <span id="ai-badge-mode"
+                    class="px-2 py-0.5 rounded text-[9px] font-black bg-indigo-100 text-indigo-800 uppercase">Balanced</span>
+                  <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800"><i
+                      class="fa-solid fa-check mr-0.5"></i>Verified</span>
                 </div>
               </div>
               <div id="ai-answer-text" class="text-xs text-slate-800 leading-relaxed font-medium space-y-2"></div>
@@ -1725,14 +2016,15 @@
              10. MY PROGRESS SECTION (SECTION: #sec-progress)
         =============================================== -->
         <section id="sec-progress" class="space-y-4 pt-4 border-t border-slate-200/80">
-          
+
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-chart-line text-blue-600"></i>
                 <span>My Progress & Performance Dashboard</span>
               </h2>
-              <p class="text-xs text-slate-500">Longitudinal analytics, subject mastery charts, and weekly study cadence.</p>
+              <p class="text-xs text-slate-500">Longitudinal analytics, subject mastery charts, and weekly study
+                cadence.</p>
             </div>
             <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
               Overall: {{ overall_progress_pct or 64 }}% Complete
@@ -1743,32 +2035,43 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Strong Subjects -->
             <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg font-bold shrink-0">
+              <div
+                class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg font-bold shrink-0">
                 <i class="fa-solid fa-medal"></i>
               </div>
               <div>
                 <p class="text-xs font-black text-emerald-950">Top Strong Subject: English & Social Science</p>
-                <p class="text-[11px] text-emerald-800 mt-0.5">High consistency in grammatical conversions and history timelines.</p>
+                <p class="text-[11px] text-emerald-800 mt-0.5">High consistency in grammatical conversions and history
+                  timelines.</p>
               </div>
             </div>
 
             <!-- Weak Chapters with Root-Cause X-Ray Action -->
-            <div class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div
+              class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center text-lg font-bold shrink-0">
+                <div
+                  class="w-10 h-10 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center text-lg font-bold shrink-0">
                   <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
                 <div>
                   {% if weak_topics and weak_topics|length > 0 %}
-                    <p class="text-xs font-black text-rose-950">Focus Area: {{ weak_topics[0].subject_name }} - {{ weak_topics[0].topic_name }} ({{ weak_topics[0].mastery_score }}% Mastery)</p>
-                    <p class="text-[11px] text-rose-800 mt-0.5">Underlying foundational gap detected. Tap to trace root-cause prerequisite.</p>
+                  <p class="text-xs font-black text-rose-950">Focus Area: {{ weak_topics[0].subject_name }} - {{
+                    weak_topics[0].topic_name }} ({{ weak_topics[0].mastery_score }}% Mastery)</p>
+                  <p class="text-[11px] text-rose-800 mt-0.5">Underlying foundational gap detected. Tap to trace
+                    root-cause prerequisite.</p>
                   {% else %}
-                    <p class="text-xs font-black text-rose-950">Focus Area: Mathematics - Factoring Polynomials (42% Mastery)</p>
-                    <p class="text-[11px] text-rose-800 mt-0.5">Foundational gap in Negative Numbers & Sign Rules detected.</p>
+                  <p class="text-xs font-black text-rose-950">Focus Area: Mathematics - Factoring Polynomials (42%
+                    Mastery)</p>
+                  <p class="text-[11px] text-rose-800 mt-0.5">Foundational gap in Negative Numbers & Sign Rules
+                    detected.</p>
                   {% endif %}
                 </div>
               </div>
-              <button id="trace-root-cause-trigger" class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center gap-1.5 shrink-0 self-start sm:self-auto shadow-2xs" data-topic-id="{{ weak_topics[0].id if weak_topics and weak_topics|length > 0 else 5 }}" data-topic-name="{{ weak_topics[0].topic_name if weak_topics and weak_topics|length > 0 else 'Factoring Polynomials & Identities' }}">
+              <button id="trace-root-cause-trigger"
+                class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center gap-1.5 shrink-0 self-start sm:self-auto shadow-2xs"
+                data-topic-id="{{ weak_topics[0].id if weak_topics and weak_topics|length > 0 else 5 }}"
+                data-topic-name="{{ weak_topics[0].topic_name if weak_topics and weak_topics|length > 0 else 'Factoring Polynomials & Identities' }}">
                 <i class="fa-solid fa-microscope"></i>
                 <span>Trace Root Cause</span>
               </button>
@@ -1777,7 +2080,7 @@
 
           <!-- 3 Chart.js Visualizations Grid -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
+
             <!-- Chart 1: Subject Progress Radar/Bar -->
             <div class="dashboard-card p-5 space-y-3">
               <div class="flex items-center justify-between">
@@ -1819,14 +2122,15 @@
              11. ACHIEVEMENTS SECTION (SECTION: #sec-achievements)
         =============================================== -->
         <section id="sec-achievements" class="space-y-4 pt-4 border-t border-slate-200/80">
-          
+
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-trophy text-amber-500"></i>
                 <span>My Achievements & Milestones</span>
               </h2>
-              <p class="text-xs text-slate-500">Badges earned through consistent study rhythm and high quiz accuracy.</p>
+              <p class="text-xs text-slate-500">Badges earned through consistent study rhythm and high quiz accuracy.
+              </p>
             </div>
             <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
               4 of 6 Unlocked 🏆
@@ -1835,16 +2139,18 @@
 
           <!-- 6 Achievement Cards -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            
+
             <!-- Badge 1: Unlocked -->
             <div class="dashboard-card p-4 flex items-center gap-4 border-l-4 border-l-emerald-500">
-              <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl shrink-0">
+              <div
+                class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl shrink-0">
                 🎯
               </div>
               <div class="min-w-0 flex-1">
                 <div class="flex items-center justify-between">
                   <h4 class="text-xs font-black text-slate-900">First Quiz Completed</h4>
-                  <span class="text-[9px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">UNLOCKED</span>
+                  <span
+                    class="text-[9px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">UNLOCKED</span>
                 </div>
                 <p class="text-[11px] text-slate-500 mt-0.5">Completed your very first practice assessment drill.</p>
               </div>
@@ -1852,13 +2158,15 @@
 
             <!-- Badge 2: Unlocked -->
             <div class="dashboard-card p-4 flex items-center gap-4 border-l-4 border-l-emerald-500">
-              <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl shrink-0">
+              <div
+                class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl shrink-0">
                 🏆
               </div>
               <div class="min-w-0 flex-1">
                 <div class="flex items-center justify-between">
                   <h4 class="text-xs font-black text-slate-900">5 Quizzes Completed</h4>
-                  <span class="text-[9px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">UNLOCKED</span>
+                  <span
+                    class="text-[9px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">UNLOCKED</span>
                 </div>
                 <p class="text-[11px] text-slate-500 mt-0.5">Demonstrated high self-evaluation commitment.</p>
               </div>
@@ -1866,13 +2174,15 @@
 
             <!-- Badge 3: Unlocked -->
             <div class="dashboard-card p-4 flex items-center gap-4 border-l-4 border-l-emerald-500">
-              <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl shrink-0">
+              <div
+                class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl shrink-0">
                 📖
               </div>
               <div class="min-w-0 flex-1">
                 <div class="flex items-center justify-between">
                   <h4 class="text-xs font-black text-slate-900">10 Chapters Completed</h4>
-                  <span class="text-[9px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">UNLOCKED</span>
+                  <span
+                    class="text-[9px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">UNLOCKED</span>
                 </div>
                 <p class="text-[11px] text-slate-500 mt-0.5">Covered 10 key Karnataka SSLC syllabus chapters.</p>
               </div>
@@ -1880,21 +2190,25 @@
 
             <!-- Badge 4: Unlocked -->
             <div class="dashboard-card p-4 flex items-center gap-4 border-l-4 border-l-emerald-500">
-              <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-xl shrink-0">
+              <div
+                class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-xl shrink-0">
                 🔥
               </div>
               <div class="min-w-0 flex-1">
                 <div class="flex items-center justify-between">
                   <h4 class="text-xs font-black text-slate-900">7-Day Study Streak</h4>
-                  <span class="text-[9px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">UNLOCKED</span>
+                  <span
+                    class="text-[9px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">UNLOCKED</span>
                 </div>
-                <p class="text-[11px] text-slate-500 mt-0.5">Studied consistently for 7 straight days without breaks.</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">Studied consistently for 7 straight days without breaks.
+                </p>
               </div>
             </div>
 
             <!-- Badge 5: In Progress (Locked) -->
             <div class="dashboard-card p-4 flex items-center gap-4 border-l-4 border-l-slate-300 opacity-80">
-              <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center text-xl shrink-0">
+              <div
+                class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center text-xl shrink-0">
                 🧮
               </div>
               <div class="min-w-0 flex-1">
@@ -1908,7 +2222,8 @@
 
             <!-- Badge 6: In Progress (Locked) -->
             <div class="dashboard-card p-4 flex items-center gap-4 border-l-4 border-l-slate-300 opacity-80">
-              <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center text-xl shrink-0">
+              <div
+                class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center text-xl shrink-0">
                 🔬
               </div>
               <div class="min-w-0 flex-1">
@@ -1928,27 +2243,33 @@
              12. STUDENT PROFILE SECTION (SECTION: #sec-profile)
         =============================================== -->
         <section id="sec-profile" class="space-y-4 pt-4 border-t border-slate-200/80">
-          
+
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-user-graduate text-indigo-600"></i>
                 <span>Student Profile & Account Settings</span>
               </h2>
-              <p class="text-xs text-slate-500">Manage your Karnataka SSLC candidate details and language preferences.</p>
+              <p class="text-xs text-slate-500">Manage your Karnataka SSLC candidate details and language preferences.
+              </p>
             </div>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
+
             <!-- Left 1 Col: Student Info Card -->
             <div class="dashboard-card p-6 flex flex-col items-center text-center space-y-4">
               <div class="relative">
-                <img id="profile-card-avatar" src="{{ current_user.avatar_url or 'https://api.dicebear.com/7.x/bottts/svg?seed=Aarav' }}" alt="Student Avatar" class="w-24 h-24 rounded-3xl bg-slate-100 border-4 border-indigo-200 object-cover shadow-md">
-                <span class="absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-500 text-white shadow-xs">Active</span>
+                <img id="profile-card-avatar"
+                  src="{{ current_user.avatar_url or 'https://api.dicebear.com/7.x/bottts/svg?seed=Aarav' }}"
+                  alt="Student Avatar"
+                  class="w-24 h-24 rounded-3xl bg-slate-100 border-4 border-indigo-200 object-cover shadow-md">
+                <span
+                  class="absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full text-[9px] font-black bg-emerald-500 text-white shadow-xs">Active</span>
               </div>
               <div>
-                <h3 id="profile-card-name" class="text-base font-black text-slate-900">{{ current_user.name or 'Aarav Sharma' }}</h3>
+                <h3 id="profile-card-name" class="text-base font-black text-slate-900">{{ current_user.name or 'Aarav
+                  Sharma' }}</h3>
                 <p class="text-xs font-mono text-indigo-600 font-semibold">@{{ current_user.username or 'aarav' }}</p>
                 <p class="text-xs text-slate-500 mt-1">{{ current_user.email or 'aarav@rootsrhythm.edu' }}</p>
               </div>
@@ -1984,29 +2305,34 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
-                    <input type="text" id="prof-input-name" value="{{ current_user.name or 'Aarav Sharma' }}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="prof-input-name" value="{{ current_user.name or 'Aarav Sharma' }}" required
+                      class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
                   </div>
                   <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Class & Section</label>
-                    <input type="text" id="prof-input-grade" value="{{ current_user.grade_or_cohort or 'Class 10-A' }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" id="prof-input-grade" value="{{ current_user.grade_or_cohort or 'Class 10-A' }}"
+                      class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
                   </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Email (Read Only)</label>
-                    <input type="email" value="{{ current_user.email or 'aarav@rootsrhythm.edu' }}" readonly disabled class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-500 cursor-not-allowed">
+                    <input type="email" value="{{ current_user.email or 'aarav@rootsrhythm.edu' }}" readonly disabled
+                      class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-500 cursor-not-allowed">
                   </div>
                   <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Number</label>
-                    <input type="text" value="+91 98765 43210" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="text" value="+91 98765 43210"
+                      class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
                   </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Medium of Instruction</label>
-                    <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <select
+                      class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
                       <option value="English">English Medium</option>
                       <option value="Kannada">Kannada Medium</option>
                     </select>
@@ -2014,8 +2340,11 @@
                   <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Avatar Seed / Style</label>
                     <div class="flex items-center gap-2">
-                      <input type="text" id="prof-input-avatar-seed" value="{{ current_user.username or 'Aarav' }}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
-                      <button type="button" id="prof-randomize-avatar-btn" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 shrink-0" title="Randomize avatar seed">
+                      <input type="text" id="prof-input-avatar-seed" value="{{ current_user.username or 'Aarav' }}"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                      <button type="button" id="prof-randomize-avatar-btn"
+                        class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 shrink-0"
+                        title="Randomize avatar seed">
                         🎲
                       </button>
                     </div>
@@ -2023,8 +2352,10 @@
                 </div>
 
                 <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <span id="prof-save-status" class="text-xs font-bold text-emerald-600 hidden"><i class="fa-solid fa-check mr-1"></i>Saved successfully!</span>
-                  <button type="submit" id="prof-save-btn" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black shadow-sm flex items-center gap-2 transition ml-auto">
+                  <span id="prof-save-status" class="text-xs font-bold text-emerald-600 hidden"><i
+                      class="fa-solid fa-check mr-1"></i>Saved successfully!</span>
+                  <button type="submit" id="prof-save-btn"
+                    class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black shadow-sm flex items-center gap-2 transition ml-auto">
                     <i class="fa-solid fa-floppy-disk"></i>
                     <span>Save Changes</span>
                   </button>
@@ -2061,13 +2392,16 @@
   <!-- ==============================================
        MODALS: SUBJECT VIEWER, VIDEO PLAYER, ADD TASK
   =============================================== -->
-  
+
   <!-- 1. Subject Viewer Modal -->
-  <div id="subject-detail-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto relative animate-in fade-in zoom-in-95 duration-200 space-y-4">
+  <div id="subject-detail-modal"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div
+      class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto relative animate-in fade-in zoom-in-95 duration-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div class="flex items-center gap-2.5">
-          <div id="subject-modal-icon" class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-lg">
+          <div id="subject-modal-icon"
+            class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-lg">
             <i class="fa-solid fa-book"></i>
           </div>
           <div>
@@ -2083,7 +2417,8 @@
         <div class="p-3.5 rounded-2xl bg-indigo-50/70 border border-indigo-100 space-y-1">
           <p class="font-extrabold text-indigo-950">Official Board Examination Blueprint</p>
           <p class="text-[11px] text-indigo-800 leading-relaxed">
-            Consists of 80 Theory marks + 20 Internal Assessment marks. Focus on high-weightage 4-mark and 5-mark theorems and problems.
+            Consists of 80 Theory marks + 20 Internal Assessment marks. Focus on high-weightage 4-mark and 5-mark
+            theorems and problems.
           </p>
         </div>
         <div class="space-y-2">
@@ -2094,7 +2429,8 @@
         </div>
       </div>
       <div class="pt-3 border-t border-slate-100 flex justify-end">
-        <a href="#sec-quiz" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition">
+        <a href="#sec-quiz"
+          class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition">
           Take Subject Practice Quiz →
         </a>
       </div>
@@ -2102,8 +2438,10 @@
   </div>
 
   <!-- 2. Teaching Video Player Modal -->
-  <div id="video-player-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200">
+  <div id="video-player-modal"
+    class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div
+      class="bg-white rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200">
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
         <div class="flex items-center gap-2">
           <span class="w-3 h-3 rounded-full bg-rose-500 animate-pulse"></span>
@@ -2115,14 +2453,17 @@
       </div>
       <div class="aspect-video bg-black flex items-center justify-center relative" id="video-embed-container">
         <!-- Embedded responsive player -->
-        <iframe id="video-iframe" class="w-full h-full" src="" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="video-iframe" class="w-full h-full" src="" title="Video Player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
       </div>
       <div class="p-4 bg-white flex items-center justify-between text-xs border-t border-slate-100">
         <div>
           <span id="video-modal-subject" class="font-extrabold text-indigo-600">Mathematics</span>
           <span class="text-slate-400 ml-2" id="video-modal-duration">32 Mins</span>
         </div>
-        <button class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200">
+        <button
+          class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200">
           <i class="fa-solid fa-check mr-1"></i>Mark Completed
         </button>
       </div>
@@ -2130,8 +2471,10 @@
   </div>
 
   <!-- 3. Add Study Task Modal -->
-  <div id="add-task-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200 space-y-4">
+  <div id="add-task-modal"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div
+      class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
           <i class="fa-solid fa-calendar-plus text-emerald-600"></i>
@@ -2145,7 +2488,8 @@
       <form id="add-task-form" class="space-y-3 text-xs">
         <div>
           <label class="block font-bold text-slate-700 mb-1">Subject</label>
-          <select id="task-input-subject" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
+          <select id="task-input-subject"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
             <option value="Mathematics">Mathematics</option>
             <option value="Science">Science</option>
             <option value="Social Science">Social Science</option>
@@ -2156,29 +2500,37 @@
         </div>
         <div>
           <label class="block font-bold text-slate-700 mb-1">Chapter / Task Title</label>
-          <input type="text" id="task-input-title" required placeholder="e.g. Science: Balancing Chemical Reactions" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
+          <input type="text" id="task-input-title" required placeholder="e.g. Science: Balancing Chemical Reactions"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-slate-700 mb-1">Start Time</label>
-            <input type="time" id="task-input-start" value="17:30" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
+            <input type="time" id="task-input-start" value="17:30"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
           </div>
           <div>
             <label class="block font-bold text-slate-700 mb-1">End Time</label>
-            <input type="time" id="task-input-end" value="18:30" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
+            <input type="time" id="task-input-end" value="18:30"
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
           </div>
         </div>
         <div class="pt-2 flex justify-end gap-2">
-          <button type="button" class="close-custom-modal px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50">Cancel</button>
-          <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition">Save Study Task</button>
+          <button type="button"
+            class="close-custom-modal px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50">Cancel</button>
+          <button type="submit"
+            class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition">Save Study
+            Task</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- 4. Root-Cause Prerequisite X-Ray Modal -->
-  <div id="root-cause-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200 space-y-4">
+  <div id="root-cause-modal"
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div
+      class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center text-sm font-bold">
@@ -2194,9 +2546,10 @@
       <div class="space-y-3 text-xs">
         <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200">
           <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Target Challenging Concept:</span>
-          <h4 id="rc-target-name" class="text-sm font-black text-slate-900 mt-0.5">Factoring Polynomials & Identities</h4>
+          <h4 id="rc-target-name" class="text-sm font-black text-slate-900 mt-0.5">Factoring Polynomials & Identities
+          </h4>
         </div>
-        
+
         <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-950 space-y-1.5">
           <div class="flex items-center gap-1.5 text-xs font-black text-amber-900">
             <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
@@ -2206,16 +2559,19 @@
             Negative Numbers & Sign Rules (Mastery: 48%)
           </p>
           <p id="rc-root-explanation" class="text-[11px] text-amber-800 leading-relaxed">
-            The student is failing factorization because negative sign multiplication rules (-a * -b = +ab) are unmastered.
+            The student is failing factorization because negative sign multiplication rules (-a * -b = +ab) are
+            unmastered.
           </p>
         </div>
 
         <div class="p-3 rounded-2xl bg-indigo-50/70 border border-indigo-100 flex items-center justify-between">
           <div>
-            <span class="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Prescribed Recovery Time:</span>
+            <span class="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Prescribed Recovery
+              Time:</span>
             <p id="rc-recovery-time" class="text-xs font-black text-indigo-950">15 Mins focused remediation</p>
           </div>
-          <a href="#sec-quiz" id="rc-remedial-btn" class="close-custom-modal px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+          <a href="#sec-quiz" id="rc-remedial-btn"
+            class="close-custom-modal px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
             <span>Practice Foundation</span>
             <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </a>
@@ -2413,10 +2769,11 @@
               day_of_week: "Today",
               start_time: start,
               end_time: end,
+              label: `${subj}: ${title}`,
               slot_label: `${subj}: ${title}`
             })
           });
-        } catch(err) {
+        } catch (err) {
           console.error("Error saving slot to backend:", err);
         }
 
@@ -2454,7 +2811,7 @@
           const data = await res.json();
           alert(`✨ Auto-Scheduled ${data.scheduled_count || 3} study sessions into your declared free hours! Refreshing...`);
           window.location.reload();
-        } catch(err) {
+        } catch (err) {
           console.error(err);
           alert("Auto-schedule completed in session!");
         } finally {
@@ -2479,7 +2836,7 @@
             if (sessId) {
               try {
                 await fetch(`/api/planner/sessions/${sessId}/complete`, { method: "POST" });
-              } catch(e) { console.error(e); }
+              } catch (e) { console.error(e); }
             }
           } else {
             btn.dataset.completed = "false";
@@ -2610,7 +2967,7 @@
           } else {
             activeQuizQuestions = [...fallbackQuestions];
           }
-        } catch(err) {
+        } catch (err) {
           console.error(err);
           activeQuizQuestions = [...fallbackQuestions];
         } finally {
@@ -2648,7 +3005,7 @@
       const qData = activeQuizQuestions[idx];
       document.getElementById("runner-question-count-badge").textContent = `Question ${idx + 1} of ${activeQuizQuestions.length}`;
       document.getElementById("runner-question-text").textContent = qData.q;
-      
+
       const pct = ((idx + 1) / activeQuizQuestions.length) * 100;
       document.getElementById("runner-progress-bar").style.width = `${pct}%`;
 
@@ -2718,7 +3075,7 @@
       const expList = document.getElementById("res-explanations-list");
       expList.innerHTML = activeQuizQuestions.map((q, i) => `
         <div class="p-2.5 rounded-xl border ${userAnswers[i] === q.answer ? 'bg-emerald-50/70 border-emerald-200' : 'bg-rose-50/70 border-rose-200'}">
-          <p class="font-extrabold text-slate-900">Q${i+1}: ${q.q}</p>
+          <p class="font-extrabold text-slate-900">Q${i + 1}: ${q.q}</p>
           <p class="text-[11px] ${userAnswers[i] === q.answer ? 'text-emerald-800' : 'text-rose-800'} mt-1">
             <strong>Your Answer:</strong> ${userAnswers[i] !== undefined ? q.options[userAnswers[i]] : 'Skipped'} • 
             <strong>Correct Answer:</strong> ${q.options[q.answer]}
@@ -2821,7 +3178,7 @@
           } else if (data.error) {
             alert(data.error);
           }
-        } catch(err) {
+        } catch (err) {
           console.error(err);
           alert("Could not connect to AI service. Please try again.");
         } finally {
@@ -2856,7 +3213,7 @@
           } else {
             document.getElementById("rc-root-desc").textContent = "No deep prerequisite failure detected. Review practice drills directly.";
           }
-        } catch(err) {
+        } catch (err) {
           console.error(err);
         }
       });
@@ -2873,88 +3230,88 @@
           type: "bar",
           data: {
             labels: [{% for s in subjects %}"{{ s.code }}",{% endfor %}],
-            datasets: [{
-              label: "Mastery %",
-              data: [{% for s in subjects %}{{ s.progress_pct }},{% endfor %}],
-              backgroundColor: [
-                "rgba(124, 58, 237, 0.8)",
-                "rgba(8, 145, 178, 0.8)",
-                "rgba(217, 119, 6, 0.8)",
-                "rgba(37, 99, 235, 0.8)",
-                "rgba(5, 150, 105, 0.8)",
-                "rgba(234, 88, 12, 0.8)"
-              ],
-              borderRadius: 8
+      datasets: [{
+        label: "Mastery %",
+        data: [{% for s in subjects %}{{ s.progress_pct }}, {% endfor %}],
+      backgroundColor: [
+      "rgba(124, 58, 237, 0.8)",
+      "rgba(8, 145, 178, 0.8)",
+      "rgba(217, 119, 6, 0.8)",
+      "rgba(37, 99, 235, 0.8)",
+      "rgba(5, 150, 105, 0.8)",
+      "rgba(234, 88, 12, 0.8)"
+    ],
+      borderRadius: 8
             }]
           },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { beginAtZero: true, max: 100, ticks: { callback: v => v + "%" } }
-            }
-          }
+      options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, max: 100, ticks: { callback: v => v + "%" } }
+      }
+    }
         });
       }
 
-      // Chart 2: Weekly Activity Hours
-      const ctxWeekly = document.getElementById("chartWeeklyActivity")?.getContext("2d");
-      if (ctxWeekly) {
-        new Chart(ctxWeekly, {
-          type: "line",
-          data: {
-            labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-            datasets: [{
-              label: "Study Hours",
-              data: [2.0, 2.5, 1.8, 3.0, 2.2, 3.5, 2.8],
-              borderColor: "#4f46e5",
-              backgroundColor: "rgba(79, 70, 229, 0.1)",
-              fill: true,
-              tension: 0.35,
-              pointBackgroundColor: "#4f46e5",
-              pointRadius: 4
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { beginAtZero: true, max: 5, ticks: { callback: v => v + "h" } }
-            }
+    // Chart 2: Weekly Activity Hours
+    const ctxWeekly = document.getElementById("chartWeeklyActivity")?.getContext("2d");
+    if (ctxWeekly) {
+      new Chart(ctxWeekly, {
+        type: "line",
+        data: {
+          labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          datasets: [{
+            label: "Study Hours",
+            data: [2.0, 2.5, 1.8, 3.0, 2.2, 3.5, 2.8],
+            borderColor: "#4f46e5",
+            backgroundColor: "rgba(79, 70, 229, 0.1)",
+            fill: true,
+            tension: 0.35,
+            pointBackgroundColor: "#4f46e5",
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, max: 5, ticks: { callback: v => v + "h" } }
           }
-        });
-      }
+        }
+      });
+    }
 
-      // Chart 3: Quiz Score Trend
-      const ctxQuiz = document.getElementById("chartQuizPerformance")?.getContext("2d");
-      if (ctxQuiz) {
-        new Chart(ctxQuiz, {
-          type: "line",
-          data: {
-            labels: ["Drill 1", "Drill 2", "Drill 3", "Drill 4", "Drill 5", "Drill 6"],
-            datasets: [{
-              label: "Score %",
-              data: [65, 70, 78, 80, 85, 90],
-              borderColor: "#10b981",
-              backgroundColor: "rgba(16, 185, 129, 0.1)",
-              fill: true,
-              tension: 0.3,
-              pointBackgroundColor: "#10b981",
-              pointRadius: 4
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { beginAtZero: true, max: 100, ticks: { callback: v => v + "%" } }
-            }
+    // Chart 3: Quiz Score Trend
+    const ctxQuiz = document.getElementById("chartQuizPerformance")?.getContext("2d");
+    if (ctxQuiz) {
+      new Chart(ctxQuiz, {
+        type: "line",
+        data: {
+          labels: ["Drill 1", "Drill 2", "Drill 3", "Drill 4", "Drill 5", "Drill 6"],
+          datasets: [{
+            label: "Score %",
+            data: [65, 70, 78, 80, 85, 90],
+            borderColor: "#10b981",
+            backgroundColor: "rgba(16, 185, 129, 0.1)",
+            fill: true,
+            tension: 0.3,
+            pointBackgroundColor: "#10b981",
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, max: 100, ticks: { callback: v => v + "%" } }
           }
-        });
-      }
+        }
+      });
+    }
     });
 
     // ==============================================
@@ -3055,4 +3412,5 @@
   </script>
 
 </body>
+
 </html>

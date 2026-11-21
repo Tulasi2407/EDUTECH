@@ -13,8 +13,6 @@ class RootsAndRhythmApp {
     this.activeTab = "main-dashboard"; // 10-Feature Main Dashboard as default landing view
     this.currentLearningMode = "balanced"; // Step-by-Step, Balanced, Fast-Track (Objective 5)
     this.dashboard = null;
-    this.currentLearningMode = "balanced"; // Step-by-Step, Balanced, Fast-Track (Objective 5)
-    this.dashboard = null;
     this.nodeMap = null;
     this.timeline = null;
     this.analytics = null;

@@ -144,7 +144,7 @@ class AIService:
                 "1. **Real-Life Analogy:** Think of a bank account:\n"
                 "   - Positive = Money added.\n"
                 "   - Negative = Debt.\n"
-                "   - Subtracting a debt: Taking away a \$10 fee gives you back \$10! That's why `a - (-b) = a + b`.\n"
+                "   - Subtracting a debt: Taking away a $10 fee gives you back $10! That's why `a - (-b) = a + b`.\n"
                 "2. **Multiplication Direction:**\n"
                 "   - `(+) * (+) = (+)`\n"
                 "   - `(-) * (-) = (+)` (Reversing direction twice points you right back forward!)\n"
