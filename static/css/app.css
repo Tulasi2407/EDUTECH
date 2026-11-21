@@ -126,6 +126,7 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
 .tactile-btn {
   transition: all 0.15s ease-in-out;
 }
+
 .tactile-btn:active {
   transform: scale(0.97);
 }
@@ -160,11 +161,13 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
     stroke-opacity: 0.9;
     stroke-width: 4;
   }
+
   50% {
     r: 44;
     stroke-opacity: 0.1;
     stroke-width: 8;
   }
+
   100% {
     r: 34;
     stroke-opacity: 0.9;
@@ -203,15 +206,18 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
 .perspective-1000 {
   perspective: 1000px;
 }
+
 .transform-style-3d {
   transform-style: preserve-3d;
 }
+
 .backface-hidden {
   backface-visibility: hidden;
 }
 
 /* Code & LaTeX presentation */
-code, pre {
+code,
+pre {
   font-family: 'Fira Code', monospace;
 }
 
@@ -220,13 +226,16 @@ code, pre {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 9999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
