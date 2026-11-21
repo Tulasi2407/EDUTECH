@@ -357,8 +357,8 @@ class RootsAndRhythmTestCase(unittest.TestCase):
         """Verify login/register and welcome pages render correctly."""
         res_login = self.client.get("/login")
         self.assertEqual(res_login.status_code, 200)
-        self.assertIn(b"Sign In", res_login.data)
-        self.assertIn(b"Create Account", res_login.data)
+        self.assertIn(b"User Login", res_login.data)
+        self.assertIn(b"Register Now", res_login.data)
 
         res_welcome = self.client.get("/welcome")
         self.assertEqual(res_welcome.status_code, 200)
